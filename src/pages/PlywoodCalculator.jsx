@@ -130,6 +130,12 @@ export default function PlywoodCalculator() {
                             <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Plywood" className="w-full md:w-48 h-40 object-cover rounded-lg" />
                         </div>
                     </section>
+
+                    {/* AdSense Placeholder */}
+                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-8 text-center text-gray-500 mb-8">
+                        <i className="fas fa-ad text-3xl mb-2"></i>
+                        <p className="text-sm">Advertisement</p>
+                    </div>
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
@@ -147,6 +153,11 @@ export default function PlywoodCalculator() {
                             <div className="flex gap-2 mb-5"><button onClick={calculate} className="flex-1 bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium">Calculate</button><button className="bg-red-500 text-white px-4 py-2.5 rounded-lg">Reset</button></div>
                             <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-4 text-center"><div className="text-2xl font-bold text-amber-600">{results?.sheetsRequired}</div><div className="text-sm text-gray-600">Plywood Sheets Required</div></div>
                         </div>
+                    </div>
+
+                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">
+                        <i className="fas fa-ad text-2xl mb-1"></i>
+                        <p className="text-xs">Ad Space</p>
                     </div>
                 </aside>
             </div>

@@ -2,9 +2,14 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { useEffect } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import ScrollToTopButton from './components/ScrollToTopButton';
 import HomePage from './pages/HomePage';
 import CategoryPage from './pages/CategoryPage';
 import AboutPage from './pages/AboutPage';
+import ComingSoonPage from './pages/ComingSoonPage';
+import ContactPage from './pages/ContactPage';
+import TermsOfUsePage from './pages/TermsOfUsePage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import CountertopCalculator from './pages/CountertopCalculator';
 import BitumenPrimeCoatCalculator from './pages/BitumenPrimeCoatCalculator';
 import BitumenTackCoatCalculator from './pages/BitumenTackCoatCalculator';
@@ -43,6 +48,30 @@ import RoofPitchCalculator from './pages/RoofPitchCalculator';
 import ConcreteTubeCalculator from './pages/ConcreteTubeCalculator';
 import WoodFrameCalculator from './pages/WoodFrameCalculator';
 import StairCaseCalculator from './pages/StairCaseCalculator';
+import WaterContentCalculator from './pages/WaterContentCalculator';
+import SpecificGravityCalculator from './pages/SpecificGravityCalculator';
+import FreeSwellIndexCalculator from './pages/FreeSwellIndexCalculator';
+import LiquidLimitCalculator from './pages/LiquidLimitCalculator';
+import SoilSieveAnalysisCalculator from './pages/SoilSieveAnalysisCalculator';
+import UCSTestCalculator from './pages/UCSTestCalculator';
+import VaneShearCalculator from './pages/VaneShearCalculator';
+import DirectShearCalculator from './pages/DirectShearCalculator';
+import PermeabilityFallingHeadCalculator from './pages/PermeabilityFallingHeadCalculator';
+import PermeabilityConstantHeadCalculator from './pages/PermeabilityConstantHeadCalculator';
+import InSituDensityCalculator from './pages/InSituDensityCalculator';
+import CBRTestCalculator from './pages/CBRTestCalculator';
+import GSBGradingCalculator from './pages/GSBGradingCalculator';
+import WBMGradingCalculator from './pages/WBMGradingCalculator';
+import BituminousMacadamCalculator from './pages/BituminousMacadamCalculator';
+import DBMCalculator from './pages/DBMCalculator';
+import WMMCalculator from './pages/WMMCalculator';
+import BituminousConcreteCalculator from './pages/BituminousConcreteCalculator';
+import MSSCalculator from './pages/MSSCalculator';
+import SandAsphaltCalculator from './pages/SandAsphaltCalculator';
+import SurfaceDressingCalculator from './pages/SurfaceDressingCalculator';
+import SlurrySealCalculator from './pages/SlurrySealCalculator';
+import SMACalculator from './pages/SMACalculator';
+import MasticAsphaltCalculator from './pages/MasticAsphaltCalculator';
 
 // Scroll to top on route change
 function ScrollToTop() {
@@ -61,10 +90,15 @@ function App() {
             <ScrollToTop />
             <div className="min-h-screen flex flex-col bg-[#F7F9FF]">
                 <Header />
+                <ScrollToTopButton />
                 <div className="flex-1">
                     <Routes>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/about" element={<AboutPage />} />
+                        <Route path="/coming-soon" element={<ComingSoonPage />} />
+                        <Route path="/contact" element={<ContactPage />} />
+                        <Route path="/terms-of-use" element={<TermsOfUsePage />} />
+                        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                         <Route path="/category/:categorySlug" element={<CategoryPage />} />
                         <Route path="/countertop" element={<CountertopCalculator />} />
                         <Route path="/bitumen-prime-coat" element={<BitumenPrimeCoatCalculator />} />
@@ -104,6 +138,96 @@ function App() {
                         <Route path="/concrete-tube" element={<ConcreteTubeCalculator />} />
                         <Route path="/wood-frame" element={<WoodFrameCalculator />} />
                         <Route path="/stair-case" element={<StairCaseCalculator />} />
+                        <Route path="/water-content" element={<WaterContentCalculator />} />
+                        <Route path="/specific-gravity" element={<SpecificGravityCalculator />} />
+                        <Route path="/free-swell-index" element={<FreeSwellIndexCalculator />} />
+                        <Route path="/liquid-limit" element={<LiquidLimitCalculator />} />
+                        <Route path="/soil-sieve-analysis" element={<SoilSieveAnalysisCalculator />} />
+                        <Route path="/ucs-test" element={<UCSTestCalculator />} />
+                        <Route path="/vane-shear" element={<VaneShearCalculator />} />
+                        <Route path="/direct-shear" element={<DirectShearCalculator />} />
+                        <Route path="/permeability-falling-head" element={<PermeabilityFallingHeadCalculator />} />
+                        <Route path="/permeability-constant-head" element={<PermeabilityConstantHeadCalculator />} />
+                        <Route path="/in-situ-density" element={<InSituDensityCalculator />} />
+                        <Route path="/cbr-test" element={<CBRTestCalculator />} />
+                        <Route path="/gsb-grading" element={<GSBGradingCalculator />} />
+                        <Route path="/wbm-grading" element={<WBMGradingCalculator />} />
+                        <Route path="/bituminous-macadam" element={<BituminousMacadamCalculator />} />
+                        <Route path="/dbm-grading" element={<DBMCalculator />} />
+                        <Route path="/wmm-grading" element={<WMMCalculator />} />
+                        <Route path="/bituminous-concrete" element={<BituminousConcreteCalculator />} />
+                        <Route path="/mss-grading" element={<MSSCalculator />} />
+                        <Route path="/sand-asphalt" element={<SandAsphaltCalculator />} />
+                        <Route path="/surface-dressing" element={<SurfaceDressingCalculator />} />
+                        <Route path="/slurry-seal" element={<SlurrySealCalculator />} />
+                        <Route path="/sma-grading" element={<SMACalculator />} />
+                        <Route path="/mastic-asphalt" element={<MasticAsphaltCalculator />} />
+
+                        {/* Blending Aggregates Routes - reusing same calculator components */}
+                        <Route path="/blending-aggregates/gsb-grading-1" element={<GSBGradingCalculator />} />
+                        <Route path="/blending-aggregates/gsb-grading-2" element={<GSBGradingCalculator />} />
+                        <Route path="/blending-aggregates/gsb-grading-3" element={<GSBGradingCalculator />} />
+                        <Route path="/blending-aggregates/gsb-grading-4" element={<GSBGradingCalculator />} />
+                        <Route path="/blending-aggregates/gsb-grading-5" element={<GSBGradingCalculator />} />
+                        <Route path="/blending-aggregates/gsb-grading-6" element={<GSBGradingCalculator />} />
+                        <Route path="/blending-aggregates/wbm-coarse-1" element={<WBMGradingCalculator />} />
+                        <Route path="/blending-aggregates/wbm-coarse-2" element={<WBMGradingCalculator />} />
+                        <Route path="/blending-aggregates/wbm-screening-a" element={<WBMGradingCalculator />} />
+                        <Route path="/blending-aggregates/wbm-screening-b" element={<WBMGradingCalculator />} />
+                        <Route path="/blending-aggregates/wmm" element={<WMMCalculator />} />
+                        <Route path="/blending-aggregates/bm-grading-1" element={<BituminousMacadamCalculator />} />
+                        <Route path="/blending-aggregates/bm-grading-2" element={<BituminousMacadamCalculator />} />
+                        <Route path="/blending-aggregates/dbm-grading-1" element={<DBMCalculator />} />
+                        <Route path="/blending-aggregates/dbm-grading-2" element={<DBMCalculator />} />
+                        <Route path="/blending-aggregates/sand-asphalt" element={<SandAsphaltCalculator />} />
+                        <Route path="/blending-aggregates/bc-grading-1" element={<BituminousConcreteCalculator />} />
+                        <Route path="/blending-aggregates/bc-grading-2" element={<BituminousConcreteCalculator />} />
+                        <Route path="/blending-aggregates/mss-type-a" element={<MSSCalculator />} />
+                        <Route path="/blending-aggregates/mss-type-b" element={<MSSCalculator />} />
+                        <Route path="/blending-aggregates/sd-19mm" element={<SurfaceDressingCalculator />} />
+                        <Route path="/blending-aggregates/sd-13mm" element={<SurfaceDressingCalculator />} />
+                        <Route path="/blending-aggregates/sd-10mm" element={<SurfaceDressingCalculator />} />
+                        <Route path="/blending-aggregates/sd-6mm" element={<SurfaceDressingCalculator />} />
+                        <Route path="/blending-aggregates/slurry-type-1" element={<SlurrySealCalculator />} />
+                        <Route path="/blending-aggregates/slurry-type-2" element={<SlurrySealCalculator />} />
+                        <Route path="/blending-aggregates/slurry-type-3" element={<SlurrySealCalculator />} />
+                        <Route path="/blending-aggregates/sma-13mm" element={<SMACalculator />} />
+                        <Route path="/blending-aggregates/sma-19mm" element={<SMACalculator />} />
+                        <Route path="/blending-aggregates/mastic-coarse" element={<MasticAsphaltCalculator />} />
+                        <Route path="/blending-aggregates/mastic-fine" element={<MasticAsphaltCalculator />} />
+
+                        {/* Sieve Analysis Routes - same paths for sieve analysis */}
+                        <Route path="/sieve-analysis/gsb-grading-1" element={<GSBGradingCalculator />} />
+                        <Route path="/sieve-analysis/gsb-grading-2" element={<GSBGradingCalculator />} />
+                        <Route path="/sieve-analysis/gsb-grading-3" element={<GSBGradingCalculator />} />
+                        <Route path="/sieve-analysis/gsb-grading-4" element={<GSBGradingCalculator />} />
+                        <Route path="/sieve-analysis/gsb-grading-5" element={<GSBGradingCalculator />} />
+                        <Route path="/sieve-analysis/gsb-grading-6" element={<GSBGradingCalculator />} />
+                        <Route path="/sieve-analysis/wbm-coarse-1" element={<WBMGradingCalculator />} />
+                        <Route path="/sieve-analysis/wbm-coarse-2" element={<WBMGradingCalculator />} />
+                        <Route path="/sieve-analysis/wbm-screening-a" element={<WBMGradingCalculator />} />
+                        <Route path="/sieve-analysis/wbm-screening-b" element={<WBMGradingCalculator />} />
+                        <Route path="/sieve-analysis/wmm" element={<WMMCalculator />} />
+                        <Route path="/sieve-analysis/bm-grading-1" element={<BituminousMacadamCalculator />} />
+                        <Route path="/sieve-analysis/bm-grading-2" element={<BituminousMacadamCalculator />} />
+                        <Route path="/sieve-analysis/dbm-grading-1" element={<DBMCalculator />} />
+                        <Route path="/sieve-analysis/dbm-grading-2" element={<DBMCalculator />} />
+                        <Route path="/sieve-analysis/sand-asphalt" element={<SandAsphaltCalculator />} />
+                        <Route path="/sieve-analysis/bc-grading-1" element={<BituminousConcreteCalculator />} />
+                        <Route path="/sieve-analysis/bc-grading-2" element={<BituminousConcreteCalculator />} />
+                        <Route path="/sieve-analysis/mss-type-a" element={<MSSCalculator />} />
+                        <Route path="/sieve-analysis/mss-type-b" element={<MSSCalculator />} />
+                        <Route path="/sieve-analysis/sd-19mm" element={<SurfaceDressingCalculator />} />
+                        <Route path="/sieve-analysis/sd-13mm" element={<SurfaceDressingCalculator />} />
+                        <Route path="/sieve-analysis/sd-10mm" element={<SurfaceDressingCalculator />} />
+                        <Route path="/sieve-analysis/sd-6mm" element={<SurfaceDressingCalculator />} />
+                        <Route path="/sieve-analysis/slurry-type-1" element={<SlurrySealCalculator />} />
+                        <Route path="/sieve-analysis/slurry-type-2" element={<SlurrySealCalculator />} />
+                        <Route path="/sieve-analysis/slurry-type-3" element={<SlurrySealCalculator />} />
+                        <Route path="/sieve-analysis/sma-13mm" element={<SMACalculator />} />
+                        <Route path="/sieve-analysis/sma-19mm" element={<SMACalculator />} />
+                        <Route path="/sieve-analysis/mastic-coarse" element={<MasticAsphaltCalculator />} />
+                        <Route path="/sieve-analysis/mastic-fine" element={<MasticAsphaltCalculator />} />
                     </Routes>
                 </div>
                 <Footer />

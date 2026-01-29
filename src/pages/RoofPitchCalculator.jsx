@@ -136,6 +136,12 @@ export default function RoofPitchCalculator() {
                             <p className="text-gray-600">The roof covering that is intended to allow run-off of rain and snow, heat, wind, ultraviolet rays and all the other environmental effects that tend to cause materials to deteriorate. Most roof covers are installed over a water resistant underlayment frequently felt paper, the black material you may have noticed on roofs before application of the final roof covering that, as long as it stays in place, provides an extra surface where water that gets past the roof covering can drain off the roof. Most of the time, areas where higher levels of snow or rainfall are common prefer to build roofs with steeper pitch. Well-built roofs are designed to prevent pooling of water or accumulation of snow.</p>
                         </div>
                     </section>
+
+                    {/* AdSense Placeholder */}
+                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-8 text-center text-gray-500 mb-8">
+                        <i className="fas fa-ad text-3xl mb-2"></i>
+                        <p className="text-sm">Advertisement</p>
+                    </div>
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
@@ -155,6 +161,11 @@ export default function RoofPitchCalculator() {
                                 <div><div className="text-xs text-gray-500">Angle</div><div className="text-lg font-bold text-amber-500">{results?.angle} Degree</div></div>
                             </div>
                         </div>
+                    </div>
+
+                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">
+                        <i className="fas fa-ad text-2xl mb-1"></i>
+                        <p className="text-xs">Ad Space</p>
                     </div>
                 </aside>
             </div>

@@ -107,6 +107,12 @@ export default function AntiTermiteCalculator() {
                             <p className="text-gray-600">Termite control in buildings is very important as the damage likely to be caused by the termites is huge. Wood is one of the cellulosic materials which termites damage, cellulose forming their basic nutrient. They also damage materials of organic origin with a cellulosic base, household articles like furniture, furnishings, clothing, stationery, etc. Termites are also known to damage noncellulosic substances in their search for food rubber, leather, plastics, neoprene as well as lead coating used for covering of underground cables are damaged by termites. The widespread damage by termites, high constructional cost of buildings have necessitated evolving suitable measures for preventing access of termites to buildings.</p>
                         </div>
                     </section>
+
+                    {/* AdSense Placeholder */}
+                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-8 text-center text-gray-500 mb-8">
+                        <i className="fas fa-ad text-3xl mb-2"></i>
+                        <p className="text-sm">Advertisement</p>
+                    </div>
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
@@ -122,6 +128,11 @@ export default function AntiTermiteCalculator() {
                             <div className="flex gap-2 mb-5"><button onClick={calculate} className="flex-1 bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium">Calculate</button><button className="bg-red-500 text-white px-4 py-2.5 rounded-lg">Reset</button></div>
                             <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-4 text-center"><div className="text-xs text-gray-500">Quantity of Anti Termite</div><div className="text-2xl font-bold text-red-600">{results?.quantityMl} ml</div><div className="text-sm text-gray-600">Area: {results?.areaM2} m² | {results?.areaFt2} ft²</div></div>
                         </div>
+                    </div>
+
+                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">
+                        <i className="fas fa-ad text-2xl mb-1"></i>
+                        <p className="text-xs">Ad Space</p>
                     </div>
                 </aside>
             </div>

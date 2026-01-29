@@ -129,6 +129,12 @@ export default function SolarWaterHeaterCalculator() {
                             </div>
                         </div>
                     </section>
+
+                    {/* AdSense Placeholder */}
+                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-8 text-center text-gray-500 mb-8">
+                        <i className="fas fa-ad text-3xl mb-2"></i>
+                        <p className="text-sm">Advertisement</p>
+                    </div>
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
@@ -155,6 +161,11 @@ export default function SolarWaterHeaterCalculator() {
                                 <div className="text-lg text-gray-600">liters</div>
                             </div>
                         </div>
+                    </div>
+
+                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">
+                        <i className="fas fa-ad text-2xl mb-1"></i>
+                        <p className="text-xs">Ad Space</p>
                     </div>
                 </aside>
             </div>

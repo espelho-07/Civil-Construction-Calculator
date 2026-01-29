@@ -110,6 +110,12 @@ export default function AsphaltCalculator() {
                             <p className="text-gray-600">Asphalt is a flexible pavement built in multiple layers with a continuous flow of material moving through the asphalt paver. Asphalt has low initial costs, lasts longer, and due to its recyclability, has residual value greater than other pavements. The smooth surface of asphalt provides maximum tire contact with the roadway, increasing skid resistance. The dark color of asphalt reduces glare, helps melt snow and ice, and provides a high contrast for lane markings. Asphalt pavements are fast to construct. Because asphalt effectively needs no "cure" time, motorists can use roadways as soon as the last roller leaves the construction zone.</p>
                         </div>
                     </section>
+
+                    {/* AdSense Placeholder */}
+                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-8 text-center text-gray-500 mb-8">
+                        <i className="fas fa-ad text-3xl mb-2"></i>
+                        <p className="text-sm">Advertisement</p>
+                    </div>
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
@@ -126,6 +132,11 @@ export default function AsphaltCalculator() {
                             <div className="flex gap-2 mb-5"><button onClick={calculate} className="flex-1 bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium">Calculate</button><button className="bg-red-500 text-white px-4 py-2.5 rounded-lg">Reset</button></div>
                             <div className="bg-[#f8f9fa] rounded-xl p-4 text-center"><div className="text-xs text-gray-500">Quantity of Asphalt</div><div className="text-2xl font-bold text-[#3B68FC]">{results?.totalQuantityTon} Ton</div><div className="text-sm text-gray-600">Volume: {results?.volumeM3} m³</div></div>
                         </div>
+                    </div>
+
+                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">
+                        <i className="fas fa-ad text-2xl mb-1"></i>
+                        <p className="text-xs">Ad Space</p>
                     </div>
                 </aside>
             </div>

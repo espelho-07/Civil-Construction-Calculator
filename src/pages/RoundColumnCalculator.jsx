@@ -165,6 +165,12 @@ export default function RoundColumnCalculator() {
                             </div>
                         </div>
                     </section>
+
+                    {/* AdSense Placeholder */}
+                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-8 text-center text-gray-500 mb-8">
+                        <i className="fas fa-ad text-3xl mb-2"></i>
+                        <p className="text-sm">Advertisement</p>
+                    </div>
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
@@ -182,6 +188,11 @@ export default function RoundColumnCalculator() {
                             <div className="flex gap-2 mb-5"><button onClick={calculate} className="flex-1 bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium">Calculate</button><button className="bg-red-500 text-white px-4 py-2.5 rounded-lg">Reset</button></div>
                             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 text-center"><div className="text-xs text-gray-500">Total Volume</div><div className="text-xl font-bold text-[#3B68FC]">{results?.volume} m³</div><div className="text-sm text-gray-500">{results?.volumeFt3} ft³</div></div>
                         </div>
+                    </div>
+
+                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">
+                        <i className="fas fa-ad text-2xl mb-1"></i>
+                        <p className="text-xs">Ad Space</p>
                     </div>
                 </aside>
             </div>
