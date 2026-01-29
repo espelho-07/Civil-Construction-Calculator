@@ -23,7 +23,7 @@ const mostSearched = [
 ];
 
 // All calculators for search
-const allCalculators = [
+export const allCalculators = [
     // Quantity Estimator
     { name: 'Construction Cost Calculator', slug: '/construction-cost', icon: 'fa-rupee-sign', category: 'Quantity Estimator' },
     { name: 'Carpet Area Calculator', slug: '/carpet-area', icon: 'fa-vector-square', category: 'Quantity Estimator' },
@@ -291,7 +291,7 @@ export default function HomePage() {
                                 </div>
 
                                 <h2 className="text-3xl md:text-4xl font-bold text-[#0A0A0A] mb-4">
-                                    Construction Calculators
+                                    Civil Engineering Calculators
                                     <span className="block text-[#3B68FC] mt-1">Mobile App</span>
                                 </h2>
 
@@ -302,13 +302,13 @@ export default function HomePage() {
                                 {/* Features */}
                                 <div className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8">
                                     <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/80 border border-[#e5e7eb] rounded-lg text-[#0A0A0A] text-sm shadow-sm">
-                                        <i className="fas fa-calculator text-[#3B68FC]"></i> 25+ Calculators
+                                        <i className="fas fa-calculator text-[#3B68FC]"></i> {allCalculators.length}+ Calculators
                                     </span>
                                     <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/80 border border-[#e5e7eb] rounded-lg text-[#0A0A0A] text-sm shadow-sm">
                                         <i className="fas fa-wifi-slash text-green-500"></i> Works Offline
                                     </span>
                                     <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/80 border border-[#e5e7eb] rounded-lg text-[#0A0A0A] text-sm shadow-sm">
-                                        <i className="fas fa-star text-yellow-500"></i> 4.5 Rating
+                                        <i className="fas fa-star text-yellow-500"></i> 4.0 Rating
                                     </span>
                                 </div>
 

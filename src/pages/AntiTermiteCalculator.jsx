@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function AntiTermiteCalculator() {
     const [unit, setUnit] = useState('Meter');
@@ -38,7 +39,17 @@ export default function AntiTermiteCalculator() {
             <CategoryNav activeCategory="quantity-estimator" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Anti-Termite Calculator <span className="text-sm font-normal text-gray-500">IS 6313-2</span></h1>
+                    <div className="flex items-center justify-between mb-2">
+                        <h1 className="text-3xl font-bold text-[#0A0A0A]">Anti-Termite Calculator <span className="text-sm font-normal text-gray-500">IS 6313-2</span></h1>
+                        <CalculatorActions
+                            calculatorSlug="anti-termite-calculator"
+                            calculatorName="Anti-Termite Calculator"
+                            calculatorIcon="fa-bug"
+                            category="Quantity Estimator"
+                            inputs={{ unit, length, lengthCm, width, widthCm }}
+                            outputs={results || {}}
+                        />
+                    </div>
                     <p className="text-[#6b7280] mb-6">Calculate the quantity of anti-termite chemical required</p>
 
                     <section className="mb-8">

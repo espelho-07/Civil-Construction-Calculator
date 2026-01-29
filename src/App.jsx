@@ -1,5 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import { AuthProvider } from './components/auth/AuthContext';
+import { SettingsProvider, useSettings } from './contexts/SettingsContext';
+import { GuestRoute, ProtectedRoute } from './components/auth/ProtectedRoute';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
@@ -10,6 +13,25 @@ import ComingSoonPage from './pages/ComingSoonPage';
 import ContactPage from './pages/ContactPage';
 import TermsOfUsePage from './pages/TermsOfUsePage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import NotFoundPage from './pages/NotFoundPage';
+// Auth Pages
+import LoginPage from './pages/auth/LoginPage';
+import SignupPage from './pages/auth/SignupPage';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
+import ResetPasswordPage from './pages/auth/ResetPasswordPage';
+import VerifyEmailPage from './pages/auth/VerifyEmailPage';
+import VerifyEmailRequiredPage from './pages/auth/VerifyEmailRequiredPage';
+// User Profile Pages
+import ProfilePage from './pages/ProfilePage';
+import EditProfilePage from './pages/EditProfilePage';
+import SettingsPage from './pages/SettingsPage';
+import HistoryPage from './pages/HistoryPage';
+import SavedPage from './pages/SavedPage';
+// Dashboard Pages
+import DashboardPage from './pages/dashboard/DashboardPage';
+import CalculationsPage from './pages/dashboard/CalculationsPage';
+import SecurityPage from './pages/dashboard/SecurityPage';
+// Calculator Pages
 import CountertopCalculator from './pages/CountertopCalculator';
 import BitumenPrimeCoatCalculator from './pages/BitumenPrimeCoatCalculator';
 import BitumenTackCoatCalculator from './pages/BitumenTackCoatCalculator';
@@ -84,11 +106,15 @@ function ScrollToTop() {
     return null;
 }
 
-function App() {
+// Main app content with settings-aware background
+function AppContent() {
+    const { isDarkMode } = useSettings();
+    const bgColor = isDarkMode ? 'bg-[#0f172a]' : 'bg-[#F7F9FF]';
+
     return (
         <Router>
             <ScrollToTop />
-            <div className="min-h-screen flex flex-col bg-[#F7F9FF]">
+            <div className={`min-h-screen flex flex-col ${bgColor} transition-colors duration-300`}>
                 <Header />
                 <ScrollToTopButton />
                 <div className="flex-1">
@@ -228,11 +254,40 @@ function App() {
                         <Route path="/sieve-analysis/sma-19mm" element={<SMACalculator />} />
                         <Route path="/sieve-analysis/mastic-coarse" element={<MasticAsphaltCalculator />} />
                         <Route path="/sieve-analysis/mastic-fine" element={<MasticAsphaltCalculator />} />
+                        {/* Auth Routes */}
+                        <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />
+                        <Route path="/signup" element={<GuestRoute><SignupPage /></GuestRoute>} />
+                        <Route path="/forgot-password" element={<GuestRoute><ForgotPasswordPage /></GuestRoute>} />
+                        <Route path="/reset-password" element={<ResetPasswordPage />} />
+                        <Route path="/verify-email" element={<VerifyEmailPage />} />
+                        <Route path="/verify-email-required" element={<VerifyEmailRequiredPage />} />
+                        {/* User Profile Routes (Protected) */}
+                        <Route path="/profile" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+                        <Route path="/profile/edit" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
+                        <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+                        <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
+                        <Route path="/saved" element={<ProtectedRoute><SavedPage /></ProtectedRoute>} />
+                        {/* Dashboard Routes (Protected) */}
+                        <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+                        <Route path="/dashboard/calculations" element={<ProtectedRoute><CalculationsPage /></ProtectedRoute>} />
+                        <Route path="/dashboard/security" element={<ProtectedRoute><SecurityPage /></ProtectedRoute>} />
+                        {/* 404 Route */}
+                        <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                 </div>
                 <Footer />
             </div>
         </Router>
+    );
+}
+
+function App() {
+    return (
+        <SettingsProvider>
+            <AuthProvider>
+                <AppContent />
+            </AuthProvider>
+        </SettingsProvider>
     );
 }
 

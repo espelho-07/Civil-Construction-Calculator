@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 // Info Tooltip Component
 function InfoTooltip({ text }) {
@@ -140,7 +141,17 @@ export default function BitumenPrimeCoatCalculator() {
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 {/* Main Content */}
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Bitumen Calculator (Prime Coat) - IS : 8887</h1>
+                    <div className="flex items-center justify-between mb-2">
+                        <h1 className="text-3xl font-bold text-[#0A0A0A]">Bitumen Calculator (Prime Coat) - IS : 8887</h1>
+                        <CalculatorActions
+                            calculatorSlug="bitumen-prime-coat"
+                            calculatorName="Bitumen Prime Coat Calculator"
+                            calculatorIcon="fa-fill-drip"
+                            category="Road Construction"
+                            inputs={{ unit, surfaceType, lengthMain, lengthSub, breadthMain, breadthSub, rateOfSpray }}
+                            outputs={result || {}}
+                        />
+                    </div>
                     <p className="text-[#6b7280] mb-6">Calculate bitumen quantity for prime coat application on road surfaces</p>
 
                     {/* What is Bitumen Prime Coat? */}

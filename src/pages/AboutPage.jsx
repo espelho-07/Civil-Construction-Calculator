@@ -62,7 +62,7 @@ export default function AboutPage() {
                             Why Choose Us?
                         </h2>
                         <p className="text-[#0A0A0A] leading-relaxed">
-                            With Construction Calculators you could do tedious tasks simply in a few clicks. Our calculator is <strong>fast</strong>, <strong>accurate</strong>, <strong>user-friendly</strong>, and <strong>free to use</strong>. Along with the description of each test, it becomes easy to understand for beginners as well.
+                            With Civil Engineering Calculators you could do tedious tasks simply in a few clicks. Our calculator is <strong>fast</strong>, <strong>accurate</strong>, <strong>user-friendly</strong>, and <strong>free to use</strong>. Along with the description of each test, it becomes easy to understand for beginners as well.
                         </p>
                     </div>
 

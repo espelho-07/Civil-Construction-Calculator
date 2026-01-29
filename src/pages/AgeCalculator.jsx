@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function AgeCalculator() {
     const [birthDate, setBirthDate] = useState('');
@@ -42,8 +43,20 @@ export default function AgeCalculator() {
             <CategoryNav activeCategory="other" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Age Calculator</h1>
-                    <p className="text-[#6b7280] mb-6">Calculate your age.</p>
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Age Calculator</h1>
+                            <p className="text-[#6b7280]">Calculate your age.</p>
+                        </div>
+                        <CalculatorActions
+                            calculatorSlug="age-calculator"
+                            calculatorName="Age Calculator"
+                            calculatorIcon="fa-birthday-cake"
+                            category="Other"
+                            inputs={{ birthDate }}
+                            outputs={age ? { years: age.years, months: age.months, days: age.days } : {}}
+                        />
+                    </div>
 
                     <section className="mb-8">
                         <div className="bg-white rounded-xl border border-[#e5e7eb] overflow-hidden p-6">

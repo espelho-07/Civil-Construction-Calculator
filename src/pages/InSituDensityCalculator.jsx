@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function InSituDensityCalculator() {
     const [diameterCore, setDiameterCore] = useState(10);
@@ -62,7 +63,17 @@ export default function InSituDensityCalculator() {
             <CategoryNav activeCategory="soil-test" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">IN-SITU Density By Core Cutter Method <span className="text-sm font-normal text-gray-500">IS: 2720-29</span></h1>
+                    <div className="flex items-center justify-between mb-2">
+                        <h1 className="text-3xl font-bold text-[#0A0A0A]">IN-SITU Density By Core Cutter Method <span className="text-sm font-normal text-gray-500">IS: 2720-29</span></h1>
+                        <CalculatorActions
+                            calculatorSlug="in-situ-density"
+                            calculatorName="In-Situ Density Calculator"
+                            calculatorIcon="fa-circle"
+                            category="Soil Test"
+                            inputs={{ diameterCore, heightCore, massCore, tests }}
+                            outputs={results || {}}
+                        />
+                    </div>
                     <p className="text-[#6b7280] mb-6">Determine field density of soil by core cutter method</p>
 
                     <section className="mb-8">

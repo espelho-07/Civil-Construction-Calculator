@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function PercentageCalculator() {
     const [val1, setVal1] = useState('');
@@ -39,8 +40,20 @@ export default function PercentageCalculator() {
             <CategoryNav activeCategory="math" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Percentage Calculator</h1>
-                    <p className="text-[#6b7280] mb-6">Calculate percentages easily.</p>
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Percentage Calculator</h1>
+                            <p className="text-[#6b7280]">Calculate percentages easily.</p>
+                        </div>
+                        <CalculatorActions
+                            calculatorSlug="percentage-calculator"
+                            calculatorName="Percentage Calculator"
+                            calculatorIcon="fa-percent"
+                            category="Math"
+                            inputs={{ val1, val2 }}
+                            outputs={{ result }}
+                        />
+                    </div>
 
                     <section className="mb-8">
                         <div className="bg-white rounded-xl border border-[#e5e7eb] overflow-hidden p-6">

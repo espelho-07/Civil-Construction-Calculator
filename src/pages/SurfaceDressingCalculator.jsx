@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 const SURFACE_DRESSING_SIZES = {
     '19mm': {
@@ -103,8 +104,20 @@ export default function SurfaceDressingCalculator() {
             <CategoryNav activeCategory="sieve-analysis-aggregates" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Surface Dressing</h1>
-                    <p className="text-[#6b7280] mb-6">{currentSize.title}</p>
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Surface Dressing</h1>
+                            <p className="text-[#6b7280]">{currentSize.title}</p>
+                        </div>
+                        <CalculatorActions
+                            calculatorSlug="surface-dressing-calculator"
+                            calculatorName="Surface Dressing Calculator"
+                            calculatorIcon="fa-road"
+                            category="Quantity Estimator"
+                            inputs={{ size, numMaterials, sampleWeight }}
+                            outputs={results || {}}
+                        />
+                    </div>
 
                     {/* What is Surface Dressing? */}
                     <section className="mb-8">

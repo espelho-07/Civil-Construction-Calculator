@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function WMMCalculator() {
     const [numMaterials, setNumMaterials] = useState(2);
@@ -75,7 +76,17 @@ export default function WMMCalculator() {
             <CategoryNav activeCategory="sieve-analysis-aggregates" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Wet Mix Macadam (WMM)</h1>
+                    <div className="flex items-center justify-between mb-2">
+                        <h1 className="text-3xl font-bold text-[#0A0A0A]">Wet Mix Macadam (WMM)</h1>
+                        <CalculatorActions
+                            calculatorSlug="wmm-calculator"
+                            calculatorName="WMM Calculator"
+                            calculatorIcon="fa-road"
+                            category="Sieve Analysis"
+                            inputs={{ numMaterials, sampleWeight }}
+                            outputs={results || {}}
+                        />
+                    </div>
                     <p className="text-[#6b7280] mb-6">Blending of aggregates as per MoRTH specifications</p>
 
                     <section className="mb-8">

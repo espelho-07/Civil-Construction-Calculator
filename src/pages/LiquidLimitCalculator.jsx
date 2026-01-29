@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function LiquidLimitCalculator() {
     const [trials, setTrials] = useState([
@@ -57,7 +58,17 @@ export default function LiquidLimitCalculator() {
             <CategoryNav activeCategory="soil-test" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Liquid Limit of Soil <span className="text-sm font-normal text-gray-500">Casagrande Apparatus (IS: 9259)</span></h1>
+                    <div className="flex items-center justify-between mb-2">
+                        <h1 className="text-3xl font-bold text-[#0A0A0A]">Liquid Limit of Soil <span className="text-sm font-normal text-gray-500">Casagrande Apparatus (IS: 9259)</span></h1>
+                        <CalculatorActions
+                            calculatorSlug="liquid-limit"
+                            calculatorName="Liquid Limit Calculator"
+                            calculatorIcon="fa-water"
+                            category="Soil Test"
+                            inputs={{ trials }}
+                            outputs={{ liquidLimit: liquidLimit || 0 }}
+                        />
+                    </div>
                     <p className="text-[#6b7280] mb-6">Calculate liquid limit of soil using Casagrande method</p>
 
                     <section className="mb-8">

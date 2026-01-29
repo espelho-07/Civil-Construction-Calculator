@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function SteelQuantityCalculator() {
     const [memberType, setMemberType] = useState('Footing');
@@ -47,7 +48,17 @@ export default function SteelQuantityCalculator() {
             <CategoryNav activeCategory="quantity-estimator" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Steel Quantity Calculator</h1>
+                    <div className="flex items-center justify-between mb-2">
+                        <h1 className="text-3xl font-bold text-[#0A0A0A]">Steel Quantity Calculator</h1>
+                        <CalculatorActions
+                            calculatorSlug="steel-quantity"
+                            calculatorName="Steel Quantity Calculator"
+                            calculatorIcon="fa-calculator"
+                            category="Quantity Estimator"
+                            inputs={{ memberType, concreteQuantity }}
+                            outputs={results || {}}
+                        />
+                    </div>
                     <p className="text-[#6b7280] mb-6">Calculate steel quantity based on member type and concrete volume</p>
 
                     <section className="mb-8">

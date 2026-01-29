@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 // Info Tooltip Component
 function InfoTooltip({ text }) {
@@ -100,7 +101,17 @@ export default function AggregateWaterAbsorptionCalculator() {
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 items-start">
                 {/* Main Content */}
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Aggregate Water Absorption Test</h1>
+                    <div className="flex items-center justify-between mb-2">
+                        <h1 className="text-3xl font-bold text-[#0A0A0A]">Aggregate Water Absorption Test</h1>
+                        <CalculatorActions
+                            calculatorSlug="aggregate-water-absorption"
+                            calculatorName="Aggregate Water Absorption Calculator"
+                            calculatorIcon="fa-tint"
+                            category="Concrete Technology"
+                            inputs={{ dryWeight, saturatedWeight }}
+                            outputs={{ result: result || '' }}
+                        />
+                    </div>
                     <p className="text-[#6b7280] mb-6">IS:2386 (Part III) - Determine water absorption of aggregates</p>
 
                     {/* Calculator */}

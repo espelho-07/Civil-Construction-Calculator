@@ -1,0 +1,24 @@
+# Robots.txt for Civil Engineering Calculators
+# https://civilengineeringcalculators.com
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://civilengineeringcalculators.com/sitemap.xml
+
+# Disallow admin/auth pages from being indexed
+Disallow: /login
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /verify-email
+Disallow: /verify-email-required
+
+# Allow all calculators
+Allow: /cement-concrete
+Allow: /brick-masonry
+Allow: /plastering
+Allow: /steel-weight
+Allow: /carpet-area
+Allow: /construction-cost

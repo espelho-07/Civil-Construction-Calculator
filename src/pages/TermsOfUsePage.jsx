@@ -28,7 +28,7 @@ export default function TermsOfUsePage() {
                             Acceptance of Terms
                         </h2>
                         <p className="text-[#6b7280] leading-relaxed">
-                            By accessing and using Construction Calculators website, you accept and agree to be bound by the terms and provisions of this agreement. If you do not agree to these terms, please do not use our services.
+                            By accessing and using Civil Engineering Calculators website, you accept and agree to be bound by the terms and provisions of this agreement. If you do not agree to these terms, please do not use our services.
                         </p>
                     </section>
 
@@ -54,7 +54,7 @@ export default function TermsOfUsePage() {
                             Intellectual Property
                         </h2>
                         <p className="text-[#6b7280] leading-relaxed">
-                            All content on this website, including calculators, formulas, text, graphics, and logos, is the property of Construction Calculators and ASWDC, Darshan University. Unauthorized reproduction or distribution is prohibited.
+                            All content on this website, including calculators, formulas, text, graphics, and logos, is the property of Civil Engineering Calculators and ASWDC, Darshan University. Unauthorized reproduction or distribution is prohibited.
                         </p>
                     </section>
 

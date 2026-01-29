@@ -28,7 +28,7 @@ export default function PrivacyPolicyPage() {
                             Introduction
                         </h2>
                         <p className="text-[#6b7280] leading-relaxed">
-                            Construction Calculators, developed by ASWDC at Darshan University, respects your privacy. This policy explains how we collect, use, and protect your information when you use our website.
+                            Civil Engineering Calculators, developed by ASWDC at Darshan University, respects your privacy. This policy explains how we collect, use, and protect your information when you use our website.
                         </p>
                     </section>
 

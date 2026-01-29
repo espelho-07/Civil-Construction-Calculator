@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from 'chart.js';
 import { Pie, Bar } from 'react-chartjs-2';
 
@@ -104,8 +105,20 @@ export default function ConstructionCostCalculator() {
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 {/* Main Content */}
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Construction Cost Calculator</h1>
-                    <p className="text-[#6b7280] mb-6">Estimate total construction cost and material requirements</p>
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Construction Cost Calculator</h1>
+                            <p className="text-[#6b7280]">Estimate total construction cost and material requirements</p>
+                        </div>
+                        <CalculatorActions
+                            calculatorSlug="construction-cost"
+                            calculatorName="Construction Cost Calculator"
+                            calculatorIcon="fa-rupee-sign"
+                            category="Quantity Estimator"
+                            inputs={{ builtUpArea, costPerSqFt }}
+                            outputs={results || {}}
+                        />
+                    </div>
 
                     {/* Calculation of Cost */}
                     <section className="mb-8">

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function RoofPitchCalculator() {
     const [unit, setUnit] = useState('Meter');
@@ -47,8 +48,20 @@ export default function RoofPitchCalculator() {
             <CategoryNav activeCategory="quantity-estimator" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Roof Pitch Calculator</h1>
-                    <p className="text-[#6b7280] mb-6">Calculate roof pitch, slope, and angle from rise and run</p>
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Roof Pitch Calculator</h1>
+                            <p className="text-[#6b7280]">Calculate roof pitch, slope, and angle from rise and run</p>
+                        </div>
+                        <CalculatorActions
+                            calculatorSlug="roof-pitch-calculator"
+                            calculatorName="Roof Pitch Calculator"
+                            calculatorIcon="fa-home"
+                            category="Quantity Estimator"
+                            inputs={{ unit, rise, run }}
+                            outputs={results || {}}
+                        />
+                    </div>
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-calculator text-[#3B68FC] mr-2"></i>Roof Pitch Calculation</h2>

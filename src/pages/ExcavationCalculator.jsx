@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function ExcavationCalculator() {
     const [unit, setUnit] = useState('Meter');
@@ -68,8 +69,20 @@ export default function ExcavationCalculator() {
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 {/* Main Content */}
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Excavation Calculator <span className="text-sm font-normal text-gray-500">IS 3764</span></h1>
-                    <p className="text-[#6b7280] mb-6">Calculate the total volume of excavation for earthwork</p>
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Excavation Calculator <span className="text-sm font-normal text-gray-500">IS 3764</span></h1>
+                            <p className="text-[#6b7280]">Calculate the total volume of excavation for earthwork</p>
+                        </div>
+                        <CalculatorActions
+                            calculatorSlug="excavation"
+                            calculatorName="Excavation Calculator"
+                            calculatorIcon="fa-mountain"
+                            category="Quantity Estimator"
+                            inputs={{ unit, length, lengthCm, width, widthCm, depth, depthCm }}
+                            outputs={results || {}}
+                        />
+                    </div>
 
                     {/* Result Display */}
                     <section className="mb-8">

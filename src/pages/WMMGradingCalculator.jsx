@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 const WMM_GRADING = {
     title: 'Wet Mix Macadam (WMM) Grading',
@@ -83,7 +84,17 @@ export default function WMMGradingCalculator() {
             <CategoryNav activeCategory="blending" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Wet Mix Macadam (WMM)</h1>
+                    <div className="flex items-center justify-between mb-2">
+                        <h1 className="text-3xl font-bold text-[#0A0A0A]">Wet Mix Macadam (WMM)</h1>
+                        <CalculatorActions
+                            calculatorSlug="wmm-grading"
+                            calculatorName="WMM Grading Calculator"
+                            calculatorIcon="fa-road"
+                            category="Sieve Analysis"
+                            inputs={{ numMaterials, sampleWeight }}
+                            outputs={results || {}}
+                        />
+                    </div>
                     <p className="text-[#6b7280] mb-6">{WMM_GRADING.title}</p>
 
                     {/* What is WMM? */}

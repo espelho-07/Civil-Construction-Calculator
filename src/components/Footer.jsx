@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { allCalculators } from '../pages/HomePage';
 
 const calculatorCategories = [
     { name: 'Concrete Technology', slug: 'concrete-technology' },
@@ -32,13 +33,7 @@ export default function Footer() {
                     {/* Brand Section */}
                     <div className="lg:col-span-2">
                         <Link to="/" className="flex items-center gap-3 mb-4">
-                            <div className="w-12 h-12 bg-gradient-to-br from-[#3B68FC] to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                                <i className="fas fa-hard-hat text-white text-xl"></i>
-                            </div>
-                            <div>
-                                <span className="block font-bold text-lg text-[#0A0A0A]">Civil Engineering</span>
-                                <span className="block text-sm text-[#6b7280]">Calculators</span>
-                            </div>
+                            <img src="/logo-new.png" alt="Civil Engineering Calculators" className="h-12 w-auto" />
                         </Link>
                         <p className="text-[#6b7280] text-sm mb-6 max-w-sm">
                             Free online tools for civil engineers, architects, and construction professionals. Calculate concrete, bricks, steel, soil tests and more.
@@ -140,7 +135,7 @@ export default function Footer() {
                 <div className="max-w-6xl mx-auto px-6 py-6">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                         <p className="text-sm text-[#6b7280]">
-                            © 2024 Construction Calculators. Made with ❤️ for Engineers.
+                            © 2024 Civil Engineering Calculators. Made with ❤️ for Engineers.
                         </p>
                         <div className="flex items-center gap-4">
                             <span className="text-xs text-[#9ca3af] flex items-center gap-1">
@@ -149,7 +144,7 @@ export default function Footer() {
                             </span>
                             <span className="text-xs text-[#9ca3af] flex items-center gap-1">
                                 <i className="fas fa-calculator text-[#3B68FC]"></i>
-                                100+ Calculators
+                                {allCalculators.length}+ Calculators
                             </span>
                             <span className="text-xs text-[#9ca3af] flex items-center gap-1">
                                 <i className="fas fa-globe text-blue-400"></i>

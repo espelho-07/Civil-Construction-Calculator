@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function WaterContentCalculator() {
     const [w1, setW1] = useState(30);
@@ -38,8 +39,20 @@ export default function WaterContentCalculator() {
             <CategoryNav activeCategory="soil-test" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Determination of water content for soil</h1>
-                    <p className="text-[#6b7280] mb-6">Calculate water content (moisture) of soil</p>
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Determination of water content for soil</h1>
+                            <p className="text-[#6b7280]">Calculate water content (moisture) of soil</p>
+                        </div>
+                        <CalculatorActions
+                            calculatorSlug="water-content"
+                            calculatorName="Water Content Calculator"
+                            calculatorIcon="fa-tint"
+                            category="Soil Engineering"
+                            inputs={{ w1, w2, w3 }}
+                            outputs={results || {}}
+                        />
+                    </div>
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-info-circle text-[#3B68FC] mr-2"></i>What is the need of water content determination (determination of moisture) of Soil?</h2>

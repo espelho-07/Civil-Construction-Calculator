@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function SolarWaterHeaterCalculator() {
     const [noOfPersons, setNoOfPersons] = useState(7);
@@ -35,8 +36,20 @@ export default function SolarWaterHeaterCalculator() {
             <CategoryNav activeCategory="quantity-estimator" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Solar Water Heater Calculator</h1>
-                    <p className="text-[#6b7280] mb-6">Calculate solar water heater capacity based on family size</p>
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Solar Water Heater Calculator</h1>
+                            <p className="text-[#6b7280]">Calculate solar water heater capacity based on family size</p>
+                        </div>
+                        <CalculatorActions
+                            calculatorSlug="solar-water-heater-calculator"
+                            calculatorName="Solar Water Heater Calculator"
+                            calculatorIcon="fa-solar-panel"
+                            category="Quantity Estimator"
+                            inputs={{ noOfPersons }}
+                            outputs={results || {}}
+                        />
+                    </div>
 
                     {/* Result Display */}
                     <section className="mb-8">

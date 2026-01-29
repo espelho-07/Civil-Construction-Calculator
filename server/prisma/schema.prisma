@@ -1,0 +1,199 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Roles Table
+model Role {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  users       User[]
+}
+
+// Users Table
+model User {
+  id                      Int                      @id @default(autoincrement())
+  fullName                String
+  email                   String                   @unique
+  passwordHash            String
+  phone                   String?
+  roleId                  Int                      @default(2)
+  role                    Role                     @relation(fields: [roleId], references: [id])
+  isEmailVerified         Boolean                  @default(false)
+  isActive                Boolean                  @default(true)
+  failedLoginCount        Int                      @default(0)
+  lockedUntil             DateTime?
+  lastLoginAt             DateTime?
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  
+  // Auth relations
+  emailVerificationTokens EmailVerificationToken[]
+  passwordResetTokens     PasswordResetToken[]
+  refreshTokens           RefreshToken[]
+  securityLogs            SecurityLog[]
+  
+  // Dashboard relations
+  profile                 UserProfile?
+  calculations            Calculation[]
+  favorites               FavoriteCalculator[]
+  preferences             UserPreferences?
+  loginHistory            LoginHistory[]
+}
+
+// User Profile (extended info)
+model UserProfile {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  avatarUrl    String?
+  profession   String?  // Student, Engineer, Contractor, Architect
+  designation  String?  // Jr. Engineer, Sr. Architect, Professor
+  company      String?  // Company or College name
+  location     String?  // City, State
+  bio          String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// Calculation History
+model Calculation {
+  id             Int       @id @default(autoincrement())
+  userId         Int
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  calculatorSlug String    // cement-concrete, steel-weight, etc.
+  calculatorName String    // Display name
+  calculatorIcon String?   // Font Awesome icon class
+  inputs         String    // JSON string of input values
+  outputs        String    // JSON string of output values
+  isSaved        Boolean   @default(false)
+  isDeleted      Boolean   @default(false)
+  projectName    String?   // Optional project grouping
+  notes          String?   // User notes
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([calculatorSlug])
+  @@index([isSaved])
+  @@index([createdAt])
+}
+
+// Favorite Calculators
+model FavoriteCalculator {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  calculatorSlug String
+  calculatorName String
+  calculatorIcon String?
+  category       String?
+  createdAt      DateTime @default(now())
+
+  @@unique([userId, calculatorSlug])
+  @@index([userId])
+}
+
+// User Preferences
+model UserPreferences {
+  id                  Int      @id @default(autoincrement())
+  userId              Int      @unique
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  unitSystem          String   @default("metric") // metric, imperial
+  darkMode            Boolean  @default(false)
+  compactView         Boolean  @default(false)
+  emailNotifications  Boolean  @default(true)
+  pushNotifications   Boolean  @default(false)
+  language            String   @default("en")
+  // Default material values
+  defaultConcreteGrade String? // M20, M25, M30, etc.
+  defaultSteelGrade    String? // Fe415, Fe500, Fe550
+  defaultCementType    String? // OPC, PPC, PSC
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+// Login History
+model LoginHistory {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipAddress  String?
+  userAgent  String?
+  device     String?  // Mobile, Desktop, Tablet
+  browser    String?  // Chrome, Firefox, Safari, Edge
+  os         String?  // Windows, macOS, Linux, iOS, Android
+  location   String?  // Geo location from IP (City, Country)
+  status     String   // SUCCESS, FAILED, BLOCKED
+  failReason String?  // Wrong password, Account locked, etc.
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// Email Verification Tokens
+model EmailVerificationToken {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+}
+
+// Password Reset Tokens
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  isUsed    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+}
+
+// Refresh Tokens (for JWT refresh token rotation)
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+}
+
+// Security Logs
+model SecurityLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String   // LOGIN, LOGOUT, SIGNUP, PASSWORD_RESET, PROFILE_UPDATE, etc.
+  ipAddress String?
+  userAgent String?
+  status    String   // SUCCESS, FAILED, BLOCKED
+  details   String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}

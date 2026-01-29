@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function PermeabilityFallingHeadCalculator() {
     const [length, setLength] = useState(10);
@@ -54,7 +55,17 @@ export default function PermeabilityFallingHeadCalculator() {
             <CategoryNav activeCategory="soil-test" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Permeability (Falling Head Test) Calculator <span className="text-sm font-normal text-gray-500">IS: 2720</span></h1>
+                    <div className="flex items-center justify-between mb-2">
+                        <h1 className="text-3xl font-bold text-[#0A0A0A]">Permeability (Falling Head Test) Calculator <span className="text-sm font-normal text-gray-500">IS: 2720</span></h1>
+                        <CalculatorActions
+                            calculatorSlug="permeability-falling-head"
+                            calculatorName="Permeability (Falling Head) Calculator"
+                            calculatorIcon="fa-arrow-down"
+                            category="Soil Test"
+                            inputs={{ length, diameterMold, diameterPipe, tests }}
+                            outputs={results || {}}
+                        />
+                    </div>
                     <p className="text-[#6b7280] mb-6">Calculate coefficient of permeability using falling head method</p>
 
                     <section className="mb-8">

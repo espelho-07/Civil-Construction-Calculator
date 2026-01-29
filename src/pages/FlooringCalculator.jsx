@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
@@ -104,8 +105,20 @@ export default function FlooringCalculator() {
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 {/* Main Content */}
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Flooring Calculator (Tiles Calculator)</h1>
-                    <p className="text-[#6b7280] mb-6">Calculate number of tiles, cement and sand for flooring work</p>
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Flooring Calculator</h1>
+                            <p className="text-[#6b7280]">Calculate number of tiles, cement and sand for flooring work</p>
+                        </div>
+                        <CalculatorActions
+                            calculatorSlug="flooring-calculator"
+                            calculatorName="Flooring Calculator"
+                            calculatorIcon="fa-border-all"
+                            category="Quantity Estimator"
+                            inputs={{ unit, length, width, tileSize, ratio }}
+                            outputs={results || {}}
+                        />
+                    </div>
 
                     {/* Flooring Calculation */}
                     <section className="mb-8">

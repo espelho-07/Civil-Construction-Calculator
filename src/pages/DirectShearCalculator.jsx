@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function DirectShearCalculator() {
     const [provingRingConstant, setProvingRingConstant] = useState(1);
@@ -66,7 +67,17 @@ export default function DirectShearCalculator() {
             <CategoryNav activeCategory="soil-test" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Direct Shear Test</h1>
+                    <div className="flex items-center justify-between mb-2">
+                        <h1 className="text-3xl font-bold text-[#0A0A0A]">Direct Shear Test</h1>
+                        <CalculatorActions
+                            calculatorSlug="direct-shear-test"
+                            calculatorName="Direct Shear Test Calculator"
+                            calculatorIcon="fa-compress-arrows-alt"
+                            category="Soil Test"
+                            inputs={{ provingRingConstant, tests }}
+                            outputs={results || {}}
+                        />
+                    </div>
                     <p className="text-[#6b7280] mb-6">Calculate shear strength parameters of soil</p>
 
                     <section className="mb-8">

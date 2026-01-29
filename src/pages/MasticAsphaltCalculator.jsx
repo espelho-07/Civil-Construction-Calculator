@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 const MASTIC_ASPHALT_TYPES = {
     'coarse': {
@@ -93,8 +94,20 @@ export default function MasticAsphaltCalculator() {
             <CategoryNav activeCategory="sieve-analysis-aggregates" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Mastic Asphalt</h1>
-                    <p className="text-[#6b7280] mb-6">{currentType.title}</p>
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Mastic Asphalt</h1>
+                            <p className="text-[#6b7280]">{currentType.title}</p>
+                        </div>
+                        <CalculatorActions
+                            calculatorSlug="mastic-asphalt"
+                            calculatorName="Mastic Asphalt Calculator"
+                            calculatorIcon="fa-fill-drip"
+                            category="Sieve Analysis"
+                            inputs={{ type, numMaterials, sampleWeight }}
+                            outputs={results || {}}
+                        />
+                    </div>
 
                     {/* What is Mastic Asphalt? */}
                     <section className="mb-8">

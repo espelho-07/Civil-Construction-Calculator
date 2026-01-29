@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function PaintWorkCalculator() {
     const [carpetArea, setCarpetArea] = useState(1000);
@@ -53,8 +54,20 @@ export default function PaintWorkCalculator() {
             <CategoryNav activeCategory="quantity-estimator" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Paint Work Calculator</h1>
-                    <p className="text-[#6b7280] mb-6">Calculate paint, primer and putty quantity for wall painting</p>
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Paint Work Calculator</h1>
+                            <p className="text-[#6b7280]">Calculate paint, primer and putty quantity for wall painting</p>
+                        </div>
+                        <CalculatorActions
+                            calculatorSlug="paint-work-calculator"
+                            calculatorName="Paint Work Calculator"
+                            calculatorIcon="fa-paint-roller"
+                            category="Quantity Estimator"
+                            inputs={{ carpetArea, doorWidth, doorHeight, noOfDoors, windowWidth, windowHeight, noOfWindows }}
+                            outputs={results || {}}
+                        />
+                    </div>
 
                     <section className="mb-8">
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">

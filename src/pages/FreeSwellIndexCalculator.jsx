@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function FreeSwellIndexCalculator() {
     const [vd, setVd] = useState(110);
@@ -27,7 +28,17 @@ export default function FreeSwellIndexCalculator() {
             <CategoryNav activeCategory="soil-test" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Determination of Free Swell Index of Soil <span className="text-sm font-normal text-gray-500">Calculate Free Swell Index of Soil</span></h1>
+                    <div className="flex items-center justify-between mb-2">
+                        <h1 className="text-3xl font-bold text-[#0A0A0A]">Determination of Free Swell Index of Soil <span className="text-sm font-normal text-gray-500">Calculate Free Swell Index of Soil</span></h1>
+                        <CalculatorActions
+                            calculatorSlug="free-swell-index"
+                            calculatorName="Free Swell Index Calculator"
+                            calculatorIcon="fa-expand-arrows-alt"
+                            category="Soil Test"
+                            inputs={{ vd, vk }}
+                            outputs={results || {}}
+                        />
+                    </div>
                     <p className="text-[#6b7280] mb-6">Calculate free swell index to determine soil expansion potential</p>
 
                     <section className="mb-8">

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
@@ -85,10 +86,21 @@ export default function PlasterCalculator() {
             <CategoryNav activeCategory="quantity-estimator" />
 
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
-                {/* Main Content */}
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Plaster Calculator</h1>
-                    <p className="text-[#6b7280] mb-6">Calculate cement and sand required for plastering work</p>
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Plaster Calculator</h1>
+                            <p className="text-[#6b7280]">Calculate cement and sand required for plastering work</p>
+                        </div>
+                        <CalculatorActions
+                            calculatorSlug="plaster-calculator"
+                            calculatorName="Plaster Calculator"
+                            calculatorIcon="fa-paint-roller"
+                            category="Quantity Estimator"
+                            inputs={{ unit, plasterType, length, width, ratio }}
+                            outputs={results || {}}
+                        />
+                    </div>
 
                     {/* Plaster Area Calculation */}
                     <section className="mb-8">

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import CalculatorActions from '../components/CalculatorActions';
 
 export default function AsphaltCalculator() {
     const [unit, setUnit] = useState('Meter');
@@ -53,8 +54,20 @@ export default function AsphaltCalculator() {
             <CategoryNav activeCategory="quantity-estimator" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Asphalt Calculator</h1>
-                    <p className="text-[#6b7280] mb-6">Calculate the quantity of asphalt required for road construction</p>
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Asphalt Calculator</h1>
+                            <p className="text-[#6b7280]">Calculate the quantity of asphalt required for road construction</p>
+                        </div>
+                        <CalculatorActions
+                            calculatorSlug="asphalt-calculator"
+                            calculatorName="Asphalt Calculator"
+                            calculatorIcon="fa-road"
+                            category="Quantity Estimator"
+                            inputs={{ unit, length, width, depth }}
+                            outputs={results || {}}
+                        />
+                    </div>
 
                     <section className="mb-8">
                         <div className="bg-white rounded-xl p-6 border">
