@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -14,7 +14,7 @@ datasource db {
 model Role {
   id          Int      @id @default(autoincrement())
   name        String   @unique
-  description String?
+  description String?  @db.Text
   createdAt   DateTime @default(now())
   users       User[]
 }
@@ -60,7 +60,7 @@ model UserProfile {
   designation  String?  // Jr. Engineer, Sr. Architect, Professor
   company      String?  // Company or College name
   location     String?  // City, State
-  bio          String?
+  bio          String?  @db.Text
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -73,12 +73,12 @@ model Calculation {
   calculatorSlug String    // cement-concrete, steel-weight, etc.
   calculatorName String    // Display name
   calculatorIcon String?   // Font Awesome icon class
-  inputs         String    // JSON string of input values
-  outputs        String    // JSON string of output values
+  inputs         String    @db.Text // JSON string of input values
+  outputs        String    @db.Text // JSON string of output values
   isSaved        Boolean   @default(false)
   isDeleted      Boolean   @default(false)
   projectName    String?   // Optional project grouping
-  notes          String?   // User notes
+  notes          String?   @db.Text   // User notes
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
@@ -134,7 +134,7 @@ model LoginHistory {
   os         String?  // Windows, macOS, Linux, iOS, Android
   location   String?  // Geo location from IP (City, Country)
   status     String   // SUCCESS, FAILED, BLOCKED
-  failReason String?  // Wrong password, Account locked, etc.
+  failReason String?  @db.Text // Wrong password, Account locked, etc.
   createdAt  DateTime @default(now())
 
   @@index([userId])
@@ -190,7 +190,7 @@ model SecurityLog {
   ipAddress String?
   userAgent String?
   status    String   // SUCCESS, FAILED, BLOCKED
-  details   String?
+  details   String?  @db.Text
   createdAt DateTime @default(now())
 
   @@index([userId])
