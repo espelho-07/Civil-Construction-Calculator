@@ -84,21 +84,23 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Start server
-const PORT = config.port;
-app.listen(PORT, async () => {
-    console.log(`
-╔═══════════════════════════════════════════════════════════╗
-║     🏗️  Civil Engineering Calculators API Server              ║
-╠═══════════════════════════════════════════════════════════╣
-║  Environment: ${config.nodeEnv.padEnd(42)}║
-║  Port:        ${String(PORT).padEnd(42)}║
-║  Client:      ${config.clientUrl.padEnd(42)}║
-╚═══════════════════════════════════════════════════════════╝
-    `);
+// Start server only if not in Vercel environment
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+    const PORT = config.port;
+    app.listen(PORT, async () => {
+        console.log(`
+    ╔═══════════════════════════════════════════════════════════╗
+    ║     🏗️  Civil Engineering Calculators API Server              ║
+    ╠═══════════════════════════════════════════════════════════╣
+    ║  Environment: ${config.nodeEnv.padEnd(42)}║
+    ║  Port:        ${String(PORT).padEnd(42)}║
+    ║  Client:      ${config.clientUrl.padEnd(42)}║
+    ╚═══════════════════════════════════════════════════════════╝
+        `);
 
-    // Verify email connection
-    await verifyEmailConnection();
-});
+        // Verify email connection
+        await verifyEmailConnection();
+    });
+}
 
 export default app;
