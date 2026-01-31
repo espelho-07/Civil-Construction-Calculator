@@ -2,12 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from 'chart.js';
 import { Pie, Bar } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 export default function ConstructionCostCalculator() {
+    const theme = getThemeClasses('quantity-estimator');
     const [builtUpArea, setBuiltUpArea] = useState(1000);
     const [costPerSqFt, setCostPerSqFt] = useState(1800);
 
@@ -48,6 +50,12 @@ export default function ConstructionCostCalculator() {
             months,
             breakdown,
         });
+    };
+
+    const reset = () => {
+        setBuiltUpArea(1000);
+        setCostPerSqFt(1800);
+        setResults(null);
     };
 
     useEffect(() => {
@@ -123,7 +131,7 @@ export default function ConstructionCostCalculator() {
                     {/* Calculation of Cost */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-calculator text-[#3B68FC]"></i>
+                            <i className={`fas fa-calculator ${theme.text}`}></i>
                             1. Calculation of Cost | Approx amount of cost for given construction is ₹{formatCurrency(results?.totalCost || 0)}
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
@@ -151,31 +159,32 @@ export default function ConstructionCostCalculator() {
                     {/* Material Quantity */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-boxes text-[#3B68FC]"></i>
+                            <i className={`fas fa-boxes ${theme.text}`}></i>
                             2. Quantity of material required for given construction area
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
                             <div className="text-center mb-4">
-                                <span className="text-sm text-gray-600">Quantity of material required for <span className="text-[#3B68FC] font-bold">{builtUpArea} ft²</span></span>
+                                <span className="text-sm text-gray-600">Quantity of material required for <span className={`${theme.text} font-bold`}>{builtUpArea} ft²</span></span>
                             </div>
 
-                            <div className="text-center mb-6 bg-[#f8f9fa] p-4 rounded-xl">
-                                <span className="text-sm text-gray-600">Approx wise <span className="font-bold text-[#3B68FC]">cost on various work of material</span></span>
+                            <div className={`text-center mb-6 ${theme.bgLight} p-4 rounded-xl`}>
+                                <span className="text-sm text-gray-600">Approx wise <span className={`font-bold ${theme.text}`}>cost on various work of material</span></span>
                                 <div className="text-sm text-gray-600">to complete the construction</div>
-                                <div className="text-2xl font-bold text-[#3B68FC]">Rs. {formatCurrency(results?.totalCost || 0)}</div>
+                                <div className={`text-2xl font-bold ${theme.text}`}>Rs. {formatCurrency(results?.totalCost || 0)}</div>
                             </div>
 
                             {/* Material Cards Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {/* Total Cost */}
-                                <div className="bg-white border-2 border-blue-200 rounded-xl p-4 shadow-sm">
+                                {/* Total Cost */}
+                                <div className={`bg-white border-2 border-green-200 rounded-xl p-4 shadow-sm`}>
                                     <div className="flex items-center gap-2 mb-2">
-                                        <i className="fas fa-rupee-sign text-blue-500"></i>
+                                        <i className="fas fa-rupee-sign text-green-600"></i>
                                         <span className="font-bold text-gray-800">Total Cost</span>
                                     </div>
                                     <div className="text-xs text-gray-500 mb-1">(Estimate = Approx cost/sq.ft)</div>
                                     <div className="text-sm text-gray-500">₹ {costPerSqFt}/sq.ft</div>
-                                    <div className="text-2xl font-bold text-blue-600 mt-2">₹{formatCurrency(results?.totalCost || 0)}</div>
+                                    <div className="text-2xl font-bold text-green-600 mt-2">₹{formatCurrency(results?.totalCost || 0)}</div>
                                 </div>
 
                                 {/* Cement */}
@@ -294,17 +303,17 @@ export default function ConstructionCostCalculator() {
                     {/* Construction Cost Estimator Explanation */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-info-circle text-[#3B68FC]"></i>
+                            <i className={`fas fa-info-circle ${theme.text}`}></i>
                             3. Construction Cost Estimator Calculator
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
-                            <p className="text-[#0A0A0A] leading-relaxed mb-4">
+                            <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                 This is a tool to calculate a Average cost of constructing a residential in terms that equals the area of 1 sq.ft that = 144 square inch. Construction cost in India can vary significantly depending on several factors, including location, type of construction, labor costs, material costs, etc.
                             </p>
-                            <p className="text-[#0A0A0A] leading-relaxed mb-4">
+                            <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                 The main area shows that the cost of an average construction building can be costly. For construction where all walls considered a load are typically calculated using square feet based on the type of construction and the materials used.
                             </p>
-                            <p className="text-[#0A0A0A] leading-relaxed">
+                            <p className="text-[#0A0A0A] leading-relaxed text-justify">
                                 The Quantity of Material required determines how much material is used to complete the construction of each task. And use appropriate construction to reach the goal efficiently.
                             </p>
                         </div>
@@ -313,7 +322,7 @@ export default function ConstructionCostCalculator() {
                     {/* Thumb Rules */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-thumbs-up text-green-500"></i>
+                            <i className={`fas fa-thumbs-up ${theme.text}`}></i>
                             Thumb Rule of Quantity of Material for 1000 sq. ft.
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
@@ -340,15 +349,15 @@ export default function ConstructionCostCalculator() {
                     {/* Related Calculators */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-th-large text-[#3B68FC]"></i>
+                            <i className={`fas fa-th-large ${theme.text}`}></i>
                             Related Calculators
                         </h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {relatedCalculators.map((calc) => (
-                                <Link key={calc.name} to={calc.slug} className="bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg hover:border-[#3B68FC] transition-all group">
+                                <Link key={calc.name} to={calc.slug} className={`bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
                                     <div className="flex items-center gap-3">
-                                        <i className={`fas ${calc.icon} text-[#3B68FC] group-hover:scale-110 transition-transform`}></i>
-                                        <span className="text-sm font-medium text-[#0A0A0A] group-hover:text-[#3B68FC]">{calc.name}</span>
+                                        <i className={`fas ${calc.icon} ${theme.text} group-hover:scale-110 transition-transform`}></i>
+                                        <span className={`text-sm font-medium text-[#0A0A0A] group-hover:${theme.text}`}>{calc.name}</span>
                                     </div>
                                 </Link>
                             ))}
@@ -365,9 +374,9 @@ export default function ConstructionCostCalculator() {
                 {/* Calculator Widget (Sidebar) */}
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-hidden border border-[#e5e7eb]">
-                        <div className="px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3 bg-gradient-to-r from-emerald-50 to-teal-50">
-                            <i className="fas fa-rupee-sign text-xl text-emerald-500"></i>
-                            <h2 className="font-semibold text-[#0A0A0A]">CONSTRUCTION COST ESTIMATOR</h2>
+                        <div className={`px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3 bg-gradient-to-r ${theme.gradient}`}>
+                            <i className="fas fa-rupee-sign text-xl text-white"></i>
+                            <h2 className="font-semibold text-white">CONSTRUCTION COST ESTIMATOR</h2>
                         </div>
 
                         <div className="p-5">
@@ -375,7 +384,7 @@ export default function ConstructionCostCalculator() {
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Built-up Area</label>
                                 <div className="relative">
-                                    <input type="number" value={builtUpArea} onChange={(e) => setBuiltUpArea(Number(e.target.value))} className="w-full px-3 py-2 pr-16 border border-[#e5e7eb] rounded-lg text-sm" />
+                                    <input type="number" value={builtUpArea} onChange={(e) => setBuiltUpArea(Number(e.target.value))} className={`w-full px-3 py-2 pr-16 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus}`} />
                                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">ft²</span>
                                 </div>
                             </div>
@@ -383,19 +392,19 @@ export default function ConstructionCostCalculator() {
                             <div className="mb-4">
                                 <label className="text-xs text-gray-500 mb-1 block">Approx Cost (Per Square Feet)</label>
                                 <div className="relative">
-                                    <input type="number" value={costPerSqFt} onChange={(e) => setCostPerSqFt(Number(e.target.value))} className="w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm" />
+                                    <input type="number" value={costPerSqFt} onChange={(e) => setCostPerSqFt(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus}`} />
                                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">Rs.</span>
                                 </div>
                             </div>
 
                             {/* Calculate Button */}
                             <div className="flex gap-2 mb-5">
-                                <button onClick={calculate} className="flex-1 bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors">Calculate</button>
-                                <button className="bg-red-500 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-red-600 transition-colors">Reset</button>
+                                <button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium transition-colors`}>Calculate</button>
+                                <button onClick={reset} className="bg-red-500 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-red-600 transition-colors">Reset</button>
                             </div>
 
                             {/* Results */}
-                            <div className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl p-4 mb-4 text-white text-center">
+                            <div className={`bg-gradient-to-r ${theme.gradient} rounded-xl p-4 mb-4 text-white text-center`}>
                                 <div className="text-xs opacity-80 mb-1">Total Construction Cost</div>
                                 <div className="text-3xl font-bold">₹ {formatCurrency(results?.totalCost || 0)}</div>
                                 <div className="text-xs opacity-80 mt-2">Estimated time: {results?.months} months</div>

@@ -20,8 +20,23 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-    origin: config.clientUrl,
-    credentials: true, // Allow cookies
+    origin: (origin, callback) => {
+        const allowedOrigin = config.clientUrl;
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+
+        // Allow specific client url
+        if (origin === allowedOrigin) return callback(null, true);
+
+        // Allow any Vercel deployment (for preview URLs)
+        if (origin.endsWith('.vercel.app')) return callback(null, true);
+
+        // Also allow localhost in development
+        if (config.nodeEnv === 'development' && origin.includes('localhost')) return callback(null, true);
+
+        return callback(null, false);
+    },
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));

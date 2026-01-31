@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 export default function BMICalculator() {
+    const theme = getThemeClasses('health');
     const [height, setHeight] = useState('');
     const [weight, setWeight] = useState('');
     const [bmi, setBmi] = useState(null);
@@ -62,7 +64,7 @@ export default function BMICalculator() {
                                     type="number"
                                     value={height}
                                     onChange={(e) => setHeight(e.target.value)}
-                                    className="w-full p-2 border border-[#e5e7eb] rounded"
+                                    className={`w-full p-2 border border-[#e5e7eb] rounded ${theme.focus}`}
                                 />
                             </div>
                             <div>
@@ -71,12 +73,12 @@ export default function BMICalculator() {
                                     type="number"
                                     value={weight}
                                     onChange={(e) => setWeight(e.target.value)}
-                                    className="w-full p-2 border border-[#e5e7eb] rounded"
+                                    className={`w-full p-2 border border-[#e5e7eb] rounded ${theme.focus}`}
                                 />
                             </div>
                             <div className="pt-4 border-t border-gray-100">
                                 <div className="text-sm text-gray-500">Your BMI</div>
-                                <div className="text-3xl font-bold text-[#3B68FC]">
+                                <div className={`text-3xl font-bold ${theme.text}`}>
                                     {bmi || '-'}
                                 </div>
                             </div>

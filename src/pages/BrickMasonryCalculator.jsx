@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
@@ -13,7 +14,7 @@ function InfoTooltip({ text }) {
         <div className="relative inline-block">
             <button
                 type="button"
-                className="w-4 h-4 bg-[#3B68FC] text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1"
+                className={`w-4 h-4 ${theme.button} rounded-full text-xs flex items-center justify-center cursor-help ml-1`}
                 onMouseEnter={() => setShow(true)}
                 onMouseLeave={() => setShow(false)}
             >
@@ -29,6 +30,7 @@ function InfoTooltip({ text }) {
 }
 
 export default function BrickMasonryCalculator() {
+    const theme = getThemeClasses('quantity-estimator');
     const [unit, setUnit] = useState('Feet');
     const [length, setLength] = useState(10);
     const [height, setHeight] = useState(10);
@@ -100,7 +102,7 @@ export default function BrickMasonryCalculator() {
         labels: ['Bricks', 'Mortar'],
         datasets: [{
             data: [70, 30],
-            backgroundColor: ['#ef4444', '#3b82f6'],
+            backgroundColor: ['#ef4444', '#16a34a'],
             borderWidth: 0,
         }],
     };
@@ -138,14 +140,14 @@ export default function BrickMasonryCalculator() {
                     {/* What is Brick Masonry? */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-info-circle text-[#3B68FC]"></i>
+                            <i className={`fas fa-info-circle ${theme.text}`}></i>
                             What is Brick Masonry calculation?
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
-                            <p className="text-[#0A0A0A] leading-relaxed mb-4">
+                            <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                 Brick Masonry is the a strong and durable form of construction, and can be used in all types of climate and in any position. The best process used in modern times, the best materials, and proper supervision, may hold the structure in good condition for a long time.
                             </p>
-                            <p className="text-[#0A0A0A] leading-relaxed">
+                            <p className="text-[#0A0A0A] leading-relaxed text-justify">
                                 Brick masonry calculation helps determine the number of bricks and quantity of mortar (cement and sand) required for constructing walls. The calculation depends on wall dimensions, brick size, and mortar ratio.
                             </p>
                         </div>
@@ -154,13 +156,13 @@ export default function BrickMasonryCalculator() {
                     {/* Brick Masonry Calculation Steps */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-calculator text-[#3B68FC]"></i>
+                            <i className={`fas fa-calculator ${theme.text}`}></i>
                             Brick masonry calculation
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] space-y-4">
                             <div className="font-semibold text-gray-800">Step 1:</div>
                             <div className="bg-[#f8f9fa] p-4 rounded-lg font-mono text-sm space-y-2">
-                                <p><span className="text-[#3B68FC]">Volume of Brick Masonry</span> = Length(L) × Height(H) × Wall Thickness (T)</p>
+                                <p><span className={`${theme.text}`}>Volume of Brick Masonry</span> = Length(L) × Height(H) × Wall Thickness (T)</p>
                                 <p>Volume of Brick Masonry = {length} × {height} × {thickness / 100}</p>
                                 <p>Volume of Brick Masonry = <strong>{results?.wallVolume} m³</strong></p>
                             </div>
@@ -176,13 +178,13 @@ export default function BrickMasonryCalculator() {
                             </div>
 
                             <div className="bg-[#f8f9fa] p-4 rounded-lg font-mono text-sm space-y-1">
-                                <p><span className="text-[#3B68FC]">Size of Brick with Mortar</span> = 0.20 × 0.10 × 0.10 = 0.002 m³</p>
+                                <p><span className={`${theme.text}`}>Size of Brick with Mortar</span> = 0.20 × 0.10 × 0.10 = 0.002 m³</p>
                                 <p>Actual Volume of Brick = 0.19 × 0.09 × 0.09 = 0.00154 m³</p>
                             </div>
 
                             <div className="font-semibold text-gray-800 mt-4">No. of Bricks:</div>
                             <div className="bg-[#f8f9fa] p-4 rounded-lg font-mono text-sm">
-                                <p>No of Bricks = <span className="text-[#3B68FC]">Volume of Brick Masonry</span> / <span className="text-green-600">Actual Volume of 1 Brick with mortar</span></p>
+                                <p>No of Bricks = <span className={`${theme.text}`}>Volume of Brick Masonry</span> / <span className="text-green-600">Actual Volume of 1 Brick with mortar</span></p>
                                 <p>No of Bricks = {results?.wallVolume} / 0.002</p>
                                 <p className="text-xl font-bold text-red-500 mt-2">= {results?.bricks} Bricks</p>
                             </div>
@@ -228,14 +230,14 @@ export default function BrickMasonryCalculator() {
                     {/* Brick Masonry Formulas */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-square-root-alt text-[#3B68FC]"></i>
+                            <i className={`fas fa-square-root-alt ${theme.text}`}></i>
                             Brick Masonry Formulas
                         </h2>
-                        <div className="bg-gradient-to-r from-[#EEF2FF] to-blue-50 rounded-xl p-6 border border-[#3B68FC]/20">
+                        <div className={`bg-gradient-to-r ${theme.gradient.replace('from-', 'from-green-50/50 ').replace('to-', 'to-')} rounded-xl p-6 border ${theme.border}`}>
                             <div className="space-y-3 font-mono text-sm">
-                                <p><strong className="text-[#3B68FC]">Volume of Brick Masonry</strong> = Length × Height × Thickness | Wall Volume</p>
-                                <p><strong className="text-[#3B68FC]">Dimension</strong> = Brick Length × Brick Width × Brick Height</p>
-                                <p><strong className="text-green-600]">No. of Bricks</strong> = Volume of Brick Masonry / Volume of 1 Brick with mortar</p>
+                                <p><strong className={`${theme.text}`}>Volume of Brick Masonry</strong> = Length × Height × Thickness | Wall Volume</p>
+                                <p><strong className={`${theme.text}`}>Dimension</strong> = Brick Length × Brick Width × Brick Height</p>
+                                <p><strong className="text-green-600">No. of Bricks</strong> = Volume of Brick Masonry / Volume of 1 Brick with mortar</p>
                                 <p><strong className="text-amber-600">Amount of Cement</strong> = (Dry Volume × Cement Ratio) / Sum of Ratio | Volume of Cement</p>
                                 <p><strong className="text-amber-600">Amount of Sand</strong> = (Dry Volume × Sand Ratio) / Sum of Ratio × Density of Sand</p>
                             </div>
@@ -260,7 +262,7 @@ export default function BrickMasonryCalculator() {
                                     { title: 'Wastage Factor', desc: 'Add 5-10% for breakage', icon: 'fa-recycle' },
                                 ].map((item) => (
                                     <div key={item.title} className="flex items-start gap-3 p-3 bg-[#f8f9fa] rounded-lg">
-                                        <i className={`fas ${item.icon} text-[#3B68FC] mt-1`}></i>
+                                        <i className={`fas ${item.icon} ${theme.text} mt-1`}></i>
                                         <div>
                                             <div className="font-medium text-[#0A0A0A]">{item.title}</div>
                                             <div className="text-sm text-[#6b7280]">{item.desc}</div>
@@ -274,15 +276,15 @@ export default function BrickMasonryCalculator() {
                     {/* Related Calculators */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-th-large text-[#3B68FC]"></i>
+                            <i className={`fas fa-th-large ${theme.text}`}></i>
                             Related Calculators
                         </h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {relatedCalculators.map((calc) => (
-                                <Link key={calc.name} to={calc.slug} className="bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg hover:border-[#3B68FC] transition-all group">
+                                <Link key={calc.name} to={calc.slug} className={`bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
                                     <div className="flex items-center gap-3">
-                                        <i className={`fas ${calc.icon} text-[#3B68FC] group-hover:scale-110 transition-transform`}></i>
-                                        <span className="text-sm font-medium text-[#0A0A0A] group-hover:text-[#3B68FC]">{calc.name}</span>
+                                        <i className={`fas ${calc.icon} ${theme.text} group-hover:scale-110 transition-transform`}></i>
+                                        <span className={`text-sm font-medium text-[#0A0A0A] group-hover:${theme.text}`}>{calc.name}</span>
                                     </div>
                                 </Link>
                             ))}
@@ -299,9 +301,9 @@ export default function BrickMasonryCalculator() {
                 {/* Calculator Widget (Sidebar) */}
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-hidden border border-[#e5e7eb]">
-                        <div className="px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3 bg-gradient-to-r from-red-50 to-orange-50">
-                            <i className="fas fa-th-large text-xl text-red-500"></i>
-                            <h2 className="font-semibold text-[#0A0A0A]">BRICK MASONRY CALCULATOR</h2>
+                        <div className={`px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3 bg-gradient-to-r ${theme.gradient}`}>
+                            <i className="fas fa-th-large text-xl text-white"></i>
+                            <h2 className="font-semibold text-white">BRICK MASONRY CALCULATOR</h2>
                         </div>
 
                         <div className="p-5">
@@ -309,8 +311,8 @@ export default function BrickMasonryCalculator() {
                             <div className="mb-4">
                                 <label className="text-xs text-gray-500 mb-1 block">Unit</label>
                                 <div className="flex border border-[#e5e7eb] rounded-lg overflow-hidden">
-                                    <button onClick={() => setUnit('Feet')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Feet' ? 'bg-[#3B68FC] text-white' : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Feet</button>
-                                    <button onClick={() => setUnit('Meter')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Meter' ? 'bg-[#3B68FC] text-white' : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Meter</button>
+                                    <button onClick={() => setUnit('Feet')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Feet' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Feet</button>
+                                    <button onClick={() => setUnit('Meter')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Meter' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Meter</button>
                                 </div>
                             </div>
 
@@ -319,14 +321,14 @@ export default function BrickMasonryCalculator() {
                                 <div>
                                     <label className="text-xs text-gray-500 mb-1 block">Length</label>
                                     <div className="relative">
-                                        <input type="number" value={length} onChange={(e) => setLength(Number(e.target.value))} className="w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm" />
+                                        <input type="number" value={length} onChange={(e) => setLength(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`} />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit.slice(0, 2).toLowerCase()}</span>
                                     </div>
                                 </div>
                                 <div>
                                     <label className="text-xs text-gray-500 mb-1 block">Height</label>
                                     <div className="relative">
-                                        <input type="number" value={height} onChange={(e) => setHeight(Number(e.target.value))} className="w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm" />
+                                        <input type="number" value={height} onChange={(e) => setHeight(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`} />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit.slice(0, 2).toLowerCase()}</span>
                                     </div>
                                 </div>
@@ -335,7 +337,7 @@ export default function BrickMasonryCalculator() {
                             <div className="grid grid-cols-2 gap-3 mb-3">
                                 <div>
                                     <label className="text-xs text-gray-500 mb-1 block">Wall Thickness</label>
-                                    <select value={thickness} onChange={(e) => setThickness(Number(e.target.value))} className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm">
+                                    <select value={thickness} onChange={(e) => setThickness(Number(e.target.value))} className={`w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`}>
                                         <option value={10}>10 cm (4")</option>
                                         <option value={20}>20 cm (9")</option>
                                         <option value={34}>34 cm (13.5")</option>
@@ -343,7 +345,7 @@ export default function BrickMasonryCalculator() {
                                 </div>
                                 <div>
                                     <label className="text-xs text-gray-500 mb-1 block">Ratio</label>
-                                    <select value={ratio} onChange={(e) => setRatio(e.target.value)} className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm">
+                                    <select value={ratio} onChange={(e) => setRatio(e.target.value)} className={`w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`}>
                                         <option value="1:4">1:4</option>
                                         <option value="1:5">1:5</option>
                                         <option value="1:6">1:6</option>
@@ -354,17 +356,17 @@ export default function BrickMasonryCalculator() {
                             <div className="mb-4">
                                 <label className="text-xs text-gray-500 mb-1 block">Size of Brick (L × W × H) cm</label>
                                 <div className="flex gap-2">
-                                    <input type="number" value={brickL} onChange={(e) => setBrickL(Number(e.target.value))} className="w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center" />
+                                    <input type="number" value={brickL} onChange={(e) => setBrickL(Number(e.target.value))} className={`w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center ${theme.focus} outline-none`} />
                                     <span className="text-gray-400 self-center">×</span>
-                                    <input type="number" value={brickW} onChange={(e) => setBrickW(Number(e.target.value))} className="w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center" />
+                                    <input type="number" value={brickW} onChange={(e) => setBrickW(Number(e.target.value))} className={`w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center ${theme.focus} outline-none`} />
                                     <span className="text-gray-400 self-center">×</span>
-                                    <input type="number" value={brickH} onChange={(e) => setBrickH(Number(e.target.value))} className="w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center" />
+                                    <input type="number" value={brickH} onChange={(e) => setBrickH(Number(e.target.value))} className={`w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center ${theme.focus} outline-none`} />
                                 </div>
                             </div>
 
                             {/* Calculate Button */}
                             <div className="flex gap-2 mb-5">
-                                <button onClick={calculate} className="flex-1 bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors">Calculate</button>
+                                <button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium transition-colors`}>Calculate</button>
                                 <button className="bg-red-500 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-red-600 transition-colors">Reset</button>
                             </div>
 

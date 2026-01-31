@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 export default function CBRTestCalculator() {
+    const theme = getThemeClasses('soil-test');
     const [surcharge, setSurcharge] = useState(5);
     const [penetrationRate, setPenetrationRate] = useState(1.25);
     const [readings, setReadings] = useState([
@@ -90,7 +92,7 @@ export default function CBRTestCalculator() {
                     <p className="text-[#6b7280] mb-6">Calculate CBR value of soil for pavement design</p>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-info-circle text-[#3B68FC] mr-2"></i>What is California Bearing Ratio?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is California Bearing Ratio?</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <p className="text-gray-600 mb-4">The California Bearing Ratio (CBR) is a penetration test for evaluation of the mechanical strength of natural ground, subgrades and basecourses beneath new carriageway construction. It was developed by the California Department of Transportation.</p>
                             <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg">
@@ -100,20 +102,20 @@ export default function CBRTestCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-table text-[#3B68FC] mr-2"></i>Standard CBR Loads</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-table ${theme.text} mr-2`}></i>Standard CBR Loads</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <table className="w-full text-sm">
                                 <thead><tr className="bg-gray-100"><th className="border px-3 py-2">Penetration (mm)</th><th className="border px-3 py-2">Unit Std. Load (kg/cm²)</th><th className="border px-3 py-2">Total Std. Load (kg)</th></tr></thead>
                                 <tbody>
-                                    <tr><td className="border px-3 py-2 text-center">2.5</td><td className="border px-3 py-2 text-center">70</td><td className="border px-3 py-2 text-center font-bold text-[#3B68FC]">1370</td></tr>
-                                    <tr><td className="border px-3 py-2 text-center">5.0</td><td className="border px-3 py-2 text-center">105</td><td className="border px-3 py-2 text-center font-bold text-[#3B68FC]">2055</td></tr>
+                                    <tr><td className="border px-3 py-2 text-center">2.5</td><td className="border px-3 py-2 text-center">70</td><td className={`border px-3 py-2 text-center font-bold ${theme.text}`}>1370</td></tr>
+                                    <tr><td className="border px-3 py-2 text-center">5.0</td><td className="border px-3 py-2 text-center">105</td><td className={`border px-3 py-2 text-center font-bold ${theme.text}`}>2055</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-flask text-[#3B68FC] mr-2"></i>Apparatus</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <ol className="list-decimal pl-5 text-gray-600 space-y-2">
                                 <li><strong>CBR Mould:</strong> Cylindrical mould - 150mm dia × 175mm height with detachable collar (50mm) and base plate</li>
@@ -127,11 +129,11 @@ export default function CBRTestCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-calculator text-[#3B68FC] mr-2"></i>CBR Calculation Formula</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>CBR Calculation Formula</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <div className="bg-[#f8f9fa] p-4 rounded-lg text-center space-y-3 font-mono">
-                                <div className="text-lg text-[#3B68FC]">CBR at 2.5mm = (Load at 2.5mm / 1370) × 100 %</div>
-                                <div className="text-lg text-[#3B68FC]">CBR at 5.0mm = (Load at 5.0mm / 2055) × 100 %</div>
+                                <div className={`text-lg ${theme.text}`}>CBR at 2.5mm = (Load at 2.5mm / 1370) × 100 %</div>
+                                <div className={`text-lg ${theme.text}`}>CBR at 5.0mm = (Load at 5.0mm / 2055) × 100 %</div>
                                 <div className="text-lg font-bold">CBR Value = Maximum of (CBR at 2.5mm, CBR at 5.0mm)</div>
                             </div>
                             <div className="mt-4 text-sm text-gray-600">
@@ -149,9 +151,9 @@ export default function CBRTestCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className="px-5 py-4 border-b bg-gradient-to-r from-green-50 to-emerald-50 flex items-center gap-3">
-                            <i className="fas fa-road text-xl text-green-600"></i>
-                            <h2 className="font-semibold text-sm">CALIFORNIA BEARING RATIO (CBR) TEST</h2>
+                        <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
+                            <i className="fas fa-road text-xl text-white"></i>
+                            <h2 className="font-semibold text-sm text-white">CALIFORNIA BEARING RATIO (CBR) TEST</h2>
                         </div>
                         <div className="p-4">
                             <div className="grid grid-cols-2 gap-2 mb-3">
@@ -164,7 +166,7 @@ export default function CBRTestCalculator() {
                                     <thead className="sticky top-0 bg-gray-100"><tr><th className="px-2 py-1">Penet. (mm)</th><th className="px-2 py-1">Load (kg)</th></tr></thead>
                                     <tbody>
                                         {readings.map((r, i) => (
-                                            <tr key={i} className={r.penetration === 2.5 || r.penetration === 5.0 ? 'bg-blue-50' : ''}>
+                                            <tr key={i} className={r.penetration === 2.5 || r.penetration === 5.0 ? theme.bgLight : ''}>
                                                 <td className="px-2 py-1"><input type="number" step="0.5" value={r.penetration} onChange={(e) => updateReading(i, 'penetration', e.target.value)} className="w-full px-1 py-0.5 border rounded text-xs" /></td>
                                                 <td className="px-2 py-1"><input type="number" value={r.load} onChange={(e) => updateReading(i, 'load', e.target.value)} className="w-full px-1 py-0.5 border rounded text-xs" /></td>
                                             </tr>
@@ -173,21 +175,21 @@ export default function CBRTestCalculator() {
                                 </table>
                             </div>
 
-                            <button onClick={calculate} className="w-full bg-[#3B68FC] text-white py-2 rounded-lg font-medium mb-4">Calculate</button>
-                            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4">
+                            <button onClick={calculate} className={`w-full ${theme.button} py-2 rounded-lg font-medium mb-4`}>Calculate</button>
+                            <div className={`${theme.bgLight} rounded-xl p-4`}>
                                 <div className="text-center mb-3">
                                     <div className="text-xs text-gray-500">CBR Value</div>
-                                    <div className="text-3xl font-bold text-[#3B68FC]">{results?.cbrValue} %</div>
+                                    <div className={`text-3xl font-bold ${theme.text}`}>{results?.cbrValue} %</div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-2 text-xs">
                                     <div className="bg-white p-2 rounded text-center">
                                         <div className="text-gray-500">CBR at 2.5mm</div>
-                                        <div className="font-bold text-[#3B68FC]">{results?.cbr25}%</div>
+                                        <div className={`font-bold ${theme.text}`}>{results?.cbr25}%</div>
                                         <div className="text-gray-400">Load: {results?.load25} kg</div>
                                     </div>
                                     <div className="bg-white p-2 rounded text-center">
                                         <div className="text-gray-500">CBR at 5.0mm</div>
-                                        <div className="font-bold text-green-600">{results?.cbr50}%</div>
+                                        <div className={`font-bold ${theme.text}`}>{results?.cbr50}%</div>
                                         <div className="text-gray-400">Load: {results?.load50} kg</div>
                                     </div>
                                 </div>

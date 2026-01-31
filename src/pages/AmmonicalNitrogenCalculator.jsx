@@ -2,15 +2,65 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import CustomDropdown from '../components/CustomDropdown';
+import { getThemeClasses } from '../constants/categories';
+
+// Standards Data for Ammonical Nitrogen
+const STANDARDS_DATA = {
+    'IS': {
+        code: 'IS 3025 (Part 34)',
+        title: 'IS 3025 (Part 34) : 1988',
+        desc: 'Determination of Ammonical Nitrogen in water and wastewater. The method involves distillation followed by titration.',
+        details: 'The sample is buffered at pH 9.5 and distilled. The ammonia distillate is absorbed in boric acid and titrated with standard sulfuric acid.',
+        formula: 'NH₃-N (mg/L) = (A - B) × N × 14000 / V',
+        importance: [
+            { title: 'Toxicity', text: 'Ammonia is toxic to aquatic life even at low concentrations.' },
+            { title: 'Indicator', text: 'Indicates fresh sewage pollution.' }
+        ]
+    },
+    'ASTM': {
+        code: 'ASTM D1426',
+        title: 'ASTM D1426',
+        desc: 'Standard Test Methods for Ammonia Nitrogen in Water.',
+        details: 'Test Method A covers the distillation of the sample followed by titration. Test Method B covers the direct Nesslerization.',
+        formula: 'Ammonia Nitrogen = (A - B) × N × 14000 / V',
+        importance: [
+            { title: 'Water Quality', text: 'Critical for assessing surface water health.' },
+            { title: 'Process Control', text: 'Used for chlorination control in treatment.' }
+        ]
+    },
+    'BS': {
+        code: 'BS 6068-2.11',
+        title: 'BS 6068 / ISO 5664',
+        desc: 'Water quality. Determination of ammonium. Distillation and titration method.',
+        details: 'Specifies a method for the determination of ammonium in raw, potable and waste water.',
+        formula: 'ρN = (V₁ - V₀) × c × 14000 / V₂',
+        importance: [
+            { title: 'Regulatory', text: 'Compliance with discharge consents.' },
+            { title: 'Environmental', text: 'Prevents eutrophication in receiving waters.' }
+        ]
+    },
+    'EN': {
+        code: 'EN ISO 11732',
+        title: 'EN ISO 11732',
+        desc: 'Water quality - Determination of ammonium nitrogen - Method by flow analysis (CFA and FIA).',
+        details: 'While modern labs use flow analysis, this calculator simulates the classic distillation and titration method used for reference.',
+        formula: 'NH₄-N = (V_sample - V_blank) × c(H⁺) × M(N) / V_test',
+        importance: [
+            { title: 'Standards', text: 'Reference method for water analysis directives.' },
+            { title: 'Monitoring', text: 'Routine surveillance of wastewater plants.' }
+        ]
+    }
+};
 
 // Info Tooltip Component
-function InfoTooltip({ text }) {
+function InfoTooltip({ text, theme }) {
     const [show, setShow] = useState(false);
     return (
         <div className="relative inline-block">
             <button
                 type="button"
-                className="w-4 h-4 bg-[#3B68FC] text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1"
+                className={`w-4 h-4 ${theme.bg} text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1`}
                 onMouseEnter={() => setShow(true)}
                 onMouseLeave={() => setShow(false)}
                 onClick={() => setShow(!show)}
@@ -27,6 +77,9 @@ function InfoTooltip({ text }) {
 }
 
 export default function AmmonicalNitrogenCalculator() {
+    const theme = getThemeClasses('emerald');
+    const [standard, setStandard] = useState('IS');
+
     // 3 Tests
     const [tests, setTests] = useState([
         { sampleReading: '', blankReading: '', normality: '', volume: '' },
@@ -36,6 +89,7 @@ export default function AmmonicalNitrogenCalculator() {
 
     const [results, setResults] = useState([]);
     const sidebarRef = useRef(null);
+    const currentStd = STANDARDS_DATA[standard];
 
     const updateTest = (index, field, value) => {
         const newTests = [...tests];
@@ -44,28 +98,28 @@ export default function AmmonicalNitrogenCalculator() {
     };
 
     useEffect(() => {
-        // Calculate Ammonical Nitrogen for each test
-        // If N of H2SO4 is 0.02 N: Ammonical Nitrogen (mg/L) = (A - B) × 280 / mL of sample
-        // If N is other than 0.02 N: Ammonical Nitrogen (mg/L) = (A - B) × N × 14 × 1000 / mL of sample
+        // Calculate Ammonical Nitrogen
+        // Formula: (A - B) * N * 14 * 1000 / V
+        // 14 is atomic weight of Nitrogen. 1000 converts to Liters (if V is mL, which it is)
+        // So factor is 14000.
+        // If N=0.02, 0.02*14000 = 280.
         const newResults = tests.map((test) => {
-            const A = parseFloat(test.sampleReading) || 0;
-            const B = parseFloat(test.blankReading) || 0;
-            const N = parseFloat(test.normality) || 0;
-            const V = parseFloat(test.volume) || 0;
+            const A = parseFloat(test.sampleReading) || 0; // Sample Titrant
+            const B = parseFloat(test.blankReading) || 0;  // Blank Titrant
+            const N = parseFloat(test.normality) || 0;     // Normality
+            const V = parseFloat(test.volume) || 0;        // Volume
 
             if (A >= 0 && B >= 0 && N > 0 && V > 0) {
-                let ammonia;
-                if (N === 0.02) {
-                    ammonia = ((A - B) * 280) / V;
-                } else {
-                    ammonia = ((A - B) * N * 14 * 1000) / V;
-                }
+                // If A < B, result is 0 (no ammonia) or error
+                const diff = A - B > 0 ? A - B : 0;
+
+                const ammonia = (diff * N * 14000) / V;
                 return ammonia.toFixed(2);
             }
             return null;
         });
         setResults(newResults);
-    }, [tests]);
+    }, [tests, standard]);
 
     useEffect(() => {
         const update = () => {
@@ -80,11 +134,7 @@ export default function AmmonicalNitrogenCalculator() {
     }, []);
 
     const reset = () => {
-        setTests([
-            { sampleReading: '', blankReading: '', normality: '', volume: '' },
-            { sampleReading: '', blankReading: '', normality: '', volume: '' },
-            { sampleReading: '', blankReading: '', normality: '', volume: '' },
-        ]);
+        setTests(tests.map(t => ({ sampleReading: '', blankReading: '', normality: '', volume: '' })));
         setResults([]);
     };
 
@@ -95,10 +145,17 @@ export default function AmmonicalNitrogenCalculator() {
     ];
 
     // Get average result
-    const validResults = results.filter(r => r !== null);
+    const validResults = results.filter(r => r !== null && r !== '0.00');
     const avgResult = validResults.length > 0
         ? (validResults.reduce((sum, r) => sum + parseFloat(r), 0) / validResults.length).toFixed(2)
         : null;
+
+    const standardOptions = [
+        { value: 'IS', label: '🇮🇳 IS - Indian Standard' },
+        { value: 'ASTM', label: '🇺🇸 ASTM - American' },
+        { value: 'BS', label: '🇬🇧 BS - British Standard' },
+        { value: 'EN', label: '🇪🇺 EN - European Standard' }
+    ];
 
     return (
         <main className="min-h-screen bg-[#F7F9FF]">
@@ -107,30 +164,32 @@ export default function AmmonicalNitrogenCalculator() {
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 items-start">
                 {/* Main Content */}
                 <div>
-                    <div className="flex items-center justify-between mb-2">
-                        <h1 className="text-3xl font-bold text-[#0A0A0A]">Ammonical Nitrogen Measurement Calculator</h1>
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Ammonical Nitrogen - {currentStd.title}</h1>
+                            <p className="text-[#6b7280]">Calculate ammonical nitrogen content in water samples</p>
+                        </div>
                         <CalculatorActions
                             calculatorSlug="ammonical-nitrogen"
                             calculatorName="Ammonical Nitrogen Calculator"
                             calculatorIcon="fa-atom"
                             category="Environmental Engineering"
-                            inputs={{ tests }}
+                            inputs={{ tests, standard }}
                             outputs={{ results: results || [] }}
                         />
                     </div>
-                    <p className="text-[#6b7280] mb-6">IS:3025 - Calculate ammonical nitrogen content in water samples</p>
 
                     {/* Calculator Table */}
                     <section className="mb-8">
-                        <div className="bg-white rounded-xl border border-[#e5e7eb] overflow-hidden">
-                            <div className="bg-gradient-to-r from-purple-600 to-purple-700 px-5 py-4">
+                        <div className={`bg-white rounded-xl border ${theme.border} overflow-hidden`}>
+                            <div className={`px-5 py-4 ${theme.bg}`}>
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                         <i className="fas fa-atom text-white"></i>
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-white">AMMONICAL NITROGEN CALCULATION</h3>
-                                        <p className="text-purple-100 text-xs">Enter values for up to 3 tests</p>
+                                        <h3 className="font-bold text-white">AMMONICAL NITROGEN</h3>
+                                        <p className="text-white/80 text-xs">Method: Distillation & Titration ({currentStd.code})</p>
                                     </div>
                                 </div>
                             </div>
@@ -139,93 +198,93 @@ export default function AmmonicalNitrogenCalculator() {
                                 <table className="w-full text-sm border-collapse">
                                     <thead>
                                         <tr className="bg-[#f8f9fa]">
-                                            <th className="border border-[#e5e7eb] px-3 py-2 text-left">Parameter</th>
-                                            <th className="border border-[#e5e7eb] px-3 py-2 text-center">Test-I</th>
-                                            <th className="border border-[#e5e7eb] px-3 py-2 text-center">Test-II</th>
-                                            <th className="border border-[#e5e7eb] px-3 py-2 text-center">Test-III</th>
+                                            <th className={`border ${theme.border} px-3 py-2 text-left`}>Parameter</th>
+                                            <th className={`border ${theme.border} px-3 py-2 text-center`}>Test-I</th>
+                                            <th className={`border ${theme.border} px-3 py-2 text-center`}>Test-II</th>
+                                            <th className={`border ${theme.border} px-3 py-2 text-center`}>Test-III</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td className="border border-[#e5e7eb] px-3 py-2">
+                                            <td className={`border ${theme.border} px-3 py-2`}>
                                                 <div className="flex items-center">
-                                                    Sample Reading (A) <InfoTooltip text="Titration reading for sample in mL of H₂SO₄ used" />
+                                                    Sample Reading (A) <InfoTooltip text="Titration reading for sample in mL of H₂SO₄ used" theme={theme} />
                                                 </div>
                                             </td>
                                             {tests.map((test, i) => (
-                                                <td key={i} className="border border-[#e5e7eb] px-2 py-1">
+                                                <td key={i} className={`border ${theme.border} px-2 py-1`}>
                                                     <input
                                                         type="number"
                                                         step="0.1"
                                                         value={test.sampleReading}
                                                         onChange={(e) => updateTest(i, 'sampleReading', e.target.value)}
                                                         placeholder="ml"
-                                                        className="w-full px-2 py-1 border border-[#e5e7eb] rounded text-center text-sm focus:border-[#3B68FC] outline-none"
+                                                        className={`w-full px-2 py-1 border border-[#e5e7eb] rounded text-center text-sm ${theme.focus} focus:ring-2 focus:ring-emerald-100/50 outline-none`}
                                                     />
                                                 </td>
                                             ))}
                                         </tr>
                                         <tr>
-                                            <td className="border border-[#e5e7eb] px-3 py-2">
+                                            <td className={`border ${theme.border} px-3 py-2`}>
                                                 <div className="flex items-center">
-                                                    Blank Reading (B) <InfoTooltip text="Titration reading for blank in mL of H₂SO₄ used" />
+                                                    Blank Reading (B) <InfoTooltip text="Titration reading for blank in mL of H₂SO₄ used" theme={theme} />
                                                 </div>
                                             </td>
                                             {tests.map((test, i) => (
-                                                <td key={i} className="border border-[#e5e7eb] px-2 py-1">
+                                                <td key={i} className={`border ${theme.border} px-2 py-1`}>
                                                     <input
                                                         type="number"
                                                         step="0.1"
                                                         value={test.blankReading}
                                                         onChange={(e) => updateTest(i, 'blankReading', e.target.value)}
                                                         placeholder="ml"
-                                                        className="w-full px-2 py-1 border border-[#e5e7eb] rounded text-center text-sm focus:border-[#3B68FC] outline-none"
+                                                        className={`w-full px-2 py-1 border border-[#e5e7eb] rounded text-center text-sm ${theme.focus} focus:ring-2 focus:ring-emerald-100/50 outline-none`}
                                                     />
                                                 </td>
                                             ))}
                                         </tr>
                                         <tr>
-                                            <td className="border border-[#e5e7eb] px-3 py-2">
+                                            <td className={`border ${theme.border} px-3 py-2`}>
                                                 <div className="flex items-center">
-                                                    Normality of H₂SO₄ (N) <InfoTooltip text="Normality of Sulphuric Acid solution (typically 0.02 N)" />
+                                                    Normality of H₂SO₄ (N) <InfoTooltip text="Normality of Standard Sulphuric Acid (e.g., 0.02 N)" theme={theme} />
                                                 </div>
                                             </td>
                                             {tests.map((test, i) => (
-                                                <td key={i} className="border border-[#e5e7eb] px-2 py-1">
+                                                <td key={i} className={`border ${theme.border} px-2 py-1`}>
                                                     <input
                                                         type="number"
                                                         step="0.01"
                                                         value={test.normality}
                                                         onChange={(e) => updateTest(i, 'normality', e.target.value)}
                                                         placeholder="N"
-                                                        className="w-full px-2 py-1 border border-[#e5e7eb] rounded text-center text-sm focus:border-[#3B68FC] outline-none"
+                                                        className={`w-full px-2 py-1 border border-[#e5e7eb] rounded text-center text-sm ${theme.focus} focus:ring-2 focus:ring-emerald-100/50 outline-none`}
                                                     />
                                                 </td>
                                             ))}
                                         </tr>
                                         <tr>
-                                            <td className="border border-[#e5e7eb] px-3 py-2">
+                                            <td className={`border ${theme.border} px-3 py-2`}>
                                                 <div className="flex items-center">
-                                                    Volume of Sample (VOS) <InfoTooltip text="Volume of sample taken in mL" />
+                                                    Sample Volume <InfoTooltip text="Volume of water sample taken for distillation (mL)" theme={theme} />
                                                 </div>
                                             </td>
                                             {tests.map((test, i) => (
-                                                <td key={i} className="border border-[#e5e7eb] px-2 py-1">
+                                                <td key={i} className={`border ${theme.border} px-2 py-1`}>
                                                     <input
                                                         type="number"
                                                         step="0.1"
                                                         value={test.volume}
                                                         onChange={(e) => updateTest(i, 'volume', e.target.value)}
                                                         placeholder="ml"
-                                                        className="w-full px-2 py-1 border border-[#e5e7eb] rounded text-center text-sm focus:border-[#3B68FC] outline-none"
+                                                        className={`w-full px-2 py-1 border border-[#e5e7eb] rounded text-center text-sm ${theme.focus} focus:ring-2 focus:ring-emerald-100/50 outline-none`}
                                                     />
                                                 </td>
                                             ))}
                                         </tr>
-                                        <tr className="bg-purple-50">
-                                            <td className="border border-[#e5e7eb] px-3 py-2 font-semibold">NH₃-N (mg/L)</td>
+                                        <tr className={`${theme.bgLight}`}>
+                                            <td className={`border ${theme.border} px-3 py-2 font-semibold`}>NH₃-N (mg/L)</td>
                                             {results.map((result, i) => (
-                                                <td key={i} className="border border-[#e5e7eb] px-2 py-2 text-center font-bold text-purple-600">
+                                                <td key={i} className={`border ${theme.border} px-2 py-2 text-center font-bold ${theme.text}`}>
                                                     {result || '-'}
                                                 </td>
                                             ))}
@@ -242,130 +301,54 @@ export default function AmmonicalNitrogenCalculator() {
                         </div>
                     </section>
 
-                    {/* What is Ammonical Nitrogen? */}
+                    {/* Description */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-info-circle text-[#3B68FC]"></i>
-                            What is Ammonical Nitrogen Test?
+                            <i className={`fas fa-info-circle ${theme.text}`}></i>
+                            About Ammonical Nitrogen ({currentStd.code})
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
-                            <p className="text-[#0A0A0A] leading-relaxed mb-4">
-                                Ammonical nitrogen (NH₃-N) is a measure for the amount of ammonia, a toxic pollutant often found in landfill leachate and in waste products, such as sewage, liquid manure and other liquid organic waste products.
+                            <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
+                                {currentStd.desc}
                             </p>
-                            <p className="text-[#0A0A0A] leading-relaxed">
-                                It is a common parameter used in the characterization of wastewater and to monitor the efficiency of biological treatment processes. Ammonia nitrogen is composed of both ammonia (NH₃) and ammonium (NH₄⁺) species.
+                            <p className="text-[#0A0A0A] leading-relaxed text-justify">
+                                {currentStd.details}
                             </p>
                         </div>
                     </section>
 
-                    {/* Principle */}
+                    {/* Importance */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-book text-[#3B68FC]"></i>
-                            Principle
+                            <i className={`fas fa-check-circle ${theme.text}`}></i>
+                            Importance
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
-                            <p className="text-[#0A0A0A] leading-relaxed">
-                                Ammonia after distillation is dissolved in boric acid and mixed indicator and can be titrated with H₂SO₄. Boric acid is so weak acid that it does not interfere with acidimetric titration.
-                            </p>
+                            <ul className="space-y-3">
+                                {currentStd.importance && currentStd.importance.map((item, idx) => (
+                                    <li key={idx} className="flex items-start gap-3">
+                                        <i className={`fas fa-check ${theme.text} mt-1`}></i>
+                                        <span><strong>{item.title}:</strong> {item.text}</span>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
                     </section>
 
                     {/* Formula Section */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-calculator text-[#3B68FC]"></i>
-                            Calculation of Ammonical Nitrogen
+                            <i className={`fas fa-calculator ${theme.text}`}></i>
+                            Formula
                         </h2>
-                        <div className="bg-gradient-to-r from-[#EEF2FF] to-blue-50 rounded-xl p-6 border border-[#3B68FC]/20">
-                            <div className="text-center mb-4">
-                                <p className="text-sm text-[#6b7280] mb-2">If Normality of H₂SO₄ is 0.02 N:</p>
-                                <div className="inline-block bg-white px-6 py-3 rounded-lg shadow-sm">
-                                    <code className="text-lg font-mono text-[#0A0A0A]">
-                                        <span className="text-purple-600">NH₃-N (mg/L)</span> = (A - B) × 280 / mL of sample
-                                    </code>
-                                </div>
-                            </div>
+                        <div className={`bg-gradient-to-r ${theme.bgSoft} to-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="text-center">
-                                <p className="text-sm text-[#6b7280] mb-2">If Normality is other than 0.02 N:</p>
-                                <div className="inline-block bg-white px-6 py-3 rounded-lg shadow-sm">
+                                <div className="inline-block bg-white px-6 py-4 rounded-lg shadow-sm">
                                     <code className="text-lg font-mono text-[#0A0A0A]">
-                                        <span className="text-purple-600">NH₃-N (mg/L)</span> = (A - B) × N × 14 × 1000 / mL of sample
+                                        {currentStd.formula}
                                     </code>
                                 </div>
                             </div>
-                            <div className="mt-4 text-center text-sm text-[#6b7280]">
-                                <p><strong>Where:</strong></p>
-                                <p>A = Sample reading</p>
-                                <p>B = Blank reading</p>
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* Apparatus */}
-                    <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-vials text-[#3B68FC]"></i>
-                            Apparatus
-                        </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
-                            <ul className="space-y-2 text-sm text-[#6b7280]">
-                                <li className="flex items-start gap-2"><i className="fas fa-check text-green-500 mt-1"></i> Distillation apparatus (All borosilicate glass apparatus)</li>
-                                <li className="flex items-start gap-2"><i className="fas fa-check text-green-500 mt-1"></i> Pipettes</li>
-                                <li className="flex items-start gap-2"><i className="fas fa-check text-green-500 mt-1"></i> Heating Mantle</li>
-                                <li className="flex items-start gap-2"><i className="fas fa-check text-green-500 mt-1"></i> Volumetric Flask</li>
-                                <li className="flex items-start gap-2"><i className="fas fa-check text-green-500 mt-1"></i> Burette borosilicate glass</li>
-                            </ul>
-                        </div>
-                    </section>
-
-                    {/* Reagent Preparation */}
-                    <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-flask text-[#3B68FC]"></i>
-                            Preparation of Reagent
-                        </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
-                            <div className="space-y-4">
-                                <div>
-                                    <h4 className="font-semibold text-[#0A0A0A] mb-2">Reagents Required:</h4>
-                                    <ul className="space-y-1 text-sm text-[#6b7280] ml-4">
-                                        <li>• Ammonia Free Water</li>
-                                        <li>• Borate Buffer Solution</li>
-                                        <li>• Sodium Hydroxide, 6N</li>
-                                        <li>• Dechlorinating reagent</li>
-                                        <li>• Neutralization Agent: NaOH 1N, H₂SO₄ 1N</li>
-                                        <li>• Mix Indicator Solution</li>
-                                        <li>• Boric Acid</li>
-                                        <li>• Sulphuric Acid</li>
-                                        <li>• Methyl red and methyl blue indicator</li>
-                                    </ul>
-                                </div>
-
-                                <div>
-                                    <h4 className="font-semibold text-[#0A0A0A] mb-2">Reagent Preparation:</h4>
-                                    <ul className="space-y-2 text-sm text-[#6b7280]">
-                                        <li><strong>Ammonia Free Water:</strong> Distillation - Eliminate traces of Ammonia in distilled water by adding 0.1 ml of conc. H₂SO₄ to 1L distilled water and redistillation.</li>
-                                        <li><strong>Borate Buffer Solution:</strong> Add 88 mL of 0.1 N NaOH solution to 500 mL approximately 0.025 M Sodium tetra borate solution of 0.5 g sodium tetra borate and dilute to 1000 mL.</li>
-                                        <li><strong>Mix Indicator Solution:</strong> (A) Dissolved 0.200 g Methyl red indicator in 100 mL 95% Ethyl or isopropyl alcohol. (B) Dissolve 0.100 g Methyl Blue in 50 mL 95% ethyl or isopropyl alcohol. Combine two solutions.</li>
-                                        <li><strong>Boric Acid:</strong> Dissolve 20 g Boric acid (H₃BO₃) in distilled water, add 10 mL mixed indicator solution and dilute to 1000 mL.</li>
-                                        <li><strong>Standard Sulphuric Acid:</strong> Dissolve 10 mL 1N H₂SO₄ dilute to 500 mL with distilled water.</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* Detection Limit */}
-                    <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-chart-line text-[#3B68FC]"></i>
-                            Range
-                        </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
-                            <p className="text-[#0A0A0A]">
-                                Minimum Detection limit of Ammonical Nitrogen is <strong>0.05 mg/L</strong>
-                            </p>
                         </div>
                     </section>
 
@@ -378,32 +361,53 @@ export default function AmmonicalNitrogenCalculator() {
 
                 {/* Sidebar */}
                 <div ref={sidebarRef} className="sticky top-20">
-                    {/* Result Card */}
-                    {avgResult && (
-                        <div className="bg-white rounded-2xl shadow-lg border border-[#e5e7eb] overflow-hidden mb-4">
-                            <div className="bg-gradient-to-r from-purple-600 to-purple-700 px-5 py-4">
-                                <h3 className="font-bold text-white text-sm">Average NH₃-N Result</h3>
-                            </div>
-                            <div className="p-5 text-center">
-                                <div className="text-4xl font-bold text-purple-600">{avgResult}</div>
-                                <div className="text-sm text-[#6b7280] mt-1">mg/L</div>
-                                <div className="text-xs text-[#6b7280] mt-2">Based on {validResults.length} test(s)</div>
+                    <div className={`bg-white rounded-2xl shadow-lg border ${theme.border} mb-6`}>
+                        <div className={`px-5 py-4 ${theme.bg} rounded-t-2xl`}>
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                    <i className="fas fa-atom text-white"></i>
+                                </div>
+                                <h3 className="font-bold text-white text-sm">NH₃-N Calculator</h3>
                             </div>
                         </div>
-                    )}
+                        <div className="p-5">
+                            {/* Standard Selector */}
+                            <div className="mb-4">
+                                <label className="text-xs text-[#6b7280] mb-1 block font-medium">Standard</label>
+                                <CustomDropdown
+                                    options={standardOptions}
+                                    value={standard}
+                                    onChange={setStandard}
+                                    theme={theme}
+                                />
+                            </div>
+
+                            {/* Result Card */}
+                            {avgResult && (
+                                <div className={`bg-gradient-to-br ${theme.bgSoft} to-white rounded-xl p-4 border ${theme.border} text-center`}>
+                                    <h3 className="font-bold text-[#6b7280] text-xs uppercase mb-2">Average NH₃-N</h3>
+                                    <div className={`text-4xl font-bold ${theme.text} mb-1`}>{avgResult}</div>
+                                    <div className="text-sm text-[#6b7280]">mg/L</div>
+                                    <div className="text-xs text-[#6b7280] mt-2 border-t border-dashed border-gray-200 pt-2">
+                                        Based on {validResults.length} test(s)
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
 
                     {/* Related Calculators */}
                     <div className="bg-white rounded-xl p-4 border border-[#e5e7eb]">
                         <h4 className="font-semibold text-[#0A0A0A] text-sm mb-3 flex items-center gap-2">
-                            <i className="fas fa-leaf text-green-600"></i>
-                            Environmental Engineering Tests
+                            <i className={`fas fa-leaf ${theme.text}`}></i>
+                            Environmental Eng.
                         </h4>
                         <div className="space-y-2">
                             {relatedCalculators.map((calc) => (
                                 <Link
                                     key={calc.name}
                                     to={calc.slug}
-                                    className={`flex items-center gap-3 p-2 rounded-lg transition-all text-sm ${calc.active ? 'bg-purple-50 text-purple-600 font-medium' : 'hover:bg-[#f8f9fa] text-[#6b7280]'}`}
+                                    className={`flex items-center gap-3 p-2 rounded-lg transition-all text-sm ${calc.active ? `${theme.bgSoft} ${theme.text} font-medium` : 'hover:bg-[#f8f9fa] text-[#6b7280]'}`}
                                 >
                                     <i className={`fas ${calc.icon}`}></i>
                                     {calc.name}

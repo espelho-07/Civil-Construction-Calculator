@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 export default function WaterContentCalculator() {
+    const theme = getThemeClasses('soil-test');
     const [w1, setW1] = useState(30);
     const [w2, setW2] = useState(50);
     const [w3, setW3] = useState(45);
@@ -55,7 +57,7 @@ export default function WaterContentCalculator() {
                     </div>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-info-circle text-[#3B68FC] mr-2"></i>What is the need of water content determination (determination of moisture) of Soil?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is the need of water content determination (determination of moisture) of Soil?</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <p className="text-gray-600 mb-4 italic">In almost all soil tests natural moisture content of the soil is to be determined. The knowledge of the natural moisture content is essential in all studies of soil mechanics. To sight a few, natural moisture content is used in determining the index properties of the Soil. The natural moisture content will give an idea of the state of soil in the field.</p>
                             <h3 className="font-bold text-gray-800 mb-2">Apparatus</h3>
@@ -69,7 +71,7 @@ export default function WaterContentCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-vial text-[#3B68FC] mr-2"></i>Soil Specimen</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-vial ${theme.text} mr-2`}></i>Soil Specimen</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <p className="text-gray-600 mb-4">The soil specimen taken shall be representative of the soil mass. The size of the specimen selected depends on the quantity required for good representation, which is influenced by the gradation and the maximum size of particles, and on the accuracy of weighing.</p>
                             <h3 className="font-bold text-gray-800 mb-2">Recommended quantities for general laboratory use:</h3>
@@ -81,7 +83,7 @@ export default function WaterContentCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-clipboard-list text-[#3B68FC] mr-2"></i>How to determine the water content (moisture) of Soil?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-clipboard-list ${theme.text} mr-2`}></i>How to determine the water content (moisture) of Soil?</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <h3 className="font-bold text-gray-800 mb-2">Procedure</h3>
                             <p className="text-gray-600 mb-4">Clean the container with lid, dry and weigh (W₁). Take the required quantity of the soil specimen in the container crumbled and placed loosely, and weigh with lid (W₂). Then keep it in an oven with the lid removed, and maintain the temperature of the oven at 110 ± 5°C (see Note). Dry the specimen in the oven for 24 h. Every time the container is taken out for weighing, replace the lid on the container and cool the container in a desiccator. Record the final mass (W₃) of the container with lid with dried soil sample.</p>
@@ -89,7 +91,7 @@ export default function WaterContentCalculator() {
                                 <strong>Note:</strong> Oven-drying at 110 ± 5°C does not result in reliable water content values for soil containing gypsum or other minerals having loosely bound water of hydration or for soil containing significant amounts of organic material. Reliable water content values for these soils can be obtained by drying in an oven at approximately 60 to 80°C.
                             </div>
                             <h3 className="font-bold text-gray-800 mb-2">The percent of water content shall be calculated as follows:</h3>
-                            <div className="bg-[#f8f9fa] p-4 rounded-lg font-mono text-center text-lg text-[#3B68FC]">
+                            <div className={`bg-[#f8f9fa] p-4 rounded-lg font-mono text-center text-lg ${theme.text}`}>
                                 w = (W₂ - W₃) / (W₃ - W₁) × 100
                             </div>
                             <div className="mt-4 text-sm text-gray-600">
@@ -113,25 +115,25 @@ export default function WaterContentCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className="px-5 py-4 border-b bg-gradient-to-r from-amber-50 to-yellow-50 flex items-center gap-3">
-                            <i className="fas fa-tint text-xl text-amber-600"></i>
-                            <h2 className="font-semibold">DETERMINATION OF WATER CONTENT</h2>
+                        <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
+                            <i className="fas fa-tint text-xl text-white"></i>
+                            <h2 className="font-semibold text-white">DETERMINATION OF WATER CONTENT</h2>
                         </div>
                         <div className="p-5">
                             <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Mass (Weight) of Container (Bowl) (W₁)</label><div className="flex gap-2"><input type="number" value={w1} onChange={(e) => setW1(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">g</span></div></div>
                             <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Mass (Weight) of container (Bowl) with Sample wet Soil (W₂)</label><div className="flex gap-2"><input type="number" value={w2} onChange={(e) => setW2(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">g</span></div></div>
                             <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">Mass (Weight) of container (Bowl) with Sample dry soil (W₃)</label><div className="flex gap-2"><input type="number" value={w3} onChange={(e) => setW3(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">g</span></div></div>
-                            <button onClick={calculate} className="w-full bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium mb-5">Calculate</button>
-                            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl p-4">
+                            <button onClick={calculate} className={`w-full ${theme.button} py-2.5 rounded-lg font-medium mb-5`}>Calculate</button>
+                            <div className={`${theme.bgLight} rounded-xl p-4`}>
                                 <div className="text-center mb-3">
-                                    <div className="text-3xl font-bold text-[#3B68FC]">{results?.waterContent} %</div>
+                                    <div className={`text-3xl font-bold ${theme.text}`}>{results?.waterContent} %</div>
                                     <div className="text-sm text-gray-500">Water Content %</div>
                                 </div>
                                 <div className="bg-white rounded-lg p-3 text-sm space-y-1">
                                     <div className="text-center text-gray-600">Water Content</div>
                                     <div className="font-mono text-center">w = (W₂ - W₃) / (W₃ - W₁) × 100</div>
                                     <div className="font-mono text-center">w = ({w2} - {w3}) / ({w3} - {w1}) × 100</div>
-                                    <div className="font-bold text-[#3B68FC] text-center">w = {results?.waterContent} %</div>
+                                    <div className={`font-bold ${theme.text} text-center`}>w = {results?.waterContent} %</div>
                                 </div>
                             </div>
                         </div>

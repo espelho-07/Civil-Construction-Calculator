@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 export default function PermeabilityFallingHeadCalculator() {
+    const theme = getThemeClasses('soil-test');
     const [length, setLength] = useState(10);
     const [diameterMold, setDiameterMold] = useState(20);
     const [diameterPipe, setDiameterPipe] = useState(10);
@@ -69,7 +71,7 @@ export default function PermeabilityFallingHeadCalculator() {
                     <p className="text-[#6b7280] mb-6">Calculate coefficient of permeability using falling head method</p>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-info-circle text-[#3B68FC] mr-2"></i>What is Falling Head permeability Test?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is Falling Head permeability Test?</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <p className="text-gray-600 mb-4">The Falling Head Method is used for the measurement of the hydraulic conductivity of fine-grained soils by using the falling head liquid permeameter. A measured quantity of water is allowed to pass through a saturated soil sample under a falling head until equilibrium is achieved.</p>
                             <p className="text-gray-600">This method relies on a difference in head to induce water flow through a soil sample, measuring the time required for a drop in head from h₁ to h₂.</p>
@@ -77,7 +79,7 @@ export default function PermeabilityFallingHeadCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-flask text-[#3B68FC] mr-2"></i>Apparatus</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <ul className="list-disc pl-5 text-gray-600 space-y-2">
                                 <li>The permeameter mould (internal diameter) 10 cm; height 12.73 cm</li>
@@ -90,10 +92,10 @@ export default function PermeabilityFallingHeadCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-calculator text-[#3B68FC] mr-2"></i>Falling Head Test Calculations</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>Falling Head Test Calculations</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <div className="bg-[#f8f9fa] p-4 rounded-lg text-center">
-                                <div className="font-mono text-lg text-[#3B68FC]">Permeability Falling Head (K) = 2.303 × (aL / At) × log₁₀(h₁/h₂)</div>
+                                <div className={`font-mono text-lg ${theme.text}`}>Permeability Falling Head (K) = 2.303 × (aL / At) × log₁₀(h₁/h₂)</div>
                             </div>
                             <div className="mt-4 text-sm text-gray-600">
                                 <p><strong>Where,</strong></p>
@@ -118,9 +120,9 @@ export default function PermeabilityFallingHeadCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className="px-5 py-4 border-b bg-gradient-to-r from-blue-50 to-cyan-50 flex items-center gap-3">
-                            <i className="fas fa-arrow-down text-xl text-blue-600"></i>
-                            <h2 className="font-semibold text-sm">PERMEABILITY (FALLING HEAD TEST)</h2>
+                        <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
+                            <i className="fas fa-arrow-down text-xl text-white"></i>
+                            <h2 className="font-semibold text-sm text-white">PERMEABILITY (FALLING HEAD TEST)</h2>
                         </div>
                         <div className="p-4">
                             <div className="grid grid-cols-3 gap-2 mb-3">
@@ -140,18 +142,18 @@ export default function PermeabilityFallingHeadCalculator() {
                                 </div>
                             ))}
 
-                            <button onClick={calculate} className="w-full bg-[#3B68FC] text-white py-2 rounded-lg font-medium mb-4">Calculate</button>
-                            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-4">
+                            <button onClick={calculate} className={`w-full ${theme.button} py-2 rounded-lg font-medium mb-4`}>Calculate</button>
+                            <div className={`${theme.bgLight} rounded-xl p-4`}>
                                 <div className="text-center mb-3">
                                     <div className="text-xs text-gray-500">Avg. Permeability</div>
-                                    <div className="text-2xl font-bold text-[#3B68FC]">{results?.avgPermeability}</div>
+                                    <div className={`text-2xl font-bold ${theme.text}`}>{results?.avgPermeability}</div>
                                     <div className="text-xs text-gray-500">Permeability (k)</div>
                                 </div>
                                 <div className="text-xs">
                                     {results?.tests?.map((t, i) => (
                                         <div key={i} className="flex justify-between bg-white px-2 py-1 rounded mb-1">
                                             <span>Test-{i + 1}</span>
-                                            <span className="font-bold text-[#3B68FC]">{t.permeability}</span>
+                                            <span className={`font-bold ${theme.text}`}>{t.permeability}</span>
                                         </div>
                                     ))}
                                 </div>

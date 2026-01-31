@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 export default function FreeSwellIndexCalculator() {
+    const theme = getThemeClasses('soil-test');
     const [vd, setVd] = useState(110);
     const [vk, setVk] = useState(106);
     const [results, setResults] = useState(null);
@@ -42,7 +44,7 @@ export default function FreeSwellIndexCalculator() {
                     <p className="text-[#6b7280] mb-6">Calculate free swell index to determine soil expansion potential</p>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-info-circle text-[#3B68FC] mr-2"></i>What is Free Swell Index of Soil?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is Free Swell Index of Soil?</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <p className="text-gray-600 mb-4"><strong>Free swell</strong> is the increase in volume of a soil, without any external constraints, on submergence in water.</p>
                             <p className="text-gray-600 mb-4">The possibility of damage to structures due to swelling of expensive clays need be identified, at the outset, by an investigation of those soils likely to possess undesirable expansion characteristics. Inferential testing is resorted to reflect the potential of the system to swell under different simulated conditions. Actual magnitude of swelling pressures developed depends upon the dry density, initial water content, surcharge loading and several other environmental factors.</p>
@@ -52,7 +54,7 @@ export default function FreeSwellIndexCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-flask text-[#3B68FC] mr-2"></i>Apparatus</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <ol className="list-decimal pl-5 text-gray-600 space-y-2">
                                 <li><strong>Sieve</strong> - 425-micron IS Sieve.</li>
@@ -64,7 +66,7 @@ export default function FreeSwellIndexCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-clipboard-list text-[#3B68FC] mr-2"></i>Procedure to determine Free Swell Index of Soil</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-clipboard-list ${theme.text} mr-2`}></i>Procedure to determine Free Swell Index of Soil</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <ol className="list-decimal pl-5 text-gray-600 space-y-2">
                                 <li>Take two 10 g soil specimens of oven dry soil passing through 425 micron IS Sieve.</li>
@@ -76,12 +78,12 @@ export default function FreeSwellIndexCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-calculator text-[#3B68FC] mr-2"></i>How to Calculate Free swell Index of soil?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>How to Calculate Free swell Index of soil?</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <p className="text-gray-600 mb-4">The level of the soil in the kerosene graduated cylinder shall be read as the original volume of the soil sample & kerosene being a non-polar liquid does not cause swelling of the soil. The level of the soil in the distilled water cylinder shall be read as the free swell level.</p>
                             <h3 className="font-bold text-gray-800 mb-2">The free swell index of the soil shall be calculated as follows:</h3>
                             <div className="bg-[#f8f9fa] p-4 rounded-lg text-center">
-                                <div className="font-mono text-xl text-[#3B68FC]">Free swell index = (V<sub>d</sub> - V<sub>k</sub>) / V<sub>k</sub> × 100 %</div>
+                                <div className={`font-mono text-xl ${theme.text}`}>Free swell index = (V<sub>d</sub> - V<sub>k</sub>) / V<sub>k</sub> × 100 %</div>
                             </div>
                             <div className="mt-4 text-sm text-gray-600">
                                 <p><strong>Where,</strong></p>
@@ -102,24 +104,24 @@ export default function FreeSwellIndexCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className="px-5 py-4 border-b bg-gradient-to-r from-green-50 to-emerald-50 flex items-center gap-3">
-                            <i className="fas fa-expand-arrows-alt text-xl text-green-600"></i>
-                            <h2 className="font-semibold">CALCULATE FREE SWELL INDEX OF SOIL</h2>
+                        <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
+                            <i className="fas fa-expand-arrows-alt text-xl text-white"></i>
+                            <h2 className="font-semibold text-white">CALCULATE FREE SWELL INDEX OF SOIL</h2>
                         </div>
                         <div className="p-5">
                             <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Volume height of soil read from cylinder containing distilled water (V<sub>d</sub>)</label><div className="flex gap-2"><input type="number" value={vd} onChange={(e) => setVd(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">cc</span></div></div>
                             <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">Volume height of soil read from cylinder containing kerosene (V<sub>k</sub>)</label><div className="flex gap-2"><input type="number" value={vk} onChange={(e) => setVk(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">cc</span></div></div>
-                            <button onClick={calculate} className="w-full bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium mb-5">Calculate</button>
-                            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4">
+                            <button onClick={calculate} className={`w-full ${theme.button} py-2.5 rounded-lg font-medium mb-5`}>Calculate</button>
+                            <div className={`${theme.bgLight} rounded-xl p-4`}>
                                 <div className="text-center mb-3">
-                                    <div className="text-3xl font-bold text-[#3B68FC]">{results?.freeSwellIndex} %</div>
+                                    <div className={`text-3xl font-bold ${theme.text}`}>{results?.freeSwellIndex} %</div>
                                     <div className="text-sm text-gray-500">Free swell Index %</div>
                                 </div>
                                 <div className="bg-white rounded-lg p-3 text-sm space-y-1">
                                     <div className="text-center text-gray-600">Free Swell Index</div>
                                     <div className="font-mono text-center text-xs">Free Swell Index = (V<sub>d</sub> - V<sub>k</sub>) / V<sub>k</sub> × 100</div>
                                     <div className="font-mono text-center text-xs">Free Swell Index = ({vd} - {vk}) / {vk} × 100</div>
-                                    <div className="font-bold text-[#3B68FC] text-center">Free Swell Index = {results?.freeSwellIndex} %</div>
+                                    <div className={`font-bold ${theme.text} text-center`}>Free Swell Index = {results?.freeSwellIndex} %</div>
                                 </div>
                             </div>
                         </div>

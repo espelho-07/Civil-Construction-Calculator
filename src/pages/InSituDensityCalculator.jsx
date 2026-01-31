@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 export default function InSituDensityCalculator() {
+    const theme = getThemeClasses('soil-test');
     const [diameterCore, setDiameterCore] = useState(10);
     const [heightCore, setHeightCore] = useState(12.73);
     const [massCore, setMassCore] = useState(1600);
@@ -77,7 +79,7 @@ export default function InSituDensityCalculator() {
                     <p className="text-[#6b7280] mb-6">Determine field density of soil by core cutter method</p>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-info-circle text-[#3B68FC] mr-2"></i>What is IN-SITU Density By Core Cutter Method?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is IN-SITU Density By Core Cutter Method?</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <p className="text-gray-600 mb-4">The Core cutter method is a fast and economical method for determining the field dry unit weight of fine grained also free from coarse particles like Pebbles or Gravels. This test is simple and gives accurate results and hence the test is used very commonly. If the soil contain particles more than 20% it is nor advisable.</p>
                             <p className="text-gray-600"><strong>Applications:</strong> Highway Construction, Embankment, Dam Construction, Sub-grade, Earthwork</p>
@@ -85,7 +87,7 @@ export default function InSituDensityCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-flask text-[#3B68FC] mr-2"></i>Apparatus</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <div className="grid grid-cols-2 gap-6">
                                 <div>
@@ -105,13 +107,13 @@ export default function InSituDensityCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-calculator text-[#3B68FC] mr-2"></i>Calculations</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>Calculations</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <div className="bg-[#f8f9fa] p-4 rounded-lg space-y-3 font-mono text-center">
                                 <div>Volume of core cutter (V) = π/4 × D² × H cm³</div>
                                 <div>Bulk Density (γ) = M/V g/cm³</div>
-                                <div className="text-[#3B68FC]">Water Content (w) = (W₂ - W₃)/(W₃ - W₁) × 100 %</div>
-                                <div className="text-[#3B68FC]">Dry Density (γd) = γ / (1 + w/100) g/cm³</div>
+                                <div className={theme.text}>Water Content (w) = (W₂ - W₃)/(W₃ - W₁) × 100 %</div>
+                                <div className={theme.text}>Dry Density (γd) = γ / (1 + w/100) g/cm³</div>
                             </div>
                             <div className="mt-4 text-sm text-gray-600">
                                 <p><strong>Where,</strong></p>
@@ -135,9 +137,9 @@ export default function InSituDensityCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className="px-5 py-4 border-b bg-gradient-to-r from-amber-50 to-orange-50 flex items-center gap-3">
-                            <i className="fas fa-circle text-xl text-amber-600"></i>
-                            <h2 className="font-semibold text-sm">IN-SITU DENSITY BY CORE CUTTER METHOD</h2>
+                        <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
+                            <i className="fas fa-circle text-xl text-white"></i>
+                            <h2 className="font-semibold text-sm text-white">IN-SITU DENSITY BY CORE CUTTER METHOD</h2>
                         </div>
                         <div className="p-4">
                             <div className="grid grid-cols-3 gap-2 mb-3">
@@ -162,29 +164,29 @@ export default function InSituDensityCalculator() {
                                 </table>
                             </div>
 
-                            <button onClick={calculate} className="w-full bg-[#3B68FC] text-white py-2 rounded-lg font-medium mb-4">Calculate</button>
-                            <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-4">
+                            <button onClick={calculate} className={`w-full ${theme.button} py-2 rounded-lg font-medium mb-4`}>Calculate</button>
+                            <div className={`${theme.bgLight} rounded-xl p-4`}>
                                 <div className="grid grid-cols-2 gap-3 text-center mb-3">
                                     <div>
                                         <div className="text-xs text-gray-500">Bulk Density</div>
-                                        <div className="text-lg font-bold text-[#3B68FC]">{results?.bulkDensity}</div>
+                                        <div className={`text-lg font-bold ${theme.text}`}>{results?.bulkDensity}</div>
                                         <div className="text-xs text-gray-400">g/cm³</div>
                                     </div>
                                     <div>
                                         <div className="text-xs text-gray-500">Field Dry Density</div>
-                                        <div className="text-lg font-bold text-amber-600">{results?.avgDryDensity}</div>
+                                        <div className={`text-lg font-bold ${theme.text}`}>{results?.avgDryDensity}</div>
                                         <div className="text-xs text-gray-400">g/cm³</div>
                                     </div>
                                 </div>
                                 <div className="text-center mb-2">
                                     <div className="text-xs text-gray-500">Avg. Water Content</div>
-                                    <div className="text-lg font-bold text-[#3B68FC]">{results?.avgWaterContent} %</div>
+                                    <div className={`text-lg font-bold ${theme.text}`}>{results?.avgWaterContent} %</div>
                                 </div>
                                 <div className="text-xs">
                                     {results?.tests?.map((t, i) => (
                                         <div key={i} className="flex justify-between bg-white px-2 py-1 rounded mb-1">
                                             <span>Test-{t.containerNo}</span>
-                                            <span className="font-bold text-[#3B68FC]">γd={t.dryDensity} | w={t.waterContent}%</span>
+                                            <span className={`font-bold ${theme.text}`}>γd={t.dryDensity} | w={t.waterContent}%</span>
                                         </div>
                                     ))}
                                 </div>

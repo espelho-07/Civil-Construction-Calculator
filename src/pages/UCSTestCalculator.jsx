@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 export default function UCSTestCalculator() {
+    const theme = getThemeClasses('soil-test');
     const [diameter, setDiameter] = useState(38);
     const [length, setLength] = useState(76);
     const [density, setDensity] = useState(1.65);
@@ -72,7 +74,7 @@ export default function UCSTestCalculator() {
                     <p className="text-[#6b7280] mb-6">Calculate unconfined compressive strength of soil</p>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-info-circle text-[#3B68FC] mr-2"></i>What Unconfined Compressive Strength?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What Unconfined Compressive Strength?</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <p className="text-gray-600 mb-4">A measure of a material's strength. The unconfined compressive strength (UCS) is the maximum axial compressive stress that a right cylindrical sample of material can withstand under unconfined conditions—the confining stress is zero. It is also known as the uniaxial compressive strength of a medium.</p>
                             <p className="text-gray-600 mb-4"><strong>Alternate Form:</strong> UCS, uniaxial compressive strength.</p>
@@ -81,7 +83,7 @@ export default function UCSTestCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-flask text-[#3B68FC] mr-2"></i>Apparatus</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <ol className="list-decimal pl-5 text-gray-600 space-y-2">
                                 <li><strong>Compression Device:</strong> Platform weighing scale equipped with a screw jack activated yoke, Hydraulic loading device, Screw jack with spring load measuring device, Any of live loading device</li>
@@ -96,7 +98,7 @@ export default function UCSTestCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-calculator text-[#3B68FC] mr-2"></i>The Unconfined Compressive Strength is calculated as</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>The Unconfined Compressive Strength is calculated as</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <div className="space-y-2 text-gray-600">
                                 <p>1. Initial Area Of Specimen (A₀) = π/4 × D₀²</p>
@@ -108,8 +110,8 @@ export default function UCSTestCalculator() {
                             </div>
                             <div className="bg-[#f8f9fa] p-4 rounded-lg mt-4 text-center">
                                 <div className="font-bold text-lg">Result of Test</div>
-                                <div className="font-mono text-xl text-[#3B68FC] mt-2">UCS (q<sub>u</sub>) = Maximum Value From Stress (δ)</div>
-                                <div className="font-mono text-xl text-[#3B68FC] mt-2">Cohesion = q<sub>u</sub>/2 Kg/cm²</div>
+                                <div className={`font-mono text-xl ${theme.text} mt-2`}>UCS (q<sub>u</sub>) = Maximum Value From Stress (δ)</div>
+                                <div className={`font-mono text-xl ${theme.text} mt-2`}>Cohesion = q<sub>u</sub>/2 Kg/cm²</div>
                             </div>
                         </div>
                     </section>
@@ -117,9 +119,9 @@ export default function UCSTestCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className="px-5 py-4 border-b bg-gradient-to-r from-purple-50 to-indigo-50 flex items-center gap-3">
-                            <i className="fas fa-compress text-xl text-purple-600"></i>
-                            <h2 className="font-semibold text-sm">UCS TEST</h2>
+                        <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
+                            <i className="fas fa-compress text-xl text-white"></i>
+                            <h2 className="font-semibold text-sm text-white">UCS TEST</h2>
                         </div>
                         <div className="p-4">
                             <div className="grid grid-cols-2 gap-2 mb-3">
@@ -144,16 +146,16 @@ export default function UCSTestCalculator() {
                                     </tbody>
                                 </table>
                             </div>
-                            <button onClick={calculate} className="w-full bg-[#3B68FC] text-white py-2 rounded-lg font-medium mb-4">Calculate</button>
-                            <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-4">
+                            <button onClick={calculate} className={`w-full ${theme.button} py-2 rounded-lg font-medium mb-4`}>Calculate</button>
+                            <div className={`${theme.bgLight} rounded-xl p-4`}>
                                 <div className="grid grid-cols-2 gap-3 text-center">
                                     <div>
                                         <div className="text-xs text-gray-500">UCS (q<sub>u</sub>)</div>
-                                        <div className="text-xl font-bold text-[#3B68FC]">{results?.ucs} Kg/cm²</div>
+                                        <div className={`text-xl font-bold ${theme.text}`}>{results?.ucs} Kg/cm²</div>
                                     </div>
                                     <div>
                                         <div className="text-xs text-gray-500">Cohesion (C<sub>u</sub>)</div>
-                                        <div className="text-xl font-bold text-purple-600">{results?.cohesion} Kg/cm²</div>
+                                        <div className={`text-xl font-bold ${theme.text}`}>{results?.cohesion} Kg/cm²</div>
                                     </div>
                                 </div>
                                 <div className="text-xs text-gray-500 mt-2 text-center">Initial Area: {results?.area} cm²</div>

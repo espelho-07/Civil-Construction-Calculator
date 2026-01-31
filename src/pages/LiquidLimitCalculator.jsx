@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 export default function LiquidLimitCalculator() {
+    const theme = getThemeClasses('soil-test');
     const [trials, setTrials] = useState([
         { blows: 35, wetSoil: 57, drySoil: 47, container: 20, waterContent: 0 },
         { blows: 28, wetSoil: 49, drySoil: 41, container: 17, waterContent: 0 },
@@ -72,7 +74,7 @@ export default function LiquidLimitCalculator() {
                     <p className="text-[#6b7280] mb-6">Calculate liquid limit of soil using Casagrande method</p>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-info-circle text-[#3B68FC] mr-2"></i>What is Liquid Limit of Soil?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is Liquid Limit of Soil?</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <p className="text-gray-600 mb-4 italic">A knowledge of the Atterberg limits is common in the construction of levees, earthen dams & the prediction of the level of subsidence that naturally occur when fine-grained deposits are drained. Liquid limit is used to calculate the activity of a clay and is also used in the classification of soils.</p>
                             <h3 className="font-bold text-gray-800 mb-2">Why we need to determine Liquid Limit?</h3>
@@ -85,7 +87,7 @@ export default function LiquidLimitCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-clipboard-list text-[#3B68FC] mr-2"></i>Procedure to conduct Liquid Limit of Soil</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-clipboard-list ${theme.text} mr-2`}></i>Procedure to conduct Liquid Limit of Soil</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <h3 className="font-bold text-gray-800 mb-2">Apparatus</h3>
                             <ol className="list-decimal pl-5 text-gray-600 space-y-1 mb-4">
@@ -102,18 +104,18 @@ export default function LiquidLimitCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-calculator text-[#3B68FC] mr-2"></i>Liquid Limit Calculation</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>Liquid Limit Calculation</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <div className="grid grid-cols-2 gap-4 mb-4">
                                 <div className="bg-[#f8f9fa] p-4 rounded-lg text-center">
                                     <div className="text-sm text-gray-600 mb-2">Liquid Level of given Soil is</div>
-                                    <div className="text-3xl font-bold text-[#3B68FC]">{liquidLimit} %</div>
+                                    <div className={`text-3xl font-bold ${theme.text}`}>{liquidLimit} %</div>
                                 </div>
                                 <div className="bg-[#f8f9fa] p-4 rounded-lg">
                                     <div className="text-sm text-gray-600 mb-2">Liquid Level of given Soil is</div>
                                     <table className="w-full text-xs">
                                         <thead><tr><th className="text-left">Trial</th><th className="text-left">Water %</th></tr></thead>
-                                        <tbody>{trials.map((t, i) => <tr key={i}><td>Trial {i + 1}</td><td className="font-bold text-[#3B68FC]">{t.waterContent}</td></tr>)}</tbody>
+                                        <tbody>{trials.map((t, i) => <tr key={i}><td>Trial {i + 1}</td><td className={`font-bold ${theme.text}`}>{t.waterContent}</td></tr>)}</tbody>
                                     </table>
                                 </div>
                             </div>
@@ -132,9 +134,9 @@ export default function LiquidLimitCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className="px-5 py-4 border-b bg-gradient-to-r from-cyan-50 to-blue-50 flex items-center gap-3">
-                            <i className="fas fa-water text-xl text-cyan-600"></i>
-                            <h2 className="font-semibold text-sm">DETERMINE LIQUID LIMIT OF SOIL</h2>
+                        <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
+                            <i className="fas fa-water text-xl text-white"></i>
+                            <h2 className="font-semibold text-sm text-white">DETERMINE LIQUID LIMIT OF SOIL</h2>
                         </div>
                         <div className="p-4">
                             <table className="w-full text-xs mb-4">
@@ -159,15 +161,15 @@ export default function LiquidLimitCalculator() {
                                     ))}
                                 </tbody>
                             </table>
-                            <button onClick={calculate} className="w-full bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium mb-4">Calculate</button>
-                            <div className="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-xl p-4">
+                            <button onClick={calculate} className={`w-full ${theme.button} py-2.5 rounded-lg font-medium mb-4`}>Calculate</button>
+                            <div className={`${theme.bgLight} rounded-xl p-4`}>
                                 <div className="text-center">
                                     <div className="text-sm text-gray-500">Liquid Limit</div>
-                                    <div className="text-3xl font-bold text-[#3B68FC]">{liquidLimit} %</div>
+                                    <div className={`text-3xl font-bold ${theme.text}`}>{liquidLimit} %</div>
                                 </div>
                                 <table className="w-full text-xs mt-3">
                                     <thead><tr className="bg-white"><th className="px-2 py-1">Trial</th><th className="px-2 py-1">Blows</th><th className="px-2 py-1">Water %</th></tr></thead>
-                                    <tbody>{trials.map((t, i) => <tr key={i}><td className="px-2 py-1 text-center">{i + 1}</td><td className="px-2 py-1 text-center">{t.blows}</td><td className="px-2 py-1 text-center font-bold text-[#3B68FC]">{t.waterContent}</td></tr>)}</tbody>
+                                    <tbody>{trials.map((t, i) => <tr key={i}><td className="px-2 py-1 text-center">{i + 1}</td><td className="px-2 py-1 text-center">{t.blows}</td><td className={`px-2 py-1 text-center font-bold ${theme.text}`}>{t.waterContent}</td></tr>)}</tbody>
                                 </table>
                             </div>
                         </div>

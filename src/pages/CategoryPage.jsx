@@ -1,5 +1,19 @@
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import { categories, getThemeClasses } from '../constants/categories';
+
+// Reusing the static calculator data for now, but ideally this should also be centralized or fetched
+// Mapping key from slug
+const getCategoryKey = (slug) => {
+    // This is a temporary mapping to match existing data structure with new slugs
+    if (slug === 'sieve-analysis-aggregates') return 'sieve-analysis-aggregates';
+    return slug;
+};
+
+// ... (Keeping the large categoryData object for now to avoid breaking data, but will access it dynamically)
+// In a real app, this data should be in a separate file or database. 
+// For this refactor, I will assume the existing categoryData object is available or I will declare it here.
 
 const categoryData = {
     structural: {
@@ -189,7 +203,19 @@ const defaultCategory = { name: 'Calculators', icon: 'fa-calculator', color: 'te
 
 export default function CategoryPage() {
     const { categorySlug } = useParams();
+    const [searchQuery, setSearchQuery] = useState('');
+
     const category = categoryData[categorySlug] || defaultCategory;
+
+    // Get central theme Config
+    const categoryConfig = categories.find(c => c.slug === categorySlug);
+    const theme = getThemeClasses(categoryConfig ? categoryConfig.theme : 'blue');
+
+    // Filter calculators
+    const filteredCalculators = category.calculators.filter(calc =>
+        calc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        calc.desc.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     // Special handling for "Others" page - show sub-categories
     if (categorySlug === 'others' && category.isSubCategories) {
@@ -231,37 +257,89 @@ export default function CategoryPage() {
     return (
         <main className="min-h-screen bg-[#F7F9FF]">
             <CategoryNav activeCategory={categorySlug} />
-            <section className="bg-white border-b border-[#e5e7eb] py-12 px-6">
-                <div className="max-w-6xl mx-auto">
-                    <div className="flex items-center gap-4">
-                        <i className={`fas ${category.icon} text-4xl ${category.color}`}></i>
-                        <div>
-                            <h1 className="text-4xl font-bold text-[#0A0A0A]">{category.name} Calculators</h1>
-                            <p className="text-[#6b7280] mt-1">{category.calculators.length} calculators available</p>
+
+            {/* Header Section with Dynamic Theme */}
+            <section className={`bg-white border-b border-[#e5e7eb] py-10 px-6 relative overflow-hidden`}>
+                <div className={`absolute top-0 right-0 w-64 h-64 ${theme.bsSoft} rounded-full blur-[80px] opacity-40 -mr-20 -mt-20`}></div>
+
+                <div className="max-w-6xl mx-auto relative z-10">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div className="flex items-center gap-5">
+                            <div className={`w-16 h-16 rounded-2xl ${theme.bgLight} flex items-center justify-center shrink-0 border ${theme.border}`}>
+                                <i className={`fas ${category.icon} text-3xl ${theme.text}`}></i>
+                            </div>
+                            <div>
+                                <h1 className="text-3xl md:text-4xl font-bold text-[#0A0A0A]">{category.name}</h1>
+                                <div className="flex items-center gap-2 mt-2 text-[#6b7280]">
+                                    <span>{category.calculators.length} Calculators</span>
+                                    {categoryConfig && (
+                                        <>
+                                            <span>•</span>
+                                            <span>{categoryConfig.description}</span>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Search Bar within Category */}
+                        <div className="relative w-full md:w-80">
+                            <input
+                                type="text"
+                                placeholder={`Search in ${category.name}...`}
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className={`w-full pl-10 pr-4 py-3 rounded-xl border border-[#e5e7eb] focus:outline-none focus:ring-2 focus:ring-offset-1 ${theme.focus} transition-all`}
+                            />
+                            <i className={`fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400`}></i>
                         </div>
                     </div>
                 </div>
             </section>
+
             <section className="py-8 px-6">
                 <div className="max-w-6xl mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {category.calculators.map((calc) => (
-                            <Link key={calc.name} to={calc.slug} className="bg-white border border-[#e5e7eb] rounded-xl p-5 hover:shadow-lg hover:border-[#3B68FC] hover:-translate-y-1 transition-all group">
-                                <div className="flex items-start gap-4">
-                                    <i className={`fas ${calc.icon} text-2xl ${category.color} shrink-0 group-hover:scale-110 transition-transform`}></i>
-                                    <div>
-                                        <h3 className="font-semibold text-[#0A0A0A] group-hover:text-[#3B68FC]">{calc.name}</h3>
-                                        <p className="text-sm text-[#6b7280] mt-1">{calc.desc}</p>
+                    {filteredCalculators.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {filteredCalculators.map((calc) => (
+                                <Link
+                                    key={calc.name}
+                                    to={calc.slug}
+                                    className={`bg-white border border-[#e5e7eb] rounded-xl p-5 hover:shadow-lg transition-all group hover:-translate-y-1 ${theme.hover.replace('bg-', 'border-').replace('700', '200')}`} // Hacky hover border
+                                >
+                                    <div className="flex items-start gap-4">
+                                        <div className={`w-10 h-10 rounded-lg ${theme.bgLight} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300`}>
+                                            <i className={`fas ${calc.icon} text-lg ${theme.text}`}></i>
+                                        </div>
+                                        <div>
+                                            <h3 className={`font-semibold text-[#0A0A0A] group-hover:${theme.text} transition-colors`}>{calc.name}</h3>
+                                            <p className="text-sm text-[#6b7280] mt-1 text-justify">{calc.desc}</p>
+                                        </div>
                                     </div>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-gray-300">
+                            <div className={`inline-flex w-16 h-16 rounded-full ${theme.bgLight} items-center justify-center mb-4`}>
+                                <i className={`fas fa-search text-2xl ${theme.text} opacity-50`}></i>
+                            </div>
+                            <h3 className="text-lg font-medium text-gray-900">No calculators found</h3>
+                            <p className="text-gray-500 mt-1">Try adjusting your search terms for {category.name}</p>
+                            <button
+                                onClick={() => setSearchQuery('')}
+                                className={`mt-4 px-4 py-2 text-sm font-medium ${theme.text} hover:underline`}
+                            >
+                                Clear search
+                            </button>
+                        </div>
+                    )}
+
                     {category.calculators.length === 0 && (
                         <div className="text-center py-16 text-[#6b7280]">
                             <i className="fas fa-calculator text-5xl mb-4 opacity-30"></i>
                             <p>No calculators found in this category.</p>
-                            <Link to="/" className="text-[#3B68FC] hover:underline mt-2 inline-block">← Back to home</Link>
+                            <Link to="/" className={`mt-2 inline-block ${theme.text} hover:underline`}>← Back to home</Link>
                         </div>
                     )}
                 </div>

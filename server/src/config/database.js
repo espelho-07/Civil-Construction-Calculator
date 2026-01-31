@@ -29,7 +29,8 @@ prisma.$connect()
     })
     .catch((error) => {
         console.error('❌ Database connection failed:', error);
-        process.exit(1);
+        console.error('❌ Database connection failed:', error);
+        // process.exit(1); // Keep server alive to return error response
     });
 
 export default prisma;

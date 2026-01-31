@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 export default function SteelWeightCalculator() {
+    const theme = getThemeClasses('quantity-estimator');
     const [unit, setUnit] = useState('Meter');
     const [diameter, setDiameter] = useState(12);
     const [length, setLength] = useState(15);
@@ -23,6 +25,15 @@ export default function SteelWeightCalculator() {
             weightTon: weightTon.toFixed(4),
             lengthM: lengthM.toFixed(2),
         });
+    };
+
+    const reset = () => {
+        setUnit('Meter');
+        setDiameter(12);
+        setLength(15);
+        setLengthCm(0);
+        setQuantity(1);
+        setResults(null);
     };
 
     useEffect(() => { calculate(); }, [unit, diameter, length, lengthCm, quantity]);
@@ -72,7 +83,7 @@ export default function SteelWeightCalculator() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="text-center">
                                     <div className="text-sm text-gray-500">Weight of steel in kg.</div>
-                                    <div className="text-4xl font-bold text-[#3B68FC]">{results?.weightKg} kg.</div>
+                                    <div className={`text-4xl font-bold ${theme.text}`}>{results?.weightKg} kg.</div>
                                     <div className="text-sm text-gray-500 mt-2">Weight of steel in ton</div>
                                     <div className="text-2xl font-bold text-gray-600">{results?.weightTon} Ton</div>
                                 </div>
@@ -81,7 +92,7 @@ export default function SteelWeightCalculator() {
                                     <div className="font-mono text-sm">
                                         <p>= D²/162.28 × Length × Quantity</p>
                                         <p>= {diameter}²/162.28 × {results?.lengthM} × {quantity}</p>
-                                        <p className="font-bold text-[#3B68FC]">= {results?.weightKg} kg.</p>
+                                        <p className={`font-bold ${theme.text}`}>= {results?.weightKg} kg.</p>
                                         <p className="mt-2 text-gray-500">= {results?.weightKg} / 1000</p>
                                         <p className="font-bold text-gray-600">= {results?.weightTon} Ton</p>
                                     </div>
@@ -91,12 +102,12 @@ export default function SteelWeightCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-info-circle text-[#3B68FC] mr-2"></i>What is steel weight calculation?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2"><i className={`fas fa-info-circle ${theme.text}`}></i>What is steel weight calculation?</h2>
                         <div className="bg-white rounded-xl p-6 border">
-                            <p className="text-gray-600 mb-4">Steel is an alloy of iron and carbon. Steel is created by heating iron in the presence of oxygen. Iron is a soft, malleable metal. Adding 1.5 to 2 percent carbon creates steel, which is a stronger but less malleable metal.</p>
+                            <p className="text-gray-600 mb-4 text-justify">Steel is an alloy of iron and carbon. Steel is created by heating iron in the presence of oxygen. Iron is a soft, malleable metal. Adding 1.5 to 2 percent carbon creates steel, which is a stronger but less malleable metal.</p>
                             <div className="bg-[#f8f9fa] p-4 rounded-lg mb-4">
                                 <div className="font-bold mb-2">Steel weight calculation</div>
-                                <div className="text-lg font-mono text-[#3B68FC]">Steel weight in kg = D²/162.28 × Length × Quantity</div>
+                                <div className={`text-lg font-mono ${theme.text}`}>Steel weight in kg = D²/162.28 × Length × Quantity</div>
                                 <div className="text-lg font-mono text-gray-600 mt-2">Steel weight in ton = Weight in kg / 1000</div>
                             </div>
                             <div className="flex items-center justify-center">
@@ -112,7 +123,7 @@ export default function SteelWeightCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-table text-[#3B68FC] mr-2"></i>Standard Bar Unit Weights</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2"><i className={`fas fa-table ${theme.text}`}></i>Standard Bar Unit Weights</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
@@ -132,7 +143,7 @@ export default function SteelWeightCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-cog text-[#3B68FC] mr-2"></i>Characteristics of steel</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2"><i className={`fas fa-cog ${theme.text}`}></i>Characteristics of steel</h2>
                         <div className="bg-white rounded-xl p-6 border space-y-4 text-gray-600">
                             <p><strong>High tensile strength:</strong> The high tensile strength offered by steel products and especially steel reinforcement makes it ideal to strengthen concrete structures.</p>
                             <p><strong>High compressive strength:</strong> Steel, just like concrete, is resistant to high compression forces present in larger building an structures.</p>
@@ -144,17 +155,17 @@ export default function SteelWeightCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className="px-5 py-4 border-b bg-gradient-to-r from-gray-100 to-slate-100 flex items-center gap-3">
-                            <i className="fas fa-weight-hanging text-xl text-gray-600"></i>
-                            <h2 className="font-semibold">STEEL WEIGHT CALCULATION</h2>
+                        <div className={`px-5 py-4 border-b ${theme.gradient} flex items-center gap-3 bg-gradient-to-r`}>
+                            <i className="fas fa-weight-hanging text-xl text-white"></i>
+                            <h2 className="font-semibold text-white">STEEL WEIGHT CALCULATION</h2>
                         </div>
                         <div className="p-5">
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Unit</label><select value={unit} onChange={(e) => setUnit(e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm"><option value="Meter">Meter/CM</option><option value="Feet">Feet/Inch</option></select></div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Diameter (mm)</label><input type="number" value={diameter} onChange={(e) => setDiameter(Number(e.target.value))} className="w-full px-3 py-2 border rounded-lg text-sm" /></div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Length</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={length} onChange={(e) => setLength(Number(e.target.value))} className="w-full px-3 py-2 pr-14 border rounded-lg text-sm" /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'meter' : 'feet'}</span></div><div className="relative"><input type="number" value={lengthCm} onChange={(e) => setLengthCm(Number(e.target.value))} className="w-full px-3 py-2 pr-10 border rounded-lg text-sm" /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span></div></div></div>
-                            <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">Quantity</label><input type="number" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-full px-3 py-2 border rounded-lg text-sm" /></div>
-                            <div className="flex gap-2 mb-5"><button onClick={calculate} className="flex-1 bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium">Calculate</button><button className="bg-red-500 text-white px-4 py-2.5 rounded-lg">Reset</button></div>
-                            <div className="bg-[#f8f9fa] rounded-xl p-4 text-center"><div className="text-xs text-gray-500">Weight of steel</div><div className="text-2xl font-bold text-[#3B68FC]">{results?.weightKg} kg</div><div className="text-lg font-bold text-gray-600">{results?.weightTon} Ton</div></div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Unit</label><select value={unit} onChange={(e) => setUnit(e.target.value)} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`}><option value="Meter">Meter/CM</option><option value="Feet">Feet/Inch</option></select></div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Diameter (mm)</label><input type="number" value={diameter} onChange={(e) => setDiameter(Number(e.target.value))} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`} /></div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Length</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={length} onChange={(e) => setLength(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'meter' : 'feet'}</span></div><div className="relative"><input type="number" value={lengthCm} onChange={(e) => setLengthCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span></div></div></div>
+                            <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">Quantity</label><input type="number" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`} /></div>
+                            <div className="flex gap-2 mb-5"><button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium`}>Calculate</button><button onClick={reset} className="bg-red-500 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-red-600 transition-colors">Reset</button></div>
+                            <div className="bg-[#f8f9fa] rounded-xl p-4 text-center"><div className="text-xs text-gray-500">Weight of steel</div><div className={`text-2xl font-bold ${theme.text}`}>{results?.weightKg} kg</div><div className="text-lg font-bold text-gray-600">{results?.weightTon} Ton</div></div>
                         </div>
                     </div>
                 </aside>

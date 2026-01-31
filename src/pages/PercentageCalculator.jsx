@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 export default function PercentageCalculator() {
+    const theme = getThemeClasses('math');
     const [val1, setVal1] = useState('');
     const [val2, setVal2] = useState('');
     const [result, setResult] = useState(null);
@@ -63,18 +65,18 @@ export default function PercentageCalculator() {
                                     type="number"
                                     value={val1}
                                     onChange={(e) => setVal1(e.target.value)}
-                                    className="w-24 p-2 border border-[#e5e7eb] rounded"
+                                    className={`w-24 p-2 border border-[#e5e7eb] rounded ${theme.focus}`}
                                 />
                                 <span className="text-[#0A0A0A]">% of</span>
                                 <input
                                     type="number"
                                     value={val2}
                                     onChange={(e) => setVal2(e.target.value)}
-                                    className="w-24 p-2 border border-[#e5e7eb] rounded"
+                                    className={`w-24 p-2 border border-[#e5e7eb] rounded ${theme.focus}`}
                                 />
                                 <span className="text-[#0A0A0A]">?</span>
                             </div>
-                            <div className="text-2xl font-bold text-[#3B68FC]">
+                            <div className={`text-2xl font-bold ${theme.text}`}>
                                 {result ? `${result}%` : '-'}
                             </div>
                         </div>

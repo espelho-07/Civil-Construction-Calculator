@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 export default function DirectShearCalculator() {
+    const theme = getThemeClasses('soil-test');
     const [provingRingConstant, setProvingRingConstant] = useState(1);
     const [tests, setTests] = useState([
         { area: 36, dialGauge: 0, provingRing: 1, normalStress: 0.5 },
@@ -81,14 +83,14 @@ export default function DirectShearCalculator() {
                     <p className="text-[#6b7280] mb-6">Calculate shear strength parameters of soil</p>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-info-circle text-[#3B68FC] mr-2"></i>What Is Direct Shear Test?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What Is Direct Shear Test?</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <p className="text-gray-600 mb-4">A Direct shear test is a laboratory or field test used by geotechnical engineers to measure the shear strength properties of soil or rock material, or of discontinuities in soil or rock masses.</p>
                         </div>
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-flask text-[#3B68FC] mr-2"></i>Apparatus</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <ol className="list-decimal pl-5 text-gray-600 space-y-2">
                                 <li>The shear box grid plates, porous stones, base plate, and loading pad and water jacket/cell</li>
@@ -104,12 +106,12 @@ export default function DirectShearCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-calculator text-[#3B68FC] mr-2"></i>Direct Shear Test Calculation</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>Direct Shear Test Calculation</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <div className="bg-[#f8f9fa] p-4 rounded-lg text-center space-y-3">
                                 <div className="font-mono text-lg">Horizontal Load(kg) = Proving Ring Reading × Proving Ring Constant</div>
                                 <div className="font-mono text-lg">Corrected Area = A₀ × (1 - δ/L) cm²</div>
-                                <div className="font-mono text-lg text-[#3B68FC]">Shear Stress(τ) = Horizontal Load(kg) / Corrected Area (cm²)</div>
+                                <div className={`font-mono text-lg ${theme.text}`}>Shear Stress(τ) = Horizontal Load(kg) / Corrected Area (cm²)</div>
                             </div>
                             <div className="mt-4 text-sm text-gray-600">
                                 <p><strong>Where,</strong></p>
@@ -131,9 +133,9 @@ export default function DirectShearCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className="px-5 py-4 border-b bg-gradient-to-r from-red-50 to-orange-50 flex items-center gap-3">
-                            <i className="fas fa-compress-arrows-alt text-xl text-red-600"></i>
-                            <h2 className="font-semibold text-sm">DIRECT SHEAR TEST</h2>
+                        <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
+                            <i className="fas fa-compress-arrows-alt text-xl text-white"></i>
+                            <h2 className="font-semibold text-sm text-white">DIRECT SHEAR TEST</h2>
                         </div>
                         <div className="p-4">
                             <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Proving Ring Constant (k)</label><input type="number" value={provingRingConstant} onChange={(e) => setProvingRingConstant(Number(e.target.value))} className="w-full px-3 py-2 border rounded-lg text-sm" /></div>
@@ -155,16 +157,16 @@ export default function DirectShearCalculator() {
                                 </table>
                             </div>
 
-                            <button onClick={calculate} className="w-full bg-[#3B68FC] text-white py-2 rounded-lg font-medium mb-4">Calculate</button>
-                            <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-4">
+                            <button onClick={calculate} className={`w-full ${theme.button} py-2 rounded-lg font-medium mb-4`}>Calculate</button>
+                            <div className={`${theme.bgLight} rounded-xl p-4`}>
                                 <div className="grid grid-cols-2 gap-3 text-center mb-3">
                                     <div>
                                         <div className="text-xs text-gray-500">Cohesion (C)</div>
-                                        <div className="text-lg font-bold text-[#3B68FC]">{results?.cohesion} kg/cm²</div>
+                                        <div className={`text-lg font-bold ${theme.text}`}>{results?.cohesion} kg/cm²</div>
                                     </div>
                                     <div>
                                         <div className="text-xs text-gray-500">Angle of Friction (φ)</div>
-                                        <div className="text-lg font-bold text-red-600">{results?.phi}°</div>
+                                        <div className={`text-lg font-bold ${theme.text}`}>{results?.phi}°</div>
                                     </div>
                                 </div>
                                 <div className="text-xs">
@@ -172,7 +174,7 @@ export default function DirectShearCalculator() {
                                     {results?.tests?.map((t, i) => (
                                         <div key={i} className="flex justify-between bg-white px-2 py-1 rounded mb-1">
                                             <span>Test-{i + 1} (σ={t.normalStress})</span>
-                                            <span className="font-bold text-[#3B68FC]">{t.shearStress} kg/cm²</span>
+                                            <span className={`font-bold ${theme.text}`}>{t.shearStress} kg/cm²</span>
                                         </div>
                                     ))}
                                 </div>

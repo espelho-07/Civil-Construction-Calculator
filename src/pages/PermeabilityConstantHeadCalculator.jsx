@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 export default function PermeabilityConstantHeadCalculator() {
+    const theme = getThemeClasses('soil-test');
     const [crossSection, setcrossSection] = useState(100);
     const [length, setLength] = useState(12);
     const [tests, setTests] = useState([
@@ -63,7 +65,7 @@ export default function PermeabilityConstantHeadCalculator() {
                     <p className="text-[#6b7280] mb-6">Calculate coefficient of permeability using constant head method</p>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-info-circle text-[#3B68FC] mr-2"></i>What is Constant Head permeability Test?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is Constant Head permeability Test?</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <p className="text-gray-600 mb-4">The Constant-Head Permeability Test is used to find the permeability or hydraulic conductivity of relatively coarse-grained soils (sands and gravels). A constant head of water is maintained across the soil sample and the quantity of water flowing through the sample is measured over a period of time.</p>
                             <p className="text-gray-600">The test is performed by maintaining a constant head and measuring the quantity of water that passes through an undisturbed soil sample in a given length of time.</p>
@@ -71,7 +73,7 @@ export default function PermeabilityConstantHeadCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-clipboard-list text-[#3B68FC] mr-2"></i>Procedure</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-clipboard-list ${theme.text} mr-2`}></i>Procedure</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <ol className="list-decimal pl-5 text-gray-600 space-y-2">
                                 <li>The mould is fixed in the base and saturated by filling with water from the bottom.</li>
@@ -85,10 +87,10 @@ export default function PermeabilityConstantHeadCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-calculator text-[#3B68FC] mr-2"></i>Constant Head Test Calculations</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>Constant Head Test Calculations</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <div className="bg-[#f8f9fa] p-4 rounded-lg text-center">
-                                <div className="font-mono text-lg text-[#3B68FC]">Permeability Constant Head (K) = QL / (Aht)</div>
+                                <div className={`font-mono text-lg ${theme.text}`}>Permeability Constant Head (K) = QL / (Aht)</div>
                             </div>
                             <div className="mt-4 text-sm text-gray-600">
                                 <p><strong>Where,</strong></p>
@@ -115,9 +117,9 @@ export default function PermeabilityConstantHeadCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className="px-5 py-4 border-b bg-gradient-to-r from-green-50 to-emerald-50 flex items-center gap-3">
-                            <i className="fas fa-arrows-alt-h text-xl text-green-600"></i>
-                            <h2 className="font-semibold text-sm">PERMEABILITY (CONSTANT HEAD TEST)</h2>
+                        <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
+                            <i className="fas fa-arrows-alt-h text-xl text-white"></i>
+                            <h2 className="font-semibold text-sm text-white">PERMEABILITY (CONSTANT HEAD TEST)</h2>
                         </div>
                         <div className="p-4">
                             <div className="grid grid-cols-2 gap-2 mb-3">
@@ -136,18 +138,18 @@ export default function PermeabilityConstantHeadCalculator() {
                                 </div>
                             ))}
 
-                            <button onClick={calculate} className="w-full bg-[#3B68FC] text-white py-2 rounded-lg font-medium mb-4">Calculate</button>
-                            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4">
+                            <button onClick={calculate} className={`w-full ${theme.button} py-2 rounded-lg font-medium mb-4`}>Calculate</button>
+                            <div className={`${theme.bgLight} rounded-xl p-4`}>
                                 <div className="text-center mb-3">
                                     <div className="text-xs text-gray-500">Avg. Permeability</div>
-                                    <div className="text-2xl font-bold text-[#3B68FC]">{results?.avgPermeability}</div>
+                                    <div className={`text-2xl font-bold ${theme.text}`}>{results?.avgPermeability}</div>
                                     <div className="text-xs text-gray-500">cm/sec</div>
                                 </div>
                                 <div className="text-xs">
                                     {results?.tests?.map((t, i) => (
                                         <div key={i} className="flex justify-between bg-white px-2 py-1 rounded mb-1">
                                             <span>Test-{i + 1} (Q={t.dischargeMl}ml)</span>
-                                            <span className="font-bold text-[#3B68FC]">{t.permeability} cm/s</span>
+                                            <span className={`font-bold ${theme.text}`}>{t.permeability} cm/s</span>
                                         </div>
                                     ))}
                                 </div>

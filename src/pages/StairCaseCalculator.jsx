@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 export default function StairCaseCalculator() {
+    const theme = getThemeClasses('quantity-estimator');
     const [unit, setUnit] = useState('Meter');
     const [gradeOfConcrete, setGradeOfConcrete] = useState('M20 (1:1.5:3)');
     const [numberOfRiser, setNumberOfRiser] = useState(11);
@@ -87,6 +89,17 @@ export default function StairCaseCalculator() {
         });
     };
 
+    const reset = () => {
+        setUnit('Meter');
+        setGradeOfConcrete('M20 (1:1.5:3)');
+        setNumberOfRiser(11);
+        setHeightOfRiser(0); setHeightOfRiserCm(18);
+        setWidthOfTread(0); setWidthOfTreadCm(25);
+        setLengthOfStair(1); setLengthOfStairCm(67);
+        setThicknessOfWaistSlab(0); setThicknessOfWaistSlabCm(15);
+        setResults(null);
+    };
+
     useEffect(() => { calculate(); }, [unit, gradeOfConcrete, numberOfRiser, heightOfRiser, heightOfRiserCm, widthOfTread, widthOfTreadCm, lengthOfStair, lengthOfStairCm, thicknessOfWaistSlab, thicknessOfWaistSlabCm]);
     useEffect(() => {
         const update = () => { if (sidebarRef.current) { const vh = window.innerHeight, sh = sidebarRef.current.offsetHeight; sidebarRef.current.style.top = sh > vh - 80 ? `${vh - sh - 16}px` : '80px'; } };
@@ -114,7 +127,10 @@ export default function StairCaseCalculator() {
                     </div>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-calculator text-[#3B68FC] mr-2"></i>Stair case calculation</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
+                            <i className={`fas fa-calculator ${theme.text}`}></i>
+                            Stair case calculation
+                        </h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div>
@@ -130,9 +146,9 @@ export default function StairCaseCalculator() {
                                         <p className="mt-2">Volume of Step = L × Width × Tread</p>
                                         <p>Volume of Step = <span className="text-red-500">{results?.volumeOfStep}</span></p>
                                         <p className="mt-2">Vol of Tread Step = Volume of Step × Tread Nos</p>
-                                        <p className="font-bold text-[#3B68FC]">Vol of Tread Step = {results?.volumeOfTreadStep}</p>
+                                        <p className={`font-bold ${theme.text}`}>Vol of Tread Step = {results?.volumeOfTreadStep}</p>
                                         <p className="mt-2">Length of Tread Step = Tread × {results?.numberOfTread}</p>
-                                        <p className="font-bold text-[#3B68FC]">Length of Tread Step = {results?.lengthOfTreadStep}</p>
+                                        <p className={`font-bold ${theme.text}`}>Length of Tread Step = {results?.lengthOfTreadStep}</p>
                                     </div>
                                 </div>
                                 <div>
@@ -146,7 +162,7 @@ export default function StairCaseCalculator() {
                                         <p>Slab Supplied Waist = <span className="text-red-500">{results?.waistSlabThicknessPerp}</span></p>
                                         <p className="mt-2">Waist Thick of Waist Slab = {results?.waistSlabThicknessPerp}</p>
                                         <p className="mt-2">Vol of Waist = L × Thick waist × Stair Per Jo</p>
-                                        <p className="font-bold text-[#3B68FC]">Volume of Waist Slab = {results?.volumeOfWaistSlab}</p>
+                                        <p className={`font-bold ${theme.text}`}>Volume of Waist Slab = {results?.volumeOfWaistSlab}</p>
                                     </div>
                                 </div>
                             </div>
@@ -154,19 +170,22 @@ export default function StairCaseCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-cubes text-[#3B68FC] mr-2"></i>Total Volume of Stair:</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
+                            <i className={`fas fa-cubes ${theme.text}`}></i>
+                            Total Volume of Stair:
+                        </h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="text-sm text-gray-600">
                                     <p>Total Volume = Vol of Tread + Volume of Waist Slab</p>
                                     <p>Total Volume = {results?.volumeOfTreadStep} + {results?.volumeOfWaistSlab}</p>
-                                    <p className="text-xl font-bold text-[#3B68FC] mt-2">Total Volume of Stair = {results?.totalVolume} m³</p>
+                                    <p className={`text-xl font-bold ${theme.text} mt-2`}>Total Volume of Stair = {results?.totalVolume} m³</p>
                                 </div>
                                 <div className="text-sm text-gray-600">
                                     <h4 className="font-bold mb-2">Dry Volume of Stair:</h4>
                                     <p>Dry Volume of Stair = Volume of Stair × 1.54</p>
                                     <p>Dry Volume of Stair = {results?.totalVolume} × 1.524</p>
-                                    <p className="font-bold text-[#3B68FC]">Dry Volume of Stair = {results?.dryVolume}</p>
+                                    <p className={`font-bold ${theme.text}`}>Dry Volume of Stair = {results?.dryVolume}</p>
                                 </div>
                             </div>
                         </div>
@@ -196,14 +215,20 @@ export default function StairCaseCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-info-circle text-[#3B68FC] mr-2"></i>What is stair case calculation?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
+                            <i className={`fas fa-info-circle ${theme.text}`}></i>
+                            What is stair case calculation?
+                        </h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <p className="text-gray-600 mb-4">A stair case or stairway, is a way of building a stair that splits the whole height into smaller heights with an equal amount of distance from one height to the other. The best height of a riser is in between 31/2 inches to 8 1/4 inches and the best width of a stair tread in a straight flight is 11 inches to 14 inches. These two are the main requirements of a stair that must be fulfilled first. Usually, we have to fix the rise and tread sizes to satisfy the range of the width and headroom.</p>
                         </div>
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-list text-[#3B68FC] mr-2"></i>Terminology of stair case calculation</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
+                            <i className={`fas fa-list ${theme.text}`}></i>
+                            Terminology of stair case calculation
+                        </h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <ul className="space-y-3 text-gray-600">
                                 <li><strong>Rise/Riser –</strong> The one step from the other. The length between the first floor to the second floor is known as full length/height. The best height of one rise is in between 5 inches to 8 1/4 inches.</li>
@@ -217,25 +242,25 @@ export default function StairCaseCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className="px-5 py-4 border-b bg-gradient-to-r from-indigo-50 to-purple-50 flex items-center gap-3">
-                            <i className="fas fa-stairs text-xl text-indigo-600"></i>
-                            <h2 className="font-semibold">STAIR CASE CALCULATION</h2>
+                        <div className={`px-5 py-4 border-b ${theme.gradient} flex items-center gap-3 bg-gradient-to-r`}>
+                            <i className="fas fa-stairs text-xl text-white"></i>
+                            <h2 className="font-semibold text-white">STAIR CASE CALCULATION</h2>
                         </div>
                         <div className="p-5">
                             <div className="grid grid-cols-2 gap-2 mb-3">
-                                <div><label className="text-xs text-gray-500 mb-1 block">Unit</label><select value={unit} onChange={(e) => setUnit(e.target.value)} className="w-full px-2 py-1.5 border rounded-lg text-xs"><option value="Meter">Meter/CM</option><option value="Feet">Feet/Inch</option></select></div>
-                                <div><label className="text-xs text-gray-500 mb-1 block">Grade</label><select value={gradeOfConcrete} onChange={(e) => setGradeOfConcrete(e.target.value)} className="w-full px-2 py-1.5 border rounded-lg text-xs">{Object.keys(gradeRatios).map(g => <option key={g} value={g}>{g.split(' ')[0]}</option>)}</select></div>
+                                <div><label className="text-xs text-gray-500 mb-1 block">Unit</label><select value={unit} onChange={(e) => setUnit(e.target.value)} className={`w-full px-2 py-1.5 border rounded-lg text-xs ${theme.focus} outline-none`}><option value="Meter">Meter/CM</option><option value="Feet">Feet/Inch</option></select></div>
+                                <div><label className="text-xs text-gray-500 mb-1 block">Grade</label><select value={gradeOfConcrete} onChange={(e) => setGradeOfConcrete(e.target.value)} className={`w-full px-2 py-1.5 border rounded-lg text-xs ${theme.focus} outline-none`}>{Object.keys(gradeRatios).map(g => <option key={g} value={g}>{g.split(' ')[0]}</option>)}</select></div>
                             </div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Number of Riser</label><input type="number" value={numberOfRiser} onChange={(e) => setNumberOfRiser(Number(e.target.value))} className="w-full px-3 py-2 border rounded-lg text-sm" /></div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Height of Riser</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={heightOfRiser} onChange={(e) => setHeightOfRiser(Number(e.target.value))} className="w-full px-3 py-2 pr-14 border rounded-lg text-sm" /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={heightOfRiserCm} onChange={(e) => setHeightOfRiserCm(Number(e.target.value))} className="w-full px-3 py-2 pr-10 border rounded-lg text-sm" /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Width of Tread</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={widthOfTread} onChange={(e) => setWidthOfTread(Number(e.target.value))} className="w-full px-3 py-2 pr-14 border rounded-lg text-sm" /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={widthOfTreadCm} onChange={(e) => setWidthOfTreadCm(Number(e.target.value))} className="w-full px-3 py-2 pr-10 border rounded-lg text-sm" /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Length of Stair</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={lengthOfStair} onChange={(e) => setLengthOfStair(Number(e.target.value))} className="w-full px-3 py-2 pr-14 border rounded-lg text-sm" /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={lengthOfStairCm} onChange={(e) => setLengthOfStairCm(Number(e.target.value))} className="w-full px-3 py-2 pr-10 border rounded-lg text-sm" /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
-                            <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">Thickness of Waist Slab</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={thicknessOfWaistSlab} onChange={(e) => setThicknessOfWaistSlab(Number(e.target.value))} className="w-full px-3 py-2 pr-14 border rounded-lg text-sm" /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={thicknessOfWaistSlabCm} onChange={(e) => setThicknessOfWaistSlabCm(Number(e.target.value))} className="w-full px-3 py-2 pr-10 border rounded-lg text-sm" /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
-                            <div className="flex gap-2 mb-5"><button onClick={calculate} className="flex-1 bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium">Calculate</button><button className="bg-red-500 text-white px-4 py-2.5 rounded-lg">Reset</button></div>
-                            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4">
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Number of Riser</label><input type="number" value={numberOfRiser} onChange={(e) => setNumberOfRiser(Number(e.target.value))} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`} /></div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Height of Riser</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={heightOfRiser} onChange={(e) => setHeightOfRiser(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={heightOfRiserCm} onChange={(e) => setHeightOfRiserCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Width of Tread</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={widthOfTread} onChange={(e) => setWidthOfTread(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={widthOfTreadCm} onChange={(e) => setWidthOfTreadCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Length of Stair</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={lengthOfStair} onChange={(e) => setLengthOfStair(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={lengthOfStairCm} onChange={(e) => setLengthOfStairCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
+                            <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">Thickness of Waist Slab</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={thicknessOfWaistSlab} onChange={(e) => setThicknessOfWaistSlab(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={thicknessOfWaistSlabCm} onChange={(e) => setThicknessOfWaistSlabCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
+                            <div className="flex gap-2 mb-5"><button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium`}>Calculate</button><button onClick={reset} className="bg-red-500 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-red-600 transition-colors">Reset</button></div>
+                            <div className={`${theme.bgLight} rounded-xl p-4`}>
                                 <div className="text-center mb-3">
                                     <div className="text-xs text-gray-500">Total Volume of Stair Case</div>
-                                    <div className="text-xl font-bold text-[#3B68FC]">{results?.totalVolume} m³ <span className="text-gray-400">|</span> {results?.totalVolumeFt3} ft³</div>
+                                    <div className={`text-xl font-bold ${theme.text}`}>{results?.totalVolume} m³ <span className="text-gray-400">|</span> {results?.totalVolumeFt3} ft³</div>
                                 </div>
                                 <table className="w-full text-xs">
                                     <thead><tr className="bg-white"><th className="px-2 py-1 text-left">Sr.</th><th className="px-2 py-1 text-left">Material</th><th className="px-2 py-1 text-left">Quantity</th></tr></thead>

@@ -2,12 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function CementConcreteCalculator() {
+    const theme = getThemeClasses('quantity-estimator');
     const [unit, setUnit] = useState('Meter');
     const [grade, setGrade] = useState('M20');
     const [length, setLength] = useState(10);
@@ -125,7 +127,7 @@ export default function CementConcreteCalculator() {
                     {/* Cement Concrete Calculation */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-calculator text-[#3B68FC]"></i>
+                            <i className={`fas fa-calculator ${theme.text}`}></i>
                             Cement Concrete Calculation
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] space-y-4">
@@ -224,15 +226,15 @@ export default function CementConcreteCalculator() {
                     {/* What is RCC? */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-info-circle text-[#3B68FC]"></i>
+                            <i className={`fas fa-info-circle ${theme.text}`}></i>
                             What is RCC (Plain Cement Concrete) Calculation?
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] flex flex-col md:flex-row gap-6">
                             <div className="flex-1">
-                                <p className="text-[#0A0A0A] leading-relaxed mb-4">
+                                <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                     Cement concrete is one of the main building materials used in today's construction industry. It can be moulded to any desired shape, does not corrode, is not combustible, and is resistant to abrasion. Concrete is a mixture of sand or aggregate combined with cement.
                                 </p>
-                                <p className="text-[#0A0A0A] leading-relaxed">
+                                <p className="text-[#0A0A0A] leading-relaxed text-justify">
                                     The standard mix for concrete is Cement: Sand: Aggregate in specified ratios like 1:1.5:3 (M20), 1:2:4 (M15), etc. Higher the grade, more is the strength and cement content.
                                 </p>
                             </div>
@@ -243,7 +245,7 @@ export default function CementConcreteCalculator() {
                     {/* Standard Grades Table */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-table text-[#3B68FC]"></i>
+                            <i className={`fas fa-table ${theme.text}`}></i>
                             Concrete grade and proportion/mix ratio:
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
@@ -286,15 +288,15 @@ export default function CementConcreteCalculator() {
                     {/* Related Calculators */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-th-large text-[#3B68FC]"></i>
+                            <i className={`fas fa-th-large ${theme.text}`}></i>
                             Related Calculators
                         </h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {relatedCalculators.map((calc) => (
-                                <Link key={calc.name} to={calc.slug} className="bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg hover:border-[#3B68FC] transition-all group">
+                                <Link key={calc.name} to={calc.slug} className={`bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
                                     <div className="flex items-center gap-3">
-                                        <i className={`fas ${calc.icon} text-[#3B68FC] group-hover:scale-110 transition-transform`}></i>
-                                        <span className="text-sm font-medium text-[#0A0A0A] group-hover:text-[#3B68FC]">{calc.name}</span>
+                                        <i className={`fas ${calc.icon} ${theme.text} group-hover:scale-110 transition-transform`}></i>
+                                        <span className={`text-sm font-medium text-[#0A0A0A] group-hover:${theme.text}`}>{calc.name}</span>
                                     </div>
                                 </Link>
                             ))}
@@ -311,9 +313,9 @@ export default function CementConcreteCalculator() {
                 {/* Calculator Widget (Sidebar) */}
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-hidden border border-[#e5e7eb]">
-                        <div className="px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3 bg-gradient-to-r from-green-50 to-emerald-50">
-                            <i className="fas fa-cubes text-xl text-green-500"></i>
-                            <h2 className="font-semibold text-[#0A0A0A]">CEMENT CONCRETE CALCULATOR</h2>
+                        <div className={`px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3 bg-gradient-to-r ${theme.gradient}`}>
+                            <i className="fas fa-cubes text-xl text-white"></i>
+                            <h2 className="font-semibold text-white">CEMENT CONCRETE CALCULATOR</h2>
                         </div>
 
                         <div className="p-5">
@@ -321,15 +323,15 @@ export default function CementConcreteCalculator() {
                             <div className="mb-4">
                                 <label className="text-xs text-gray-500 mb-1 block">Unit</label>
                                 <div className="flex border border-[#e5e7eb] rounded-lg overflow-hidden">
-                                    <button onClick={() => setUnit('Meter')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Meter' ? 'bg-[#3B68FC] text-white' : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Meter</button>
-                                    <button onClick={() => setUnit('Feet')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Feet' ? 'bg-[#3B68FC] text-white' : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Feet</button>
+                                    <button onClick={() => setUnit('Meter')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Meter' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Meter</button>
+                                    <button onClick={() => setUnit('Feet')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Feet' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Feet</button>
                                 </div>
                             </div>
 
                             {/* Grade */}
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Grade of Concrete</label>
-                                <select value={grade} onChange={(e) => setGrade(e.target.value)} className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm">
+                                <select value={grade} onChange={(e) => setGrade(e.target.value)} className={`w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`}>
                                     {Object.entries(grades).map(([key, val]) => (
                                         <option key={key} value={key}>{val.label}</option>
                                     ))}
@@ -340,21 +342,21 @@ export default function CementConcreteCalculator() {
                             <div className="grid grid-cols-3 gap-2 mb-3">
                                 <div>
                                     <label className="text-xs text-gray-500 mb-1 block">Length</label>
-                                    <input type="number" value={length} onChange={(e) => setLength(Number(e.target.value))} className="w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center" />
+                                    <input type="number" value={length} onChange={(e) => setLength(Number(e.target.value))} className={`w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center ${theme.focus} outline-none`} />
                                 </div>
                                 <div>
                                     <label className="text-xs text-gray-500 mb-1 block">Width</label>
-                                    <input type="number" value={width} onChange={(e) => setWidth(Number(e.target.value))} className="w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center" />
+                                    <input type="number" value={width} onChange={(e) => setWidth(Number(e.target.value))} className={`w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center ${theme.focus} outline-none`} />
                                 </div>
                                 <div>
                                     <label className="text-xs text-gray-500 mb-1 block">Depth</label>
-                                    <input type="number" value={depth} step="0.01" onChange={(e) => setDepth(Number(e.target.value))} className="w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center" />
+                                    <input type="number" value={depth} step="0.01" onChange={(e) => setDepth(Number(e.target.value))} className={`w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center ${theme.focus} outline-none`} />
                                 </div>
                             </div>
 
                             {/* Calculate Button */}
                             <div className="flex gap-2 mb-5">
-                                <button onClick={calculate} className="flex-1 bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors">Calculate</button>
+                                <button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium transition-colors`}>Calculate</button>
                                 <button className="bg-red-500 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-red-600 transition-colors">Reset</button>
                             </div>
 

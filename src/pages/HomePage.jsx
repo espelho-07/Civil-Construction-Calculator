@@ -1,15 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
-
-const categories = [
-    { name: 'Concrete Technology', count: 6, icon: 'fa-cubes', color: 'text-gray-600', slug: 'concrete-technology' },
-    { name: 'Quantity Estimator', count: 27, icon: 'fa-calculator', color: 'text-green-600', slug: 'quantity-estimator' },
-    { name: 'Road Construction', count: 2, icon: 'fa-road', color: 'text-gray-700', slug: 'road-construction' },
-    { name: 'Soil Test', count: 12, icon: 'fa-vial', color: 'text-amber-600', slug: 'soil-test' },
-    { name: 'Sieve Analysis', count: 31, icon: 'fa-filter', color: 'text-blue-600', slug: 'sieve-analysis-aggregates' },
-    { name: 'Blending of Aggregates', count: 31, icon: 'fa-blender', color: 'text-purple-600', slug: 'blending-aggregates' },
-    { name: 'Environmental Eng.', count: 3, icon: 'fa-leaf', color: 'text-green-600', slug: 'environmental-engineering' },
-];
+import { categories, getThemeClasses } from '../constants/categories';
 
 const mostSearched = [
     { name: 'Countertop Calculator', slug: '/countertop', icon: 'fa-ruler-combined', searches: '45.2K', category: 'Quantity Estimator' },
@@ -22,6 +13,7 @@ const mostSearched = [
     { name: 'Cement Concrete', slug: '/cement-concrete', icon: 'fa-cubes', searches: '18.9K', category: 'Quantity Estimator' },
 ];
 
+// All calculators for search
 // All calculators for search
 export const allCalculators = [
     // Quantity Estimator
@@ -266,13 +258,18 @@ export default function HomePage() {
                     {/* Categories */}
                     <h2 className="text-2xl font-bold text-[#0A0A0A] mb-6">Browse by Category</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-                        {categories.map((cat) => (
-                            <Link key={cat.name} to={`/category/${cat.slug}`} className="flex flex-col items-center p-6 bg-[#f8f9fa] border border-[#e5e7eb] rounded-xl text-center hover:shadow-lg hover:border-[#3B68FC] hover:-translate-y-1 transition-all">
-                                <i className={`fas ${cat.icon} text-2xl ${cat.color} mb-3`}></i>
-                                <span className="font-medium text-[#0A0A0A] text-sm">{cat.name}</span>
-                                <span className="text-xs text-[#6b7280] mt-1">{cat.count} calculators</span>
-                            </Link>
-                        ))}
+                        {categories.map((cat) => {
+                            const theme = getThemeClasses(cat.theme);
+                            return (
+                                <Link key={cat.name} to={`/category/${cat.slug}`} className={`flex flex-col items-center p-6 bg-white border border-[#e5e7eb] rounded-2xl text-center hover:shadow-xl transition-all hover:-translate-y-1 group ${theme.hover.replace('bg-', 'border-').replace('700', '200')}`}>
+                                    <div className={`w-14 h-14 rounded-full ${theme.bgLight} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                                        <i className={`fas ${cat.icon} text-2xl ${theme.text}`}></i>
+                                    </div>
+                                    <span className="font-semibold text-[#0A0A0A] text-sm group-hover:text-blue-600 transition-colors">{cat.name}</span>
+                                    <span className="text-xs text-[#6b7280] mt-1">{cat.count} calculators</span>
+                                </Link>
+                            );
+                        })}
                     </div>
 
                     {/* Mobile App Promotion - Light Theme */}

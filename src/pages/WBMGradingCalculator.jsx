@@ -2,251 +2,210 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import CustomDropdown from '../components/CustomDropdown';
+import { getThemeClasses } from '../constants/categories';
 
-const WBM_GRADINGS = {
-    'coarse-1': {
-        title: 'WBM Coarse Aggregates (63mm to 45mm)',
-        sieves: ['90 mm', '63 mm', '45 mm', 'Pan'],
-        limits: { '90 mm': [100, 100], '63 mm': [90, 100], '45 mm': [0, 10] }
+// WBM Grading Data (MORTH Table 400-8 & 400-9)
+const GRADING_DATA = {
+    'Grading 1': {
+        title: 'Grading 1 (90mm to 45mm)',
+        desc: 'Coarse aggregates for WBM Grade 1.',
+        sieves: [
+            { size: '125 mm', min: 100, max: 100 },
+            { size: '90 mm', min: 90, max: 100 },
+            { size: '63 mm', min: 25, max: 60 },
+            { size: '45 mm', min: 0, max: 15 },
+            { size: '22.4 mm', min: 0, max: 5 }
+        ]
     },
-    'coarse-2': {
-        title: 'WBM Coarse Aggregates (53mm to 22.4mm)',
-        sieves: ['63 mm', '53 mm', '45 mm', '22.4 mm', 'Pan'],
-        limits: { '63 mm': [100, 100], '53 mm': [90, 100], '45 mm': [25, 60], '22.4 mm': [0, 10] }
+    'Grading 2': {
+        title: 'Grading 2 (63mm to 45mm)',
+        desc: 'Coarse aggregates for WBM Grade 2.',
+        sieves: [
+            { size: '90 mm', min: 100, max: 100 },
+            { size: '63 mm', min: 90, max: 100 },
+            { size: '53 mm', min: 25, max: 75 },
+            { size: '45 mm', min: 0, max: 15 },
+            { size: '22.4 mm', min: 0, max: 5 }
+        ]
     },
-    'screenings-a': {
-        title: 'WBM Screenings Grade A (13.2mm)',
-        sieves: ['13.2 mm', '11.2 mm', '5.6 mm', '0.18 mm', '0.075 mm', 'Pan'],
-        limits: { '13.2 mm': [100, 100], '11.2 mm': [90, 100], '5.6 mm': [10, 35], '0.18 mm': [0, 10], '0.075 mm': [0, 5] }
+    'Grading 3': {
+        title: 'Grading 3 (53mm to 22.4mm)',
+        desc: 'Coarse aggregates for WBM Grade 3.',
+        sieves: [
+            { size: '63 mm', min: 100, max: 100 },
+            { size: '53 mm', min: 95, max: 100 },
+            { size: '45 mm', min: 65, max: 90 },
+            { size: '22.4 mm', min: 0, max: 10 },
+            { size: '11.2 mm', min: 0, max: 5 }
+        ]
     },
-    'screenings-b': {
-        title: 'WBM Screenings Grade B (11.2mm)',
-        sieves: ['11.2 mm', '5.6 mm', '0.18 mm', '0.075 mm', 'Pan'],
-        limits: { '11.2 mm': [100, 100], '5.6 mm': [90, 100], '0.18 mm': [0, 10], '0.075 mm': [0, 5] }
+    'Screenings Type A': {
+        title: 'Screenings Type A (13.2mm)',
+        desc: 'Screenings to fill voids in coarse aggregates.',
+        sieves: [
+            { size: '13.2 mm', min: 100, max: 100 },
+            { size: '11.2 mm', min: 95, max: 100 },
+            { size: '5.6 mm', min: 15, max: 35 },
+            { size: '0.18 mm', min: 0, max: 10 }
+        ]
+    },
+    'Screenings Type B': {
+        title: 'Screenings Type B (11.2mm)',
+        desc: 'Screenings to fill voids in coarse aggregates.',
+        sieves: [
+            { size: '11.2 mm', min: 100, max: 100 },
+            { size: '9.5 mm', min: 80, max: 100 },
+            { size: '5.6 mm', min: 50, max: 70 },
+            { size: '0.18 mm', min: 15, max: 35 }
+        ]
     }
 };
 
+function InfoTooltip({ text, theme }) {
+    const [show, setShow] = useState(false);
+    return (
+        <div className="relative inline-block">
+            <button
+                type="button"
+                className={`w-4 h-4 ${theme.bg} text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1`}
+                onMouseEnter={() => setShow(true)}
+                onMouseLeave={() => setShow(false)}
+                onClick={() => setShow(!show)}
+            >
+                i
+            </button>
+            {show && (
+                <div className="absolute left-6 top-0 z-50 w-56 p-3 bg-white border border-[#e5e7eb] rounded-lg shadow-lg text-xs text-[#0A0A0A] leading-relaxed">
+                    {text}
+                </div>
+            )}
+        </div>
+    );
+}
+
 export default function WBMGradingCalculator() {
-    const [grading, setGrading] = useState('coarse-1');
-    const [numMaterials, setNumMaterials] = useState(2);
-    const [sampleWeight, setSampleWeight] = useState(5000);
-    const [materialsData, setMaterialsData] = useState({});
-    const [results, setResults] = useState(null);
+    const theme = getThemeClasses('blue');
+    const [grade, setGrade] = useState('Grading 1');
+    const [inputs, setInputs] = useState({});
+    const [results, setResults] = useState({});
+
+    const currentData = GRADING_DATA[grade];
     const sidebarRef = useRef(null);
 
-    const currentGrading = WBM_GRADINGS[grading];
-
-    useEffect(() => {
-        const initialData = {};
-        for (let m = 0; m < numMaterials; m++) {
-            initialData[`material_${m}`] = {};
-            currentGrading.sieves.forEach(sieve => {
-                initialData[`material_${m}`][sieve] = 0;
-            });
-        }
-        setMaterialsData(initialData);
-    }, [grading, numMaterials]);
-
-    const calculate = () => {
-        const blendedResult = {};
-        const materialPercentages = Array(numMaterials).fill(100 / numMaterials);
-
-        currentGrading.sieves.forEach(sieve => {
-            let blendedRetained = 0;
-            for (let m = 0; m < numMaterials; m++) {
-                const retained = materialsData[`material_${m}`]?.[sieve] || 0;
-                blendedRetained += (retained * materialPercentages[m]) / 100;
-            }
-            blendedResult[sieve] = {
-                retained: blendedRetained.toFixed(2),
-                cumRetained: 0,
-                passing: 0,
-            };
-        });
-
-        let cumulative = 0;
-        currentGrading.sieves.forEach(sieve => {
-            cumulative += parseFloat(blendedResult[sieve].retained);
-            blendedResult[sieve].cumRetained = ((cumulative / sampleWeight) * 100).toFixed(2);
-            blendedResult[sieve].passing = (100 - parseFloat(blendedResult[sieve].cumRetained)).toFixed(2);
-        });
-
-        setResults(blendedResult);
+    const handleInputChange = (sieveSize, value) => {
+        setInputs(prev => ({ ...prev, [sieveSize]: value }));
     };
 
-    const updateMaterialData = (materialIndex, sieve, value) => {
-        setMaterialsData(prev => ({
-            ...prev,
-            [`material_${materialIndex}`]: {
-                ...prev[`material_${materialIndex}`],
-                [sieve]: Number(value)
+    useEffect(() => {
+        const newResults = {};
+        currentData.sieves.forEach(sieve => {
+            const val = parseFloat(inputs[sieve.size]);
+            if (!isNaN(val)) {
+                if (val >= sieve.min && val <= sieve.max) {
+                    newResults[sieve.size] = 'Pass';
+                } else {
+                    newResults[sieve.size] = 'Fail';
+                }
             }
-        }));
+        });
+        setResults(newResults);
+    }, [inputs, grade]);
+
+    const reset = () => {
+        setInputs({});
+        setResults({});
     };
 
-    useEffect(() => { if (Object.keys(materialsData).length > 0) calculate(); }, [materialsData, sampleWeight]);
+    const gradeOptions = Object.keys(GRADING_DATA).map(g => ({ value: g, label: g }));
+
     useEffect(() => {
-        const update = () => { if (sidebarRef.current) { const vh = window.innerHeight, sh = sidebarRef.current.offsetHeight; sidebarRef.current.style.top = sh > vh - 80 ? `${vh - sh - 16}px` : '80px'; } };
-        update(); window.addEventListener('resize', update); return () => window.removeEventListener('resize', update);
+        const update = () => {
+            if (sidebarRef.current) {
+                const vh = window.innerHeight, sh = sidebarRef.current.offsetHeight;
+                sidebarRef.current.style.top = sh > vh - 80 ? `${vh - sh - 16}px` : '80px';
+            }
+        };
+        update();
+        window.addEventListener('resize', update);
+        return () => window.removeEventListener('resize', update);
     }, []);
-
-    const relatedCalculators = [
-        { name: 'GSB Grading', icon: 'fa-layer-group', slug: '/gsb-grading' },
-        { name: 'WMM Grading', icon: 'fa-road', slug: '/wmm-grading' },
-        { name: 'DBM Grading', icon: 'fa-road', slug: '/dbm-grading' },
-        { name: 'BC Grading', icon: 'fa-road', slug: '/bituminous-concrete' },
-        { name: 'Bituminous Macadam', icon: 'fa-fill-drip', slug: '/bituminous-macadam' },
-        { name: 'SMA Grading', icon: 'fa-layer-group', slug: '/sma-grading' },
-    ];
 
     return (
         <main className="min-h-screen bg-[#F7F9FF]">
             <CategoryNav activeCategory="sieve-analysis-aggregates" />
-            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
+
+            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 items-start">
                 <div>
                     <div className="flex items-center justify-between mb-4">
                         <div>
-                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Water Bound Macadam (WBM)</h1>
-                            <p className="text-[#6b7280]">{currentGrading.title}</p>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">WBM Grading Calculator</h1>
+                            <p className="text-[#6b7280]">Water Bound Macadam Grading Analysis (MORT&H)</p>
                         </div>
                         <CalculatorActions
                             calculatorSlug="wbm-grading"
                             calculatorName="WBM Grading Calculator"
-                            calculatorIcon="fa-road"
+                            calculatorIcon="fa-layer-group"
                             category="Sieve Analysis"
-                            inputs={{ grading, numMaterials, sampleWeight }}
-                            outputs={results || {}}
+                            inputs={{ grade, inputs }}
+                            outputs={results}
                         />
                     </div>
 
-                    {/* What is WBM? */}
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-info-circle text-[#3B68FC]"></i>
-                            What is Water Bound Macadam (WBM)?
-                        </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
-                            <p className="text-[#0A0A0A] leading-relaxed mb-4">
-                                Water Bound Macadam (WBM) is a pavement layer constructed from clean, crushed aggregates mechanically interlocked by rolling and bound together with filler material and water. It is commonly used for base/sub-base courses.
-                            </p>
-                            <p className="text-[#0A0A0A] leading-relaxed">
-                                WBM consists of coarse aggregates and screenings. Coarse aggregates provide the structural skeleton while screenings fill the voids and bind the material together.
-                            </p>
-                        </div>
-                    </section>
-
-                    {/* Grading Selection */}
-                    <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-sliders-h text-[#3B68FC]"></i>
-                            Select WBM Grading
-                        </h2>
-                        <div className="grid grid-cols-2 gap-3">
-                            {Object.entries(WBM_GRADINGS).map(([key, g]) => (
-                                <div key={key} onClick={() => setGrading(key)} className={`bg-white rounded-xl p-4 border-2 cursor-pointer transition-all ${grading === key ? 'border-[#3B68FC] shadow-lg' : 'border-[#e5e7eb] hover:border-[#3B68FC]'}`}>
-                                    <div className="text-center font-medium text-[#0A0A0A] text-sm">{key.includes('coarse') ? 'Coarse Agg' : 'Screenings'}</div>
-                                    <div className="text-center text-xs text-[#6b7280]">{key.split('-')[1]?.toUpperCase() || key}</div>
+                        <div className={`bg-white rounded-xl border ${theme.border} overflow-hidden`}>
+                            <div className={`px-5 py-4 ${theme.bg}`}>
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                        <i className="fas fa-layer-group text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-white">Grading Analysis</h3>
+                                        <p className="text-white/80 text-xs">{grade}</p>
+                                    </div>
                                 </div>
-                            ))}
-                        </div>
-                    </section>
+                            </div>
 
-                    {/* Grading Requirements Table */}
-                    <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-table text-[#3B68FC]"></i>
-                            MoRTH Grading Requirements
-                        </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] overflow-x-auto">
-                            <table className="w-full text-sm">
-                                <thead><tr className="bg-gray-100"><th className="border px-3 py-2">Sieve Size</th><th className="border px-3 py-2">Min % Passing</th><th className="border px-3 py-2">Max % Passing</th></tr></thead>
-                                <tbody>
-                                    {currentGrading.sieves.filter(s => s !== 'Pan').map(sieve => (
-                                        <tr key={sieve}>
-                                            <td className="border px-3 py-2 font-medium">{sieve}</td>
-                                            <td className="border px-3 py-2 text-center text-[#3B68FC]">{currentGrading.limits[sieve]?.[0] || 0}</td>
-                                            <td className="border px-3 py-2 text-center text-[#3B68FC]">{currentGrading.limits[sieve]?.[1] || 100}</td>
+                            <div className="p-5 overflow-x-auto">
+                                <table className="w-full text-sm border-collapse">
+                                    <thead>
+                                        <tr className="bg-[#f8f9fa]">
+                                            <th className="border border-[#e5e7eb] px-4 py-2 text-left">IS Sieve</th>
+                                            <th className="border border-[#e5e7eb] px-4 py-2 text-center">% Passing Range</th>
+                                            <th className="border border-[#e5e7eb] px-4 py-2 text-center">Input % Passing</th>
+                                            <th className="border border-[#e5e7eb] px-4 py-2 text-center">Status</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
-
-                    {/* Blended Result */}
-                    {results && (
-                        <section className="mb-8">
-                            <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                                <i className="fas fa-chart-bar text-[#3B68FC]"></i>
-                                Blended Aggregate Result
-                            </h2>
-                            <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] overflow-x-auto">
-                                <table className="w-full text-sm">
-                                    <thead><tr className="bg-gradient-to-r from-stone-50 to-amber-50"><th className="border px-3 py-2">Sieve</th><th className="border px-3 py-2">Retained (g)</th><th className="border px-3 py-2">Cum. Retained %</th><th className="border px-3 py-2">% Passing</th><th className="border px-3 py-2">Status</th></tr></thead>
+                                    </thead>
                                     <tbody>
-                                        {currentGrading.sieves.map(sieve => {
-                                            const passing = parseFloat(results[sieve]?.passing || 0);
-                                            const limits = currentGrading.limits[sieve];
-                                            const isWithinLimits = sieve === 'Pan' || !limits || (passing >= limits[0] && passing <= limits[1]);
-                                            return (
-                                                <tr key={sieve}>
-                                                    <td className="border px-3 py-2 font-medium">{sieve}</td>
-                                                    <td className="border px-3 py-2 text-center">{results[sieve]?.retained}</td>
-                                                    <td className="border px-3 py-2 text-center">{results[sieve]?.cumRetained}</td>
-                                                    <td className="border px-3 py-2 text-center font-bold text-[#3B68FC]">{results[sieve]?.passing}</td>
-                                                    <td className={`border px-3 py-2 text-center font-bold ${isWithinLimits ? 'text-green-600' : 'text-red-600'}`}>
-                                                        {sieve === 'Pan' ? '-' : (isWithinLimits ? '✓ Within' : '✗ Out')}
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
+                                        {currentData.sieves.map((sieve, idx) => (
+                                            <tr key={idx}>
+                                                <td className="border border-[#e5e7eb] px-4 py-2 font-medium">{sieve.size}</td>
+                                                <td className="border border-[#e5e7eb] px-4 py-2 text-center text-[#6b7280]">
+                                                    {sieve.min} - {sieve.max}
+                                                </td>
+                                                <td className="border border-[#e5e7eb] px-2 py-1">
+                                                    <input
+                                                        type="number"
+                                                        value={inputs[sieve.size] || ''}
+                                                        onChange={(e) => handleInputChange(sieve.size, e.target.value)}
+                                                        className={`w-full px-2 py-1 border border-[#e5e7eb] rounded text-center outline-none ${theme.focus} focus:ring-2 focus:ring-blue-100/50`}
+                                                        placeholder="-"
+                                                    />
+                                                </td>
+                                                <td className="border border-[#e5e7eb] px-4 py-2 text-center">
+                                                    {results[sieve.size] === 'Pass' && <span className="text-green-600 font-bold"><i className="fas fa-check mr-1"></i>Pass</span>}
+                                                    {results[sieve.size] === 'Fail' && <span className="text-red-500 font-bold"><i className="fas fa-times mr-1"></i>Fail</span>}
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
+                                <div className="flex justify-center gap-3 mt-4">
+                                    <button onClick={reset} className="px-6 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors">
+                                        <i className="fas fa-redo mr-1"></i> Reset
+                                    </button>
+                                </div>
                             </div>
-                        </section>
-                    )}
-
-                    {/* Important Factors */}
-                    <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-exclamation-triangle text-yellow-500"></i>
-                            Important Factors
-                        </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {[
-                                    { title: 'Aggregate Quality', desc: 'Hard, durable crushed stone', icon: 'fa-gem' },
-                                    { title: 'Screening Material', desc: 'Proper grading for void filling', icon: 'fa-filter' },
-                                    { title: 'Water Application', desc: 'Sprinkling for binding', icon: 'fa-tint' },
-                                    { title: 'Rolling', desc: 'Power roller compaction', icon: 'fa-compress-arrows-alt' },
-                                ].map((item) => (
-                                    <div key={item.title} className="flex items-start gap-3 p-3 bg-[#f8f9fa] rounded-lg">
-                                        <i className={`fas ${item.icon} text-[#3B68FC] mt-1`}></i>
-                                        <div>
-                                            <div className="font-medium text-[#0A0A0A]">{item.title}</div>
-                                            <div className="text-sm text-[#6b7280]">{item.desc}</div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* Related Calculators */}
-                    <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-th-large text-[#3B68FC]"></i>
-                            Related Calculators
-                        </h2>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            {relatedCalculators.map((calc) => (
-                                <Link key={calc.name} to={calc.slug} className="bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg hover:border-[#3B68FC] transition-all group">
-                                    <div className="flex items-center gap-3">
-                                        <i className={`fas ${calc.icon} text-[#3B68FC] group-hover:scale-110 transition-transform`}></i>
-                                        <span className="text-sm font-medium text-[#0A0A0A] group-hover:text-[#3B68FC]">{calc.name}</span>
-                                    </div>
-                                </Link>
-                            ))}
                         </div>
                     </section>
 
@@ -256,70 +215,32 @@ export default function WBMGradingCalculator() {
                     </div>
                 </div>
 
-                {/* Calculator Sidebar */}
-                <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-hidden border border-[#e5e7eb]">
-                        <div className="px-5 py-4 border-b border-[#e5e7eb] bg-gradient-to-r from-stone-50 to-amber-50 flex items-center gap-3">
-                            <i className="fas fa-road text-xl text-amber-700"></i>
-                            <h2 className="font-semibold text-[#0A0A0A]">WBM Grading Calculator</h2>
+                <div ref={sidebarRef} className="sticky top-20">
+                    <div className={`bg-white rounded-2xl shadow-lg border ${theme.border} mb-6`}>
+                        <div className={`px-5 py-4 ${theme.bg} rounded-t-2xl`}>
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                    <i className="fas fa-layer-group text-white"></i>
+                                </div>
+                                <h3 className="font-bold text-white text-sm">WBM Calculator</h3>
+                            </div>
                         </div>
-                        <div className="p-4">
-                            <div className="grid grid-cols-2 gap-2 mb-4">
-                                <div>
-                                    <label className="text-xs text-gray-500 mb-1 block">No. of Materials</label>
-                                    <select value={numMaterials} onChange={(e) => setNumMaterials(Number(e.target.value))} className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:border-[#3B68FC] outline-none">
-                                        <option value={2}>2</option>
-                                        <option value={3}>3</option>
-                                        <option value={4}>4</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="text-xs text-gray-500 mb-1 block">Sample Weight (g)</label>
-                                    <input type="number" value={sampleWeight} onChange={(e) => setSampleWeight(Number(e.target.value))} className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:border-[#3B68FC] outline-none" />
-                                </div>
+                        <div className="p-5">
+                            <div className="mb-4">
+                                <label className="text-xs text-[#6b7280] mb-1 block font-medium">Select Grading</label>
+                                <CustomDropdown
+                                    options={gradeOptions}
+                                    value={grade}
+                                    onChange={setGrade}
+                                    theme={theme}
+                                />
                             </div>
-
-                            <div className="overflow-x-auto mb-4 max-h-80 overflow-y-auto border border-[#e5e7eb] rounded-lg">
-                                <table className="w-full text-xs">
-                                    <thead className="sticky top-0 bg-gray-100">
-                                        <tr>
-                                            <th className="px-2 py-2 text-left">Sieve</th>
-                                            {Array.from({ length: numMaterials }).map((_, i) => (
-                                                <th key={i} className="px-2 py-2">Mat. {String.fromCharCode(65 + i)}</th>
-                                            ))}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {currentGrading.sieves.map(sieve => (
-                                            <tr key={sieve} className="border-t border-[#e5e7eb]">
-                                                <td className="px-2 py-2 font-medium text-xs whitespace-nowrap">{sieve}</td>
-                                                {Array.from({ length: numMaterials }).map((_, m) => (
-                                                    <td key={m} className="px-1 py-1">
-                                                        <input type="number" value={materialsData[`material_${m}`]?.[sieve] || 0} onChange={(e) => updateMaterialData(m, sieve, e.target.value)} className="w-16 px-2 py-1 border border-[#e5e7eb] rounded text-xs text-center focus:border-[#3B68FC] outline-none" />
-                                                    </td>
-                                                ))}
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div className="flex gap-2">
-                                <button onClick={() => setMaterialsData({})} className="flex-1 bg-gray-100 text-gray-700 py-2.5 rounded-lg font-medium text-sm hover:bg-gray-200 transition-colors">
-                                    <i className="fas fa-redo mr-2"></i>Reset
-                                </button>
-                                <button onClick={calculate} className="flex-1 bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium text-sm hover:bg-[#2952d9] transition-colors">
-                                    <i className="fas fa-calculator mr-2"></i>Calculate
-                                </button>
+                            <div className="text-xs text-[#6b7280] mt-2">
+                                {currentData.desc}
                             </div>
                         </div>
                     </div>
-
-                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">
-                        <i className="fas fa-ad text-2xl mb-1"></i>
-                        <p className="text-xs">Ad Space</p>
-                    </div>
-                </aside>
+                </div>
             </div>
         </main>
     );

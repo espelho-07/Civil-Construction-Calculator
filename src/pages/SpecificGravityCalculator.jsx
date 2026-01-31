@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 export default function SpecificGravityCalculator() {
+    const theme = getThemeClasses('soil-test');
     const [m1, setM1] = useState(31.45);
     const [m2, setM2] = useState(39.9);
     const [m3, setM3] = useState(86.61);
@@ -49,7 +51,7 @@ export default function SpecificGravityCalculator() {
                     </div>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-info-circle text-[#3B68FC] mr-2"></i>What is the need of specific gravity determination of Soil?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is the need of specific gravity determination of Soil?</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <p className="text-gray-600 mb-4">Specific gravity G is defined as the ratio of the weight of a given volume of soil solids to the weight of a equal volume of distilled water.</p>
                             <p className="text-gray-600">It deals with the method of test for determination of specific gravity of soils which finds application in finding out the degree of saturation and unit weight of most soils. The unit weights are needed in pressure, settlement and stability problems in soil engineering.</p>
@@ -57,7 +59,7 @@ export default function SpecificGravityCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-flask text-[#3B68FC] mr-2"></i>Apparatus</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <ol className="list-decimal pl-5 text-gray-600 space-y-2">
                                 <li><strong>Two density bottles</strong> (Pycnometer) of approximately 50 ml capacity with stoppers.</li>
@@ -76,7 +78,7 @@ export default function SpecificGravityCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-clipboard-list text-[#3B68FC] mr-2"></i>How to determine the Specific Gravity of Soil?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-clipboard-list ${theme.text} mr-2`}></i>How to determine the Specific Gravity of Soil?</h2>
                         <div className="bg-white rounded-xl p-6 border">
                             <h3 className="font-bold text-gray-800 mb-2">Procedures</h3>
                             <ol className="list-decimal pl-5 text-gray-600 space-y-2">
@@ -92,7 +94,7 @@ export default function SpecificGravityCalculator() {
                             <h3 className="font-bold text-gray-800 mt-4 mb-2">The specific gravity of soil shall be calculated as follows:</h3>
                             <div className="bg-[#f8f9fa] p-4 rounded-lg text-center">
                                 <div className="font-mono text-lg">G = (Density of water at 27°C) / (Weight of soil of equal volume)</div>
-                                <div className="font-mono text-xl text-[#3B68FC] mt-2">G = (M₂ - M₁) / ((M₄ - M₁) - (M₃ - M₂))</div>
+                                <div className={`font-mono text-xl ${theme.text} mt-2`}>G = (M₂ - M₁) / ((M₄ - M₁) - (M₃ - M₂))</div>
                             </div>
                             <div className="mt-4 text-sm text-gray-600">
                                 <p><strong>Where,</strong></p>
@@ -113,26 +115,26 @@ export default function SpecificGravityCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className="px-5 py-4 border-b bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center gap-3">
-                            <i className="fas fa-balance-scale-right text-xl text-blue-600"></i>
-                            <h2 className="font-semibold">DETERMINATION OF SPECIFIC GRAVITY OF SOIL</h2>
+                        <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
+                            <i className="fas fa-balance-scale-right text-xl text-white"></i>
+                            <h2 className="font-semibold text-white">DETERMINATION OF SPECIFIC GRAVITY OF SOIL</h2>
                         </div>
                         <div className="p-5">
                             <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Mass of Density Bottle (M₁)</label><div className="flex gap-2"><input type="number" step="0.01" value={m1} onChange={(e) => setM1(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">g</span></div></div>
                             <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Mass of Bottle & Dry Soil (M₂)</label><div className="flex gap-2"><input type="number" step="0.01" value={m2} onChange={(e) => setM2(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">g</span></div></div>
                             <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Mass of Bottle, Soil & Liquid (M₃)</label><div className="flex gap-2"><input type="number" step="0.01" value={m3} onChange={(e) => setM3(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">g</span></div></div>
                             <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">Mass of Bottle when full of Liquid only (M₄)</label><div className="flex gap-2"><input type="number" step="0.01" value={m4} onChange={(e) => setM4(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">g</span></div></div>
-                            <button onClick={calculate} className="w-full bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium mb-5">Calculate</button>
-                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4">
+                            <button onClick={calculate} className={`w-full ${theme.button} py-2.5 rounded-lg font-medium mb-5`}>Calculate</button>
+                            <div className={`${theme.bgLight} rounded-xl p-4`}>
                                 <div className="text-center mb-3">
-                                    <div className="text-3xl font-bold text-[#3B68FC]">{results?.specificGravity}</div>
+                                    <div className={`text-3xl font-bold ${theme.text}`}>{results?.specificGravity}</div>
                                     <div className="text-sm text-gray-500">Specific Gravity</div>
                                 </div>
                                 <div className="bg-white rounded-lg p-3 text-sm space-y-1">
                                     <div className="text-center text-gray-600">Specific Gravity</div>
                                     <div className="font-mono text-center text-xs">G = (M₂ - M₁) / ((M₄ - M₁) - (M₃ - M₂))</div>
                                     <div className="font-mono text-center text-xs">G = ({m2} - {m1}) / (({m4} - {m1}) - ({m3} - {m2}))</div>
-                                    <div className="font-bold text-[#3B68FC] text-center">G = {results?.specificGravity}</div>
+                                    <div className={`font-bold ${theme.text} text-center`}>G = {results?.specificGravity}</div>
                                 </div>
                             </div>
                         </div>

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 // Info Tooltip Component
 function InfoTooltip({ text }) {
@@ -10,7 +11,7 @@ function InfoTooltip({ text }) {
         <div className="relative inline-block">
             <button
                 type="button"
-                className="w-4 h-4 bg-[#3B68FC] text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1"
+                className={`w-4 h-4 ${getThemeClasses('quantity-estimator').bg} text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1`}
                 onMouseEnter={() => setShow(true)}
                 onMouseLeave={() => setShow(false)}
                 onClick={() => setShow(!show)}
@@ -44,7 +45,7 @@ function DualInput({ label, unit, valuePrimary, valueSecondary, onChangePrimary,
                         placeholder={placeholder1}
                         value={valuePrimary}
                         onChange={(e) => onChangePrimary(e.target.value)}
-                        className="w-full px-3 py-2 pr-12 border border-[#e5e7eb] rounded-lg outline-none focus:border-[#3B68FC] text-sm"
+                        className={`w-full px-3 py-2 pr-12 border border-[#e5e7eb] rounded-lg outline-none ${getThemeClasses('quantity-estimator').focus} text-sm`}
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#6b7280]">{primaryUnit}</span>
                 </div>
@@ -54,7 +55,7 @@ function DualInput({ label, unit, valuePrimary, valueSecondary, onChangePrimary,
                         placeholder={placeholder2}
                         value={valueSecondary}
                         onChange={(e) => onChangeSecondary(e.target.value)}
-                        className="w-full px-3 py-2 pr-12 border border-[#e5e7eb] rounded-lg outline-none focus:border-[#3B68FC] text-sm"
+                        className={`w-full px-3 py-2 pr-12 border border-[#e5e7eb] rounded-lg outline-none ${getThemeClasses('quantity-estimator').focus} text-sm`}
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#6b7280]">{secondaryUnit}</span>
                 </div>
@@ -64,6 +65,7 @@ function DualInput({ label, unit, valuePrimary, valueSecondary, onChangePrimary,
 }
 
 export default function CountertopCalculator() {
+    const theme = getThemeClasses('quantity-estimator');
     const [unit, setUnit] = useState('ft');
     const [shape, setShape] = useState('L');
 
@@ -172,7 +174,7 @@ export default function CountertopCalculator() {
 
     return (
         <main className="min-h-screen bg-[#F7F9FF]">
-            <CategoryNav activeCategory="construction" />
+            <CategoryNav activeCategory="quantity-estimator" />
 
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 {/* Main Content */}
@@ -196,14 +198,14 @@ export default function CountertopCalculator() {
                     {/* What is Kitchen Platform? */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-info-circle text-[#3B68FC]"></i>
+                            <i className={`fas fa-info-circle ${theme.text}`}></i>
                             What is Kitchen Platform?
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
-                            <p className="text-[#0A0A0A] leading-relaxed mb-4">
+                            <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                 A kitchen platform, also known as a countertop or worktop, is the flat surface in a kitchen where food preparation takes place. It is typically installed on top of base cabinets and can be made from various materials such as granite, marble, quartz, laminate, or solid surface materials.
                             </p>
-                            <p className="text-[#0A0A0A] leading-relaxed">
+                            <p className="text-[#0A0A0A] leading-relaxed text-justify">
                                 Kitchen platform calculation is calculating how many numbers of granites required for platform. We use height, width and depth to calculate the granites sizes. Three shapes are available: <strong>L-shape</strong>, <strong>U-shape</strong>, and <strong>I-shape (straight)</strong>.
                             </p>
                         </div>
@@ -212,11 +214,11 @@ export default function CountertopCalculator() {
                     {/* Shape Diagrams */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-shapes text-[#3B68FC]"></i>
+                            <i className={`fas fa-shapes ${theme.text}`}></i>
                             Kitchen Shapes
                         </h2>
                         <div className="grid grid-cols-3 gap-4">
-                            <div className={`bg-white rounded-xl p-4 border-2 cursor-pointer transition-all ${shape === 'I' ? 'border-[#3B68FC] shadow-lg' : 'border-[#e5e7eb] hover:border-[#3B68FC]'}`} onClick={() => handleShapeChange('I')}>
+                            <div className={`bg-white rounded-xl p-4 border-2 cursor-pointer transition-all ${shape === 'I' ? `${theme.border.replace('border-', 'border-green-600 ')} shadow-lg` : `border-[#e5e7eb] ${theme.hover.replace('bg-', 'hover:border-')}`}`} onClick={() => handleShapeChange('I')}>
                                 <div className="w-full h-20 bg-[#f8f9fa] rounded-lg flex items-center justify-center mb-3">
                                     <div className="w-3/4 h-4 bg-[#0A0A0A] rounded"></div>
                                 </div>
@@ -224,7 +226,7 @@ export default function CountertopCalculator() {
                                 <div className="text-center text-xs text-[#6b7280]">Straight</div>
                             </div>
 
-                            <div className={`bg-white rounded-xl p-4 border-2 cursor-pointer transition-all ${shape === 'L' ? 'border-[#3B68FC] shadow-lg' : 'border-[#e5e7eb] hover:border-[#3B68FC]'}`} onClick={() => handleShapeChange('L')}>
+                            <div className={`bg-white rounded-xl p-4 border-2 cursor-pointer transition-all ${shape === 'L' ? `${theme.border.replace('border-', 'border-green-600 ')} shadow-lg` : `border-[#e5e7eb] ${theme.hover.replace('bg-', 'hover:border-')}`}`} onClick={() => handleShapeChange('L')}>
                                 <div className="w-full h-20 bg-[#f8f9fa] rounded-lg relative mb-3">
                                     <div className="absolute top-3 left-3 w-3/4 h-3 bg-[#0A0A0A] rounded"></div>
                                     <div className="absolute top-3 left-3 w-3 h-14 bg-[#0A0A0A] rounded"></div>
@@ -233,7 +235,7 @@ export default function CountertopCalculator() {
                                 <div className="text-center text-xs text-[#6b7280]">Corner</div>
                             </div>
 
-                            <div className={`bg-white rounded-xl p-4 border-2 cursor-pointer transition-all ${shape === 'U' ? 'border-[#3B68FC] shadow-lg' : 'border-[#e5e7eb] hover:border-[#3B68FC]'}`} onClick={() => handleShapeChange('U')}>
+                            <div className={`bg-white rounded-xl p-4 border-2 cursor-pointer transition-all ${shape === 'U' ? `${theme.border.replace('border-', 'border-green-600 ')} shadow-lg` : `border-[#e5e7eb] ${theme.hover.replace('bg-', 'hover:border-')}`}`} onClick={() => handleShapeChange('U')}>
                                 <div className="w-full h-20 bg-[#f8f9fa] rounded-lg relative mb-3">
                                     <div className="absolute top-3 left-3 w-3/4 h-3 bg-[#0A0A0A] rounded"></div>
                                     <div className="absolute top-3 left-3 w-3 h-14 bg-[#0A0A0A] rounded"></div>
@@ -248,15 +250,15 @@ export default function CountertopCalculator() {
                     {/* Formula Section */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-calculator text-[#3B68FC]"></i>
+                            <i className={`fas fa-calculator ${theme.text}`}></i>
                             Formula
                         </h2>
-                        <div className="bg-gradient-to-r from-[#EEF2FF] to-blue-50 rounded-xl p-6 border border-[#3B68FC]/20">
+                        <div className={`bg-gradient-to-r ${theme.gradient.replace('from-', 'from-blue-50/50 ').replace('to-', 'to-')} rounded-xl p-6 border ${theme.border}`}>
                             <div className="text-center mb-4">
                                 <div className="inline-block bg-white px-6 py-4 rounded-lg shadow-sm">
-                                    {shape === 'I' && <code className="text-lg font-mono text-[#0A0A0A]"><span className="text-[#3B68FC]">Area</span> = Length × Width</code>}
-                                    {shape === 'L' && <code className="text-lg font-mono text-[#0A0A0A]"><span className="text-[#3B68FC]">Area</span> = (L₁ × W₁) + (L₂ × W₂)</code>}
-                                    {shape === 'U' && <code className="text-lg font-mono text-[#0A0A0A]"><span className="text-[#3B68FC]">Area</span> = (L₁ × W₁) + (L₂ × W₂) + (L₃ × W₃)</code>}
+                                    {shape === 'I' && <code className="text-lg font-mono text-[#0A0A0A]"><span className={theme.text}>Area</span> = Length × Width</code>}
+                                    {shape === 'L' && <code className="text-lg font-mono text-[#0A0A0A]"><span className={theme.text}>Area</span> = (L₁ × W₁) + (L₂ × W₂)</code>}
+                                    {shape === 'U' && <code className="text-lg font-mono text-[#0A0A0A]"><span className={theme.text}>Area</span> = (L₁ × W₁) + (L₂ × W₂) + (L₃ × W₃)</code>}
                                 </div>
                             </div>
                             <div className="text-center">
@@ -287,7 +289,7 @@ export default function CountertopCalculator() {
                                     { title: 'Wastage', desc: 'Add 10-15% extra for cuts', icon: 'fa-cut' },
                                 ].map((item) => (
                                     <div key={item.title} className="flex items-start gap-3 p-3 bg-[#f8f9fa] rounded-lg">
-                                        <i className={`fas ${item.icon} text-[#3B68FC] mt-1`}></i>
+                                        <i className={`fas ${item.icon} ${theme.text} mt-1`}></i>
                                         <div>
                                             <div className="font-medium text-[#0A0A0A]">{item.title}</div>
                                             <div className="text-sm text-[#6b7280]">{item.desc}</div>
@@ -301,15 +303,15 @@ export default function CountertopCalculator() {
                     {/* Related Calculators */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-th-large text-[#3B68FC]"></i>
+                            <i className={`fas fa-th-large ${theme.text}`}></i>
                             Related Calculators
                         </h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {relatedCalculators.map((calc) => (
-                                <Link key={calc.name} to={calc.slug} className="bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg hover:border-[#3B68FC] transition-all group">
+                                <Link key={calc.name} to={calc.slug} className={`bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
                                     <div className="flex items-center gap-3">
-                                        <i className={`fas ${calc.icon} text-[#3B68FC] group-hover:scale-110 transition-transform`}></i>
-                                        <span className="text-sm font-medium text-[#0A0A0A] group-hover:text-[#3B68FC]">{calc.name}</span>
+                                        <i className={`fas ${calc.icon} ${theme.text} group-hover:scale-110 transition-transform`}></i>
+                                        <span className={`text-sm font-medium text-[#0A0A0A] group-hover:${theme.text}`}>{calc.name}</span>
                                     </div>
                                 </Link>
                             ))}
@@ -326,9 +328,9 @@ export default function CountertopCalculator() {
                 {/* Calculator Widget */}
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-hidden border border-[#e5e7eb]">
-                        <div className="px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3">
-                            <i className="fas fa-ruler-combined text-xl text-yellow-500"></i>
-                            <h2 className="font-semibold text-[#0A0A0A]">Kitchen Platform Calculator</h2>
+                        <div className={`px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3 bg-gradient-to-r ${theme.gradient}`}>
+                            <i className="fas fa-ruler-combined text-xl text-white"></i>
+                            <h2 className="font-semibold text-white">Kitchen Platform Calculator</h2>
                         </div>
 
                         <div className="p-5">
@@ -356,7 +358,7 @@ export default function CountertopCalculator() {
                                 </div>
                                 <div className="flex border border-[#e5e7eb] rounded-lg overflow-hidden">
                                     {['I', 'L', 'U'].map((s) => (
-                                        <button key={s} onClick={() => handleShapeChange(s)} className={`flex-1 py-2 text-sm font-medium transition-colors ${shape === s ? 'bg-[#3B68FC] text-white' : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>
+                                        <button key={s} onClick={() => handleShapeChange(s)} className={`flex-1 py-2 text-sm font-medium transition-colors ${shape === s ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>
                                             {s}-Shape
                                         </button>
                                     ))}
@@ -370,10 +372,10 @@ export default function CountertopCalculator() {
                                     <InfoTooltip text="Feet/Inch: Common in India & USA. Meter/cm: SI unit used worldwide." />
                                 </div>
                                 <div className="flex border border-[#e5e7eb] rounded-lg overflow-hidden">
-                                    <button onClick={() => setUnit('ft')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'ft' ? 'bg-[#3B68FC] text-white' : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>
+                                    <button onClick={() => setUnit('ft')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'ft' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>
                                         Feet / Inch
                                     </button>
-                                    <button onClick={() => setUnit('m')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'm' ? 'bg-[#3B68FC] text-white' : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>
+                                    <button onClick={() => setUnit('m')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'm' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>
                                         Meter / cm
                                     </button>
                                 </div>
@@ -397,7 +399,7 @@ export default function CountertopCalculator() {
                             {/* Section 1 */}
                             <div className="mb-4 p-3 bg-[#f8f9fa] rounded-lg">
                                 <div className="flex items-center gap-2 mb-3">
-                                    <span className="w-5 h-5 bg-[#3B68FC] text-white rounded text-xs flex items-center justify-center">1</span>
+                                    <span className={`w-5 h-5 ${theme.bg} text-white rounded text-xs flex items-center justify-center`}>1</span>
                                     <span className="text-sm font-medium text-[#0A0A0A]">{shape === 'I' ? 'Countertop' : 'First Section'}</span>
                                     <InfoTooltip text="Length is the longer horizontal side. Width is the depth from front to back (typically 2 feet)." />
                                 </div>
@@ -409,7 +411,7 @@ export default function CountertopCalculator() {
                             {(shape === 'L' || shape === 'U') && (
                                 <div className="mb-4 p-3 bg-[#f8f9fa] rounded-lg">
                                     <div className="flex items-center gap-2 mb-3">
-                                        <span className="w-5 h-5 bg-[#3B68FC] text-white rounded text-xs flex items-center justify-center">2</span>
+                                        <span className={`w-5 h-5 ${theme.bg} text-white rounded text-xs flex items-center justify-center`}>2</span>
                                         <span className="text-sm font-medium text-[#0A0A0A]">Second Section</span>
                                         <InfoTooltip text="The perpendicular section of your L or U shaped countertop." />
                                     </div>
@@ -422,7 +424,7 @@ export default function CountertopCalculator() {
                             {shape === 'U' && (
                                 <div className="mb-4 p-3 bg-[#f8f9fa] rounded-lg">
                                     <div className="flex items-center gap-2 mb-3">
-                                        <span className="w-5 h-5 bg-[#3B68FC] text-white rounded text-xs flex items-center justify-center">3</span>
+                                        <span className={`w-5 h-5 ${theme.bg} text-white rounded text-xs flex items-center justify-center`}>3</span>
                                         <span className="text-sm font-medium text-[#0A0A0A]">Third Section</span>
                                         <InfoTooltip text="The third section parallel to the first, completing the U-shape." />
                                     </div>
@@ -433,8 +435,10 @@ export default function CountertopCalculator() {
                         </div>
 
                         <div className="flex items-center justify-center gap-6 p-4 border-t border-[#e5e7eb]">
-                            <button onClick={reset} className="flex items-center gap-2 text-sm text-[#6b7280] hover:text-[#3B68FC]"><i className="fas fa-redo"></i> Reset</button>
-                            <button className="flex items-center gap-2 text-sm text-[#6b7280] hover:text-[#3B68FC]"><i className="fas fa-share-alt"></i> Share</button>
+                            <button onClick={reset} className="bg-red-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-red-600 transition-colors flex items-center gap-2">
+                                <i className="fas fa-redo"></i> Reset
+                            </button>
+                            <button className={`flex items-center gap-2 text-sm text-[#6b7280] hover:${theme.text}`}><i className="fas fa-share-alt"></i> Share</button>
                         </div>
                     </div>
 

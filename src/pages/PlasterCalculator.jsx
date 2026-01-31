@@ -2,12 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function PlasterCalculator() {
+    const theme = getThemeClasses('quantity-estimator');
     const [unit, setUnit] = useState('Meter');
     const [plasterType, setPlasterType] = useState('12');
     const [length, setLength] = useState(10);
@@ -68,7 +70,7 @@ export default function PlasterCalculator() {
         labels: ['Cement', 'Sand'],
         datasets: [{
             data: [20, 80],
-            backgroundColor: ['#3b82f6', '#f59e0b'],
+            backgroundColor: ['#16a34a', '#f59e0b'],
             borderWidth: 0,
         }],
     };
@@ -105,12 +107,12 @@ export default function PlasterCalculator() {
                     {/* Plaster Area Calculation */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-calculator text-[#3B68FC]"></i>
+                            <i className={`fas fa-calculator ${theme.text}`}></i>
                             Plaster Area calculation
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] space-y-4">
                             <div className="bg-[#f8f9fa] p-4 rounded-lg font-mono text-sm space-y-2">
-                                <p><span className="text-[#3B68FC]">Plaster Area</span> = Length × Width</p>
+                                <p><span className={`${theme.text}`}>Plaster Area</span> = Length × Width</p>
                                 <p>Plaster Area = {length} × {width}</p>
                                 <p>Plaster Area = <strong>{results?.areaSqM} m²</strong></p>
                                 <p>Plaster Area = <strong>{results?.areaSqFt} ft²</strong></p>
@@ -121,14 +123,14 @@ export default function PlasterCalculator() {
                     {/* Material Calculation */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-boxes text-[#3B68FC]"></i>
+                            <i className={`fas fa-boxes ${theme.text}`}></i>
                             Material calculation
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] space-y-4">
 
                             <div className="font-semibold text-gray-800">Step 1:</div>
                             <div className="bg-[#f8f9fa] p-4 rounded-lg font-mono text-sm space-y-2">
-                                <p><span className="text-[#3B68FC]">Volume of Mortar</span> = Plaster Thickness In Meter</p>
+                                <p><span className={`${theme.text}`}>Volume of Mortar</span> = Plaster Thickness In Meter</p>
                                 <p>Volume Of Mortar = {results?.areaSqM} × 0.012</p>
                                 <p>Volume Of Mortar = <strong>{results?.wetVol} m³</strong></p>
                             </div>
@@ -193,15 +195,15 @@ export default function PlasterCalculator() {
                     {/* What is Plastering? */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-info-circle text-[#3B68FC]"></i>
+                            <i className={`fas fa-info-circle ${theme.text}`}></i>
                             What is plastering calculation?
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] flex flex-col md:flex-row gap-6">
                             <div className="flex-1">
-                                <p className="text-[#0A0A0A] leading-relaxed mb-4">
+                                <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                     Plastering is the process of covering rough walls and uneven surfaces in the construction of houses and other structures with a plastic material called plaster, which is a mixture of lime or cement concrete and sand together with the required quantity of water.
                                 </p>
-                                <p className="text-[#0A0A0A] leading-relaxed">
+                                <p className="text-[#0A0A0A] leading-relaxed text-justify">
                                     Plastering is done for surfaces to protect that from environmental changes and also to achieve an even, smooth, regular, clean, and durable finished surface including better appearance. Plaster works on walls with specific mix ratio of cement, sand or lime with water.
                                 </p>
                             </div>
@@ -212,13 +214,13 @@ export default function PlasterCalculator() {
                     {/* Plastering Calculation Formula */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-square-root-alt text-[#3B68FC]"></i>
+                            <i className={`fas fa-square-root-alt ${theme.text}`}></i>
                             Plastering Calculation
                         </h2>
-                        <div className="bg-gradient-to-r from-[#EEF2FF] to-blue-50 rounded-xl p-6 border border-[#3B68FC]/20">
+                        <div className={`bg-gradient-to-r ${theme.gradient.replace('from-', 'from-green-50/50 ').replace('to-', 'to-')} rounded-xl p-6 border ${theme.border}`}>
                             <div className="space-y-4 font-mono text-sm">
-                                <p><strong className="text-[#3B68FC]">Area of Plastering</strong> = Length × Width</p>
-                                <p><strong className="text-[#3B68FC]">Amount of Cement</strong> = (Dry Volume × Cement Ratio) / Sum of Ratio ÷ Volume of Cement</p>
+                                <p><strong className={`${theme.text}`}>Area of Plastering</strong> = Length × Width</p>
+                                <p><strong className={`${theme.text}`}>Amount of Cement</strong> = (Dry Volume × Cement Ratio) / Sum of Ratio ÷ Volume of Cement</p>
                                 <p><strong className="text-amber-600">Amount of Sand</strong> = (Dry Volume × Sand Ratio) / Sum of Ratio × Density of Sand</p>
                             </div>
                         </div>
@@ -245,7 +247,7 @@ export default function PlasterCalculator() {
                     {/* Strength of Plastering */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-dumbbell text-[#3B68FC]"></i>
+                            <i className={`fas fa-dumbbell ${theme.text}`}></i>
                             Strength of plastering (nominal mix):
                         </h2>
                         <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
@@ -286,15 +288,15 @@ export default function PlasterCalculator() {
                     {/* Related Calculators */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-th-large text-[#3B68FC]"></i>
+                            <i className={`fas fa-th-large ${theme.text}`}></i>
                             Related Calculators
                         </h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {relatedCalculators.map((calc) => (
-                                <Link key={calc.name} to={calc.slug} className="bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg hover:border-[#3B68FC] transition-all group">
+                                <Link key={calc.name} to={calc.slug} className={`bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
                                     <div className="flex items-center gap-3">
-                                        <i className={`fas ${calc.icon} text-[#3B68FC] group-hover:scale-110 transition-transform`}></i>
-                                        <span className="text-sm font-medium text-[#0A0A0A] group-hover:text-[#3B68FC]">{calc.name}</span>
+                                        <i className={`fas ${calc.icon} ${theme.text} group-hover:scale-110 transition-transform`}></i>
+                                        <span className={`text-sm font-medium text-[#0A0A0A] group-hover:${theme.text}`}>{calc.name}</span>
                                     </div>
                                 </Link>
                             ))}
@@ -311,9 +313,9 @@ export default function PlasterCalculator() {
                 {/* Calculator Widget (Sidebar) */}
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-hidden border border-[#e5e7eb]">
-                        <div className="px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3 bg-gradient-to-r from-blue-50 to-cyan-50">
-                            <i className="fas fa-brush text-xl text-blue-500"></i>
-                            <h2 className="font-semibold text-[#0A0A0A]">PLASTER CALCULATION</h2>
+                        <div className={`px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3 bg-gradient-to-r ${theme.gradient}`}>
+                            <i className="fas fa-brush text-xl text-white"></i>
+                            <h2 className="font-semibold text-white">PLASTER CALCULATION</h2>
                         </div>
 
                         <div className="p-5">
@@ -321,15 +323,15 @@ export default function PlasterCalculator() {
                             <div className="mb-4">
                                 <label className="text-xs text-gray-500 mb-1 block">Unit</label>
                                 <div className="flex border border-[#e5e7eb] rounded-lg overflow-hidden">
-                                    <button onClick={() => setUnit('Meter')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Meter' ? 'bg-[#3B68FC] text-white' : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Meter</button>
-                                    <button onClick={() => setUnit('Feet')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Feet' ? 'bg-[#3B68FC] text-white' : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Feet</button>
+                                    <button onClick={() => setUnit('Meter')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Meter' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Meter</button>
+                                    <button onClick={() => setUnit('Feet')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Feet' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Feet</button>
                                 </div>
                             </div>
 
                             {/* Plaster Type */}
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Plaster Type</label>
-                                <select value={plasterType} onChange={(e) => setPlasterType(e.target.value)} className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm">
+                                <select value={plasterType} onChange={(e) => setPlasterType(e.target.value)} className={`w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`}>
                                     <option value="6">6 MM</option>
                                     <option value="12">12 MM</option>
                                     <option value="15">15 MM</option>
@@ -342,14 +344,14 @@ export default function PlasterCalculator() {
                                 <div>
                                     <label className="text-xs text-gray-500 mb-1 block">Length</label>
                                     <div className="relative">
-                                        <input type="number" value={length} onChange={(e) => setLength(Number(e.target.value))} className="w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm" />
+                                        <input type="number" value={length} onChange={(e) => setLength(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`} />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'm' : 'ft'}</span>
                                     </div>
                                 </div>
                                 <div>
                                     <label className="text-xs text-gray-500 mb-1 block">Width</label>
                                     <div className="relative">
-                                        <input type="number" value={width} onChange={(e) => setWidth(Number(e.target.value))} className="w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm" />
+                                        <input type="number" value={width} onChange={(e) => setWidth(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`} />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'm' : 'ft'}</span>
                                     </div>
                                 </div>
@@ -358,7 +360,7 @@ export default function PlasterCalculator() {
                             {/* Ratio */}
                             <div className="mb-4">
                                 <label className="text-xs text-gray-500 mb-1 block">Grade of Flooring</label>
-                                <select value={ratio} onChange={(e) => setRatio(e.target.value)} className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm">
+                                <select value={ratio} onChange={(e) => setRatio(e.target.value)} className={`w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`}>
                                     <option value="1:3">1:3</option>
                                     <option value="1:4">1:4</option>
                                     <option value="1:5">1:5</option>
@@ -368,7 +370,7 @@ export default function PlasterCalculator() {
 
                             {/* Calculate Button */}
                             <div className="flex gap-2 mb-5">
-                                <button onClick={calculate} className="flex-1 bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors">Calculate</button>
+                                <button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium transition-colors`}>Calculate</button>
                                 <button className="bg-red-500 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-red-600 transition-colors">Reset</button>
                             </div>
 
@@ -377,7 +379,7 @@ export default function PlasterCalculator() {
                                 <div className="grid grid-cols-2 gap-4 mb-4">
                                     <div className="text-center">
                                         <div className="text-xs text-gray-500">Total Area of Plaster</div>
-                                        <div className="text-xl font-bold text-[#3B68FC]">{results?.areaSqM} m²</div>
+                                        <div className={`text-xl font-bold ${theme.text}`}>{results?.areaSqM} m²</div>
                                         <div className="text-lg font-bold text-gray-600">{results?.areaSqFt} ft²</div>
                                     </div>
                                     <div className="flex justify-center">
