@@ -3,13 +3,16 @@ import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
+import DualInput from '../components/DualInput';
+import InfoTooltip from '../components/InfoTooltip';
+import { STANDARDS_DATA } from '../constants/STANDARDS_DATA';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function PlasterCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('gray');
     const [unit, setUnit] = useState('Meter');
     const [plasterType, setPlasterType] = useState('12');
     const [length, setLength] = useState(10);

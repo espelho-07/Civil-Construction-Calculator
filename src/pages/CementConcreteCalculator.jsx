@@ -3,13 +3,16 @@ import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
+import DualInput from '../components/DualInput';
+import InfoTooltip from '../components/InfoTooltip';
+import { STANDARDS_DATA } from '../constants/STANDARDS_DATA';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function CementConcreteCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('gray');
     const [unit, setUnit] = useState('Meter');
     const [grade, setGrade] = useState('M20');
     const [length, setLength] = useState(10);
@@ -103,12 +106,14 @@ export default function CementConcreteCalculator() {
     ];
 
     return (
-        <main className="min-h-screen bg-[#F7F9FF]">
-            <CategoryNav activeCategory="quantity-estimator" />
+        <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+            <CategoryNav activeCategory="concrete-technology" />
 
-            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
-                {/* Main Content */}
-                <div>
+            <div className="max-w-7xl mx-auto px-4 py-8">
+                {/* Sticky Sidebar Layout */}
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-8 items-start">
+                    {/* Main Content - Left Panel */}
+                    <div>
                     <div className="flex items-center justify-between mb-4">
                         <div>
                             <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Cement Concrete Calculator</h1>
@@ -126,269 +131,324 @@ export default function CementConcreteCalculator() {
 
                     {/* Cement Concrete Calculation */}
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className={`fas fa-calculator ${theme.text}`}></i>
-                            Cement Concrete Calculation
-                        </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] space-y-4">
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="bg-white rounded-t-2xl rounded-b-xl border border-gray-200 shadow-sm p-6 space-y-5">
+                            {/* Input Section */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pb-5 border-b border-gray-200">
                                 <div>
-                                    <div className="font-semibold text-gray-800 mb-2">Cement Concrete Volume</div>
-                                    <div className="bg-[#f8f9fa] p-4 rounded-lg font-mono text-sm space-y-2">
-                                        <p><span className="text-[#3B68FC]">Length</span> × <span className="text-green-600">Width</span> × <span className="text-amber-600">Depth</span></p>
-                                        <p>= {length} × {width} × {depth}</p>
-                                        <p className="text-lg font-bold">= {results?.wetVol} m³</p>
-                                    </div>
+                                    <label className={`block text-sm font-semibold ${theme.text} mb-2`}>Concrete Grade</label>
+                                    <select
+                                        value={grade}
+                                        onChange={(e) => setGrade(e.target.value)}
+                                        className={`w-full px-4 py-2.5 border rounded-lg text-sm font-medium ${theme.border} ${theme.bgLight} hover:bg-white transition-all outline-none ${theme.focus}`}
+                                    >
+                                        {Object.keys(grades).map(g => (
+                                            <option key={g} value={g}>{grades[g].label}</option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <div>
-                                    <div className="font-semibold text-gray-800 mb-2">Wet Volume of Mix</div>
-                                    <div className="bg-[#f8f9fa] p-4 rounded-lg font-mono text-sm space-y-2">
-                                        <p>as Said Volume = {results?.wetVol} m³</p>
-                                        <p>Dry Volume = Wet Vol × 1.54</p>
-                                        <p className="text-lg font-bold text-green-600">= {results?.dryVol} m³</p>
-                                    </div>
+                                    <label className={`block text-sm font-semibold ${theme.text} mb-2`}>Unit</label>
+                                    <select
+                                        value={unit}
+                                        onChange={(e) => setUnit(e.target.value)}
+                                        className={`w-full px-4 py-2.5 border rounded-lg text-sm font-medium ${theme.border} ${theme.bgLight} hover:bg-white transition-all outline-none ${theme.focus}`}
+                                    >
+                                        <option value="Meter">Meter</option>
+                                        <option value="Feet">Feet</option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg text-sm">
-                                <strong>Note:</strong> To get the dry volume consider 54% voids i.e. 1.54 factor
+                            {/* Dimensions Section */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <DualInput
+                                    label="Length"
+                                    value={length}
+                                    onChange={setLength}
+                                    unit={unit}
+                                    onUnitChange={setUnit}
+                                    units={[]}
+                                    placeholder="10"
+                                    theme={theme}
+                                    min={0}
+                                    step={0.1}
+                                />
+                                <DualInput
+                                    label="Width"
+                                    value={width}
+                                    onChange={setWidth}
+                                    unit={unit}
+                                    onUnitChange={setUnit}
+                                    units={[]}
+                                    placeholder="10"
+                                    theme={theme}
+                                    min={0}
+                                    step={0.1}
+                                />
+                                <DualInput
+                                    label="Depth"
+                                    value={depth}
+                                    onChange={setDepth}
+                                    unit={unit}
+                                    onUnitChange={setUnit}
+                                    units={[]}
+                                    placeholder="0.15"
+                                    theme={theme}
+                                    min={0}
+                                    step={0.01}
+                                />
                             </div>
 
-                            {/* Material Cards */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                                {/* Cement */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                            {/* Volume Information */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-5 border-t border-gray-200">
+                                <div className={`${theme.bgLight} p-4 rounded-lg border ${theme.border}`}>
+                                    <p className={`text-xs font-semibold ${theme.text} mb-2`}>Wet Volume</p>
+                                    <p className="text-2xl font-bold text-gray-800">{results?.wetVol} m³</p>
+                                    <p className="text-xs text-gray-600 mt-1">{length} × {width} × {depth}</p>
+                                </div>
+                                <div className={`${theme.bgLight} p-4 rounded-lg border ${theme.border}`}>
+                                    <p className={`text-xs font-semibold ${theme.text} mb-2`}>Dry Volume (1.54×)</p>
+                                    <p className="text-2xl font-bold text-gray-800">{results?.dryVol} m³</p>
+                                    <p className="text-xs text-gray-600 mt-1">Accounts for 54% voids</p>
+                                </div>
+                            </div>
+
+                            {/* Material Results Cards */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-5 border-t border-gray-200">
+                                {/* Cement Card */}
+                                <div className={`${theme.bgLight} border ${theme.border} rounded-lg p-4`}>
                                     <div className="flex items-center gap-2 mb-3">
-                                        <i className="fas fa-cubes text-blue-500"></i>
-                                        <span className="font-bold text-gray-800">1. Amount of Cement Required</span>
+                                        <i className={`fas fa-cubes ${theme.text}`}></i>
+                                        <span className="text-sm font-bold text-gray-800">Cement</span>
                                     </div>
-                                    <div className="text-sm space-y-1 font-mono bg-blue-50 p-3 rounded">
-                                        <p>Cement Volume</p>
-                                        <p>= {results?.dryVol} × (1/{results?.totalParts})</p>
-                                        <p>= {results?.cementVol} m³</p>
-                                    </div>
-                                    <div className="mt-3 text-center border-t pt-3">
-                                        <div className="text-xs text-gray-500">No. of Cement Bags</div>
-                                        <div className="text-2xl font-bold text-blue-600">{results?.cement}</div>
-                                        <div className="text-xs text-gray-400">{results?.cementKg} Kg</div>
-                                    </div>
-                                    <div className="mt-2 bg-blue-100 text-blue-800 text-xs p-2 rounded text-center">
-                                        Note: One cement bag contains 0.034722 m³ OR 1.226 CFT of Volume OR 50 KG or 110 LBS.
-                                    </div>
+                                    <p className="text-2xl font-bold text-gray-800">{results?.cement}</p>
+                                    <p className="text-xs text-gray-600 mt-1">Bags (50 kg)</p>
+                                    <p className="text-xs font-mono text-gray-500 mt-2">{results?.cementKg} kg</p>
                                 </div>
 
-                                {/* Sand */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                                {/* Sand Card */}
+                                <div className={`${theme.bgLight} border ${theme.border} rounded-lg p-4`}>
                                     <div className="flex items-center gap-2 mb-3">
-                                        <i className="fas fa-truck-loading text-amber-500"></i>
-                                        <span className="font-bold text-gray-800">2. Amount of Sand Required</span>
+                                        <i className={`fas fa-mountain ${theme.text}`}></i>
+                                        <span className="text-sm font-bold text-gray-800">Sand</span>
                                     </div>
-                                    <div className="text-sm space-y-1 font-mono bg-amber-50 p-3 rounded">
-                                        <p>Sand Volume</p>
-                                        <p>= {results?.dryVol} × ({results?.parts?.[1]}/{results?.totalParts})</p>
-                                        <p>= {results?.sandVol} m³</p>
-                                    </div>
-                                    <div className="mt-3 text-center border-t pt-3">
-                                        <div className="text-xs text-gray-500">Sand in Ton</div>
-                                        <div className="text-2xl font-bold text-amber-600">{results?.sand}</div>
-                                        <div className="text-xs text-gray-400">{results?.sandCft} CFT</div>
-                                    </div>
-                                    <div className="mt-2 bg-amber-100 text-amber-800 text-xs p-2 rounded text-center">
-                                        Density of Sand: 1550 kg/m³
-                                    </div>
+                                    <p className="text-2xl font-bold text-gray-800">{results?.sand}</p>
+                                    <p className="text-xs text-gray-600 mt-1">Metric Tons</p>
+                                    <p className="text-xs font-mono text-gray-500 mt-2">{results?.sandCft} CFT</p>
                                 </div>
 
-                                {/* Aggregate */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                                {/* Aggregate Card */}
+                                <div className={`${theme.bgLight} border ${theme.border} rounded-lg p-4`}>
                                     <div className="flex items-center gap-2 mb-3">
-                                        <i className="fas fa-gem text-green-500"></i>
-                                        <span className="font-bold text-gray-800">3. Amount of Aggregate Required</span>
+                                        <i className={`fas fa-gem ${theme.text}`}></i>
+                                        <span className="text-sm font-bold text-gray-800">Aggregate</span>
                                     </div>
-                                    <div className="text-sm space-y-1 font-mono bg-green-50 p-3 rounded">
-                                        <p>Aggregate Volume</p>
-                                        <p>= {results?.dryVol} × ({results?.parts?.[2]}/{results?.totalParts})</p>
-                                        <p>= {results?.aggVol} m³</p>
-                                    </div>
-                                    <div className="mt-3 text-center border-t pt-3">
-                                        <div className="text-xs text-gray-500">Aggregate in Ton</div>
-                                        <div className="text-2xl font-bold text-green-600">{results?.aggregate}</div>
-                                        <div className="text-xs text-gray-400">{results?.aggCft} CFT</div>
-                                    </div>
-                                    <div className="mt-2 bg-green-100 text-green-800 text-xs p-2 rounded text-center">
-                                        Aggregate density: 1500-1650 kg/m³
-                                    </div>
+                                    <p className="text-2xl font-bold text-gray-800">{results?.aggregate}</p>
+                                    <p className="text-xs text-gray-600 mt-1">Metric Tons</p>
+                                    <p className="text-xs font-mono text-gray-500 mt-2">{results?.aggCft} CFT</p>
                                 </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* What is RCC? */}
-                    <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className={`fas fa-info-circle ${theme.text}`}></i>
-                            What is RCC (Plain Cement Concrete) Calculation?
-                        </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] flex flex-col md:flex-row gap-6">
-                            <div className="flex-1">
-                                <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
-                                    Cement concrete is one of the main building materials used in today's construction industry. It can be moulded to any desired shape, does not corrode, is not combustible, and is resistant to abrasion. Concrete is a mixture of sand or aggregate combined with cement.
-                                </p>
-                                <p className="text-[#0A0A0A] leading-relaxed text-justify">
-                                    The standard mix for concrete is Cement: Sand: Aggregate in specified ratios like 1:1.5:3 (M20), 1:2:4 (M15), etc. Higher the grade, more is the strength and cement content.
-                                </p>
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Concrete work" className="w-full md:w-48 h-40 object-cover rounded-lg" />
-                        </div>
-                    </section>
-
-                    {/* Standard Grades Table */}
-                    <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className={`fas fa-table ${theme.text}`}></i>
-                            Concrete grade and proportion/mix ratio:
-                        </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-sm border-collapse">
-                                    <thead>
-                                        <tr className="bg-gray-100">
-                                            <th className="border border-gray-300 px-3 py-2 text-left">Concrete Grade</th>
-                                            <th className="border border-gray-300 px-3 py-2 text-left">Proportion (Cement: Sand: Aggregate)</th>
-                                            <th className="border border-gray-300 px-3 py-2 text-left">Expected Compressive Strength (28 days)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td className="border border-gray-300 px-3 py-2 font-medium">M10</td>
-                                            <td className="border border-gray-300 px-3 py-2">1 : 3 : 6</td>
-                                            <td className="border border-gray-300 px-3 py-2">10 N/mm²</td>
-                                        </tr>
-                                        <tr className="bg-gray-50">
-                                            <td className="border border-gray-300 px-3 py-2 font-medium">M15</td>
-                                            <td className="border border-gray-300 px-3 py-2">1 : 2 : 4</td>
-                                            <td className="border border-gray-300 px-3 py-2">15 N/mm²</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="border border-gray-300 px-3 py-2 font-medium">M20</td>
-                                            <td className="border border-gray-300 px-3 py-2">1 : 1.5 : 3</td>
-                                            <td className="border border-gray-300 px-3 py-2">20 N/mm²</td>
-                                        </tr>
-                                        <tr className="bg-gray-50">
-                                            <td className="border border-gray-300 px-3 py-2 font-medium">M25</td>
-                                            <td className="border border-gray-300 px-3 py-2">1 : 1 : 2</td>
-                                            <td className="border border-gray-300 px-3 py-2">25 N/mm²</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                     </section>
 
                     {/* Related Calculators */}
-                    <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className={`fas fa-th-large ${theme.text}`}></i>
+                    <section className="mb-12">
+                        <h2 className={`text-2xl font-bold ${theme.text} mb-6 flex items-center gap-3`}>
+                            <i className="fas fa-th-large"></i>
                             Related Calculators
                         </h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {relatedCalculators.map((calc) => (
-                                <Link key={calc.name} to={calc.slug} className={`bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
+                                <Link key={calc.name} to={calc.slug} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg hover:border-gray-300 transition-all group">
                                     <div className="flex items-center gap-3">
                                         <i className={`fas ${calc.icon} ${theme.text} group-hover:scale-110 transition-transform`}></i>
-                                        <span className={`text-sm font-medium text-[#0A0A0A] group-hover:${theme.text}`}>{calc.name}</span>
+                                        <span className="text-sm font-medium text-gray-800 group-hover:text-gray-900">{calc.name}</span>
                                     </div>
                                 </Link>
                             ))}
                         </div>
                     </section>
-
-                    {/* Inline Ad */}
-                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-8 text-center text-gray-500 mb-8">
-                        <i className="fas fa-ad text-3xl mb-2"></i>
-                        <p className="text-sm">Advertisement</p>
-                    </div>
                 </div>
 
-                {/* Calculator Widget (Sidebar) */}
-                <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-hidden border border-[#e5e7eb]">
-                        <div className={`px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3 bg-gradient-to-r ${theme.gradient}`}>
-                            <i className="fas fa-cubes text-xl text-white"></i>
-                            <h2 className="font-semibold text-white">CEMENT CONCRETE CALCULATOR</h2>
+                {/* Sidebar - Educational Content & Standards */}
+                <aside ref={sidebarRef} className="sticky top-20 h-fit space-y-6">
+                    {/* What is Cement Concrete? Card */}
+                    <div className="bg-white rounded-t-2xl border border-gray-200 shadow-sm">
+                        <div className={`px-5 py-4 border-b border-gray-200 rounded-t-2xl bg-gradient-to-r ${theme.gradient}`}>
+                            <div className="flex items-center justify-between">
+                                <h3 className="font-bold text-white text-sm flex items-center gap-2">
+                                    <i className="fas fa-info-circle"></i>
+                                    What is This?
+                                </h3>
+                                <InfoTooltip
+                                    title="Cement Concrete Mix"
+                                    description="Cement concrete is a composite building material made from Portland cement, sand, coarse aggregates, and water."
+                                    formula={STANDARDS_DATA.concrete.cement.formula}
+                                    standards={STANDARDS_DATA.concrete.cement.standards}
+                                    theme={theme}
+                                    icon="fa-graduation-cap"
+                                />
+                            </div>
                         </div>
+                        <div className="p-5 text-sm text-gray-700 leading-relaxed">
+                            <p>A mix design that calculates the precise quantities of cement, sand, and aggregate needed for concrete work based on the grade (M5-M80) and volume required.</p>
+                            <div className="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
+                                <p className="text-xs font-semibold text-blue-900 mb-1">Key Formula:</p>
+                                <p className="font-mono text-xs text-blue-800">Dry Vol = Wet Vol × 1.54</p>
+                            </div>
+                        </div>
+                    </div>
 
-                        <div className="p-5">
-                            {/* Unit Toggle */}
-                            <div className="mb-4">
-                                <label className="text-xs text-gray-500 mb-1 block">Unit</label>
-                                <div className="flex border border-[#e5e7eb] rounded-lg overflow-hidden">
-                                    <button onClick={() => setUnit('Meter')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Meter' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Meter</button>
-                                    <button onClick={() => setUnit('Feet')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Feet' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Feet</button>
+                    {/* Standards Card */}
+                    <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
+                        <h3 className={`font-bold text-sm ${theme.text} mb-3 flex items-center gap-2`}>
+                            <i className="fas fa-certificate"></i>
+                            Applicable Standards
+                        </h3>
+                        <ul className="text-xs space-y-2">
+                            <li className="flex gap-2">
+                                <span className={`${theme.bg} text-white w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-xs`}>1</span>
+                                <span className="text-gray-700">IS 456:2000 - RCC Code</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className={`${theme.bg} text-white w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-xs`}>2</span>
+                                <span className="text-gray-700">ASTM C 192 - Test Method</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className={`${theme.bg} text-white w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-xs`}>3</span>
+                                <span className="text-gray-700">BS 1881 - Testing Methods</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Quick Reference Card */}
+                    <div className="bg-white rounded-b-2xl border border-gray-200 shadow-sm p-5">
+                        <h3 className={`font-bold text-sm ${theme.text} mb-3 flex items-center gap-2`}>
+                            <i className="fas fa-chart-pie"></i>
+                            Grade Quick Reference
+                        </h3>
+                        <div className="space-y-2">
+                            <div className="text-xs p-2 rounded bg-gray-50 border border-gray-200">
+                                <p className="font-semibold text-gray-800">M20 (1:1.5:3)</p>
+                                <p className="text-gray-600">Most common, 20 MPa</p>
+                            </div>
+                            <div className="text-xs p-2 rounded bg-gray-50 border border-gray-200">
+                                <p className="font-semibold text-gray-800">M25 (1:1:2)</p>
+                                <p className="text-gray-600">RCC structures, 25 MPa</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Results Summary */}
+                    {results && (
+                        <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg p-5 text-white shadow-sm">
+                            <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
+                                <i className="fas fa-box-open"></i>
+                                Summary
+                            </h3>
+                            <div className="space-y-3">
+                                <div className="flex justify-between text-xs">
+                                    <span className="text-gray-400">Wet Volume:</span>
+                                    <span className="font-bold">{results.wetVol} m³</span>
+                                </div>
+                                <div className="flex justify-between text-xs">
+                                    <span className="text-gray-400">Dry Volume:</span>
+                                    <span className="font-bold">{results.dryVol} m³</span>
+                                </div>
+                                <div className="border-t border-gray-700 pt-3 mt-3">
+                                    <div className="flex justify-between text-xs mb-1">
+                                        <span className="text-gray-400">Cement Bags:</span>
+                                        <span className="font-bold text-blue-300">{results.cement}</span>
+                                    </div>
+                                    <div className="flex justify-between text-xs mb-1">
+                                        <span className="text-gray-400">Sand (Tons):</span>
+                                        <span className="font-bold text-amber-300">{results.sand}</span>
+                                    </div>
+                                    <div className="flex justify-between text-xs">
+                                        <span className="text-gray-400">Aggregate (Tons):</span>
+                                        <span className="font-bold text-green-300">{results.aggregate}</span>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                    )}
+                </aside>
+            </div>
+        </div>
 
-                            {/* Grade */}
-                            <div className="mb-3">
-                                <label className="text-xs text-gray-500 mb-1 block">Grade of Concrete</label>
-                                <select value={grade} onChange={(e) => setGrade(e.target.value)} className={`w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`}>
-                                    {Object.entries(grades).map(([key, val]) => (
-                                        <option key={key} value={key}>{val.label}</option>
-                                    ))}
-                                </select>
+        {/* Information Sections */}
+        <div className="max-w-6xl mx-auto px-4 py-12">
+            {/* Formula & Details */}
+            <section className="mb-12">
+                <h2 className={`text-2xl font-bold ${theme.text} mb-6 flex items-center gap-3`}>
+                    <i className="fas fa-flask-vial"></i>
+                    Calculation Details
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                        <h3 className="font-bold text-gray-800 mb-3">Dry Volume Calculation</h3>
+                        <div className="bg-gray-50 p-4 rounded font-mono text-sm space-y-2 text-gray-700">
+                            <p>Wet Volume = L × W × D</p>
+                            <p>Dry Volume = Wet Volume × 1.54</p>
+                            <p className="text-xs text-gray-600 mt-2">Factor 1.54 accounts for 54% air voids in concrete</p>
+                        </div>
+                    </div>
+                    <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                        <h3 className="font-bold text-gray-800 mb-3">Material Distribution</h3>
+                        <div className="bg-gray-50 p-4 rounded font-mono text-sm space-y-2 text-gray-700">
+                            <p>Cement = Dry Vol × (1/Parts)</p>
+                            <p>Sand = Dry Vol × (Sand Part/Total Parts)</p>
+                            <p>Aggregate = Dry Vol × (Agg Part/Total Parts)</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Concrete Grades Reference */}
+            <section className="mb-12">
+                <h2 className={`text-2xl font-bold ${theme.text} mb-6 flex items-center gap-3`}>
+                    <i className="fas fa-layer-group"></i>
+                    Concrete Grades & Standards
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Grades Table */}
+                    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+                        <table className="w-full text-sm">
+                            <thead className={`bg-gradient-to-r ${theme.gradient} text-white`}>
+                                <tr>
+                                    <th className="px-4 py-3 text-left font-semibold">Grade</th>
+                                    <th className="px-4 py-3 text-left font-semibold">Ratio</th>
+                                    <th className="px-4 py-3 text-left font-semibold">Strength</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200">
+                                {Object.entries(STANDARDS_DATA.concrete.cement.grades).map(([grade, data], idx) => (
+                                    <tr key={grade} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                                        <td className="px-4 py-3 font-semibold text-gray-800">{grade}</td>
+                                        <td className="px-4 py-3 text-gray-700">{data.ratio}</td>
+                                        <td className="px-4 py-3 text-gray-700">{data.strength}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* Cement Types */}
+                    <div className="space-y-3">
+                        <h3 className="font-bold text-gray-800 mb-3">Cement Types</h3>
+                        {Object.entries(STANDARDS_DATA.concrete.cement.cementTypes).map(([type, description]) => (
+                            <div key={type} className="bg-white rounded-lg border border-gray-200 p-4">
+                                <p className="font-semibold text-gray-800">{type}</p>
+                                <p className="text-sm text-gray-600 mt-1">{description}</p>
                             </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
-                            {/* Inputs */}
-                            <div className="grid grid-cols-3 gap-2 mb-3">
-                                <div>
-                                    <label className="text-xs text-gray-500 mb-1 block">Length</label>
-                                    <input type="number" value={length} onChange={(e) => setLength(Number(e.target.value))} className={`w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center ${theme.focus} outline-none`} />
-                                </div>
-                                <div>
-                                    <label className="text-xs text-gray-500 mb-1 block">Width</label>
-                                    <input type="number" value={width} onChange={(e) => setWidth(Number(e.target.value))} className={`w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center ${theme.focus} outline-none`} />
-                                </div>
-                                <div>
-                                    <label className="text-xs text-gray-500 mb-1 block">Depth</label>
-                                    <input type="number" value={depth} step="0.01" onChange={(e) => setDepth(Number(e.target.value))} className={`w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center ${theme.focus} outline-none`} />
-                                </div>
-                            </div>
-
-                            {/* Calculate Button */}
-                            <div className="flex gap-2 mb-5">
-                                <button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium transition-colors`}>Calculate</button>
-                                <button className="bg-red-500 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-red-600 transition-colors">Reset</button>
-                            </div>
-
-                            {/* Results */}
-                            <div className="bg-[#f8f9fa] rounded-xl p-4 mb-4">
-                                <div className="grid grid-cols-2 gap-4 mb-4">
-                                    <div className="text-center">
-                                        <div className="text-xs text-gray-500">Total Volume of Cement Concrete</div>
-                                        <div className="text-xl font-bold text-[#3B68FC]">{results?.wetVol} m³</div>
-                                        <div className="text-sm font-bold text-green-600">{results?.dryVol} m³ (Dry)</div>
-                                    </div>
-                                    <div className="flex justify-center">
-                                        <div className="w-20 h-20">
-                                            <Pie data={chartData} options={{ plugins: { legend: { display: false } } }} />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-3 gap-2 text-xs text-center">
-                                    <div className="bg-white p-2 rounded border">
-                                        <i className="fas fa-cubes text-blue-500"></i>
-                                        <div className="text-gray-500">Cement</div>
-                                        <div className="font-bold">{results?.cement} Bags</div>
-                                    </div>
-                                    <div className="bg-white p-2 rounded border">
-                                        <i className="fas fa-truck-loading text-amber-500"></i>
-                                        <div className="text-gray-500">Sand</div>
-                                        <div className="font-bold">{results?.sand} Ton</div>
-                                    </div>
-                                    <div className="bg-white p-2 rounded border">
-                                        <i className="fas fa-gem text-green-500"></i>
-                                        <div className="text-gray-500">Aggregate</div>
-                                        <div className="font-bold">{results?.aggregate} Ton</div>
+        </div>
+    );
+}
                                     </div>
                                 </div>
                             </div>

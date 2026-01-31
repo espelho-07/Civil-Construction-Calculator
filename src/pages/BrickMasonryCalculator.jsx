@@ -3,34 +3,16 @@ import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
+import DualInput from '../components/DualInput';
+import InfoTooltip from '../components/InfoTooltip';
+import { STANDARDS_DATA } from '../constants/STANDARDS_DATA';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-function InfoTooltip({ text }) {
-    const [show, setShow] = useState(false);
-    return (
-        <div className="relative inline-block">
-            <button
-                type="button"
-                className={`w-4 h-4 ${theme.button} rounded-full text-xs flex items-center justify-center cursor-help ml-1`}
-                onMouseEnter={() => setShow(true)}
-                onMouseLeave={() => setShow(false)}
-            >
-                i
-            </button>
-            {show && (
-                <div className="absolute left-6 top-0 z-50 w-56 p-3 bg-white border border-[#e5e7eb] rounded-lg shadow-lg text-xs text-[#0A0A0A] leading-relaxed">
-                    {text}
-                </div>
-            )}
-        </div>
-    );
-}
-
 export default function BrickMasonryCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('gray');
     const [unit, setUnit] = useState('Feet');
     const [length, setLength] = useState(10);
     const [height, setHeight] = useState(10);
@@ -116,26 +98,28 @@ export default function BrickMasonryCalculator() {
     ];
 
     return (
-        <main className="min-h-screen bg-[#F7F9FF]">
-            <CategoryNav activeCategory="quantity-estimator" />
+        <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+            <CategoryNav activeCategory="concrete-technology" />
 
-            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
-                {/* Main Content */}
-                <div>
-                    <div className="flex items-center justify-between mb-4">
-                        <div>
-                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Brick Masonry Calculator</h1>
-                            <p className="text-[#6b7280]">Calculate bricks, cement and sand required for masonry work</p>
+            <div className="max-w-7xl mx-auto px-4 py-8">
+                {/* Sticky Sidebar Layout */}
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-8 items-start">
+                    {/* Main Content - Left Panel */}
+                    <div>
+                        <div className="flex items-center justify-between mb-6">
+                            <div>
+                                <h1 className="text-3xl font-bold text-gray-800 mb-2">Brick Masonry Calculator</h1>
+                                <p className="text-gray-600">Calculate bricks, cement and sand for masonry work per IS 2222</p>
+                            </div>
+                            <CalculatorActions
+                                calculatorSlug="brick-masonry"
+                                calculatorName="Brick Masonry Calculator"
+                                calculatorIcon="fa-th-large"
+                                category="Concrete Technology"
+                                inputs={{ unit, length, height, thickness, ratio, brickL, brickW, brickH }}
+                                outputs={results || {}}
+                            />
                         </div>
-                        <CalculatorActions
-                            calculatorSlug="brick-masonry"
-                            calculatorName="Brick Masonry Calculator"
-                            calculatorIcon="fa-th-large"
-                            category="Quantity Estimator"
-                            inputs={{ unit, length, height, thickness, ratio, brickL, brickW, brickH }}
-                            outputs={results || {}}
-                        />
-                    </div>
 
                     {/* What is Brick Masonry? */}
                     <section className="mb-8">

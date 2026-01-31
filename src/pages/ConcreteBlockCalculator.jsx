@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
+import DualInput from '../components/DualInput';
+import InfoTooltip from '../components/InfoTooltip';
+import { STANDARDS_DATA } from '../constants/STANDARDS_DATA';
 
 export default function ConcreteBlockCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('gray');
     const [unit, setUnit] = useState('Meter');
     const [length, setLength] = useState(10);
     const [lengthCm, setLengthCm] = useState(0);
@@ -84,45 +87,48 @@ export default function ConcreteBlockCalculator() {
     }, []);
 
     return (
-        <main className="min-h-screen bg-[#F7F9FF]">
-            <CategoryNav activeCategory="quantity-estimator" />
-            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
-                <div>
-                    <div className="flex items-center justify-between mb-4">
-                        <div>
-                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Concrete Block Calculator</h1>
-                            <p className="text-[#6b7280]">Calculate concrete blocks and mortar required for wall</p>
-                        </div>
-                        <CalculatorActions
-                            calculatorSlug="concrete-block-calculator"
-                            calculatorName="Concrete Block Calculator"
-                            calculatorIcon="fa-th-large"
-                            category="Quantity Estimator"
-                            inputs={{ unit, length, height, thick, blockL, blockH, ratio }}
-                            outputs={results || {}}
-                        />
-                    </div>
-
-                    {/* Result Display */}
-                    <section className="mb-8">
-                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                                <div>
-                                    <div className="text-sm text-gray-500">Number of Blocks</div>
-                                    <div className={`text-4xl font-bold ${theme.text}`}>{results?.noOfBlocks}</div>
-                                    <div className="text-xs text-gray-400 mt-1">Nos.</div>
-                                </div>
-                                <div>
-                                    <div className="text-sm text-gray-500">Cement Bags</div>
-                                    <div className={`text-4xl font-bold ${theme.text}`}>{results?.cementBags}</div>
-                                    <div className="text-xs text-gray-400 mt-1">Bags (50kg)</div>
-                                </div>
-                                <div>
-                                    <div className="text-sm text-gray-500">Sand Volume</div>
-                                    <div className={`text-4xl font-bold ${theme.text}`}>{results?.sandVol}</div>
-                                    <div className="text-xs text-gray-400 mt-1">m³</div>
-                                </div>
+        <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+            <CategoryNav activeCategory="concrete-technology" />
+            <div className="max-w-7xl mx-auto px-4 py-8">
+                {/* Sticky Sidebar Layout */}
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-8 items-start">
+                    {/* Main Content */}
+                    <div>
+                        <div className="flex items-center justify-between mb-6">
+                            <div>
+                                <h1 className="text-3xl font-bold text-gray-800 mb-2">Concrete Block Calculator</h1>
+                                <p className="text-gray-600">Calculate concrete blocks and mortar per IS 2185</p>
                             </div>
+                            <CalculatorActions
+                                calculatorSlug="concrete-block-calculator"
+                                calculatorName="Concrete Block Calculator"
+                                calculatorIcon="fa-th-large"
+                                category="Concrete Technology"
+                                inputs={{ unit, length, height, thick, blockL, blockH, ratio }}
+                                outputs={results || {}}
+                            />
+                        </div>
+
+                        {/* Result Display */}
+                        <section className="mb-8">
+                            <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                                    <div className={`p-4 rounded-lg ${theme.bgLight} border ${theme.border}`}>
+                                        <div className="text-sm text-gray-600 font-semibold mb-2">Number of Blocks</div>
+                                        <div className={`text-3xl font-bold ${theme.text}`}>{results?.noOfBlocks}</div>
+                                        <div className="text-xs text-gray-500 mt-1">Pieces</div>
+                                    </div>
+                                    <div className={`p-4 rounded-lg ${theme.bgLight} border ${theme.border}`}>
+                                        <div className="text-sm text-gray-600 font-semibold mb-2">Cement Bags</div>
+                                        <div className={`text-3xl font-bold ${theme.text}`}>{results?.cementBags}</div>
+                                        <div className="text-xs text-gray-500 mt-1">Bags (50kg)</div>
+                                    </div>
+                                    <div className={`p-4 rounded-lg ${theme.bgLight} border ${theme.border}`}>
+                                        <div className="text-sm text-gray-600 font-semibold mb-2">Sand Volume</div>
+                                        <div className={`text-3xl font-bold ${theme.text}`}>{results?.sandVol}</div>
+                                        <div className="text-xs text-gray-500 mt-1">m³</div>
+                                    </div>
+                                </div>
 
                             <div className={`${theme.bgLight} p-4 rounded-lg text-center mt-6`}>
                                 <div className="text-sm text-gray-600 mb-2">Wall Volume</div>
