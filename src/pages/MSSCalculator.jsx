@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
@@ -31,7 +32,9 @@ const MSS_DATA = {
 };
 
 export default function MSSCalculator() {
-    const theme = getThemeClasses('blue');
+    const location = useLocation();
+    const isBlending = location.pathname.includes('blending-aggregates');
+    const theme = getThemeClasses(isBlending ? 'purple' : 'blue');
     const [grade, setGrade] = useState('Type A');
     const [inputs, setInputs] = useState({});
     const [results, setResults] = useState({});
@@ -103,7 +106,7 @@ export default function MSSCalculator() {
                     {/* Calculator Table */}
                     <section className="mb-8">
                         <div className={`bg-white rounded-xl border ${theme.border} overflow-hidden`}>
-                            <div className={`px-5 py-4 ${theme.bg}`}>
+                            <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient}`}>
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                         <i className="fas fa-layer-group text-white"></i>
@@ -200,7 +203,7 @@ export default function MSSCalculator() {
                 {/* Sidebar */}
                 <div ref={sidebarRef} className="sticky top-20">
                     <div className={`bg-white rounded-2xl shadow-lg border ${theme.border} mb-6`}>
-                        <div className={`px-5 py-4 ${theme.bg} rounded-t-2xl`}>
+                        <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                     <i className="fas fa-layer-group text-white"></i>

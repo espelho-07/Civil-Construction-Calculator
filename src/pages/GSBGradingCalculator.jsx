@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
@@ -70,7 +70,9 @@ function InfoTooltip({ text, theme }) {
 }
 
 export default function GSBGradingCalculator() {
-    const theme = getThemeClasses('blue'); // Sieve Analysis Category
+    const location = useLocation();
+    const isBlending = location.pathname.includes('blending-aggregates');
+    const theme = getThemeClasses(isBlending ? 'purple' : 'blue');
     const [grade, setGrade] = useState('Grade I');
     const [inputs, setInputs] = useState({});
     const [results, setResults] = useState({});
@@ -141,7 +143,7 @@ export default function GSBGradingCalculator() {
                     {/* Calculator Table */}
                     <section className="mb-8">
                         <div className={`bg-white rounded-xl border ${theme.border} overflow-hidden`}>
-                            <div className={`px-5 py-4 ${theme.bg}`}>
+                            <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient}`}>
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                         <i className="fas fa-filter text-white"></i>
@@ -229,9 +231,9 @@ export default function GSBGradingCalculator() {
                             <ol className="list-decimal pl-5 text-sm text-gray-600 space-y-2 text-justify">
                                 <li><strong>Preparation of Sample:</strong> Take a representative sample of the GSB material. The weight of the sample depends on the maximum size of the aggregate but should be sufficient to be representative (e.g., 10-20 kg).</li>
                                 <li><strong>Drying:</strong> Dry the sample in an oven at 110 ± 5°C to a constant weight. Allow it to cool.</li>
-                                <li><strong>Weighing:</strong> Weigh the dried sample accurately ($W_{total}$).</li>
+                                <li><strong>Weighing:</strong> Weigh the dried sample accurately (W<sub>total</sub>).</li>
                                 <li><strong>Sieving:</strong> Arrange the sieves in descending order of size (largest aperture at the top). Place the sample on the top sieve and shake the nest of sieves manually or using a mechanical shaker for about 10-15 minutes.</li>
-                                <li><strong>Weighing Retained Material:</strong> Weigh the material retained on each sieve ($W_{retained}$).</li>
+                                <li><strong>Weighing Retained Material:</strong> Weigh the material retained on each sieve (W<sub>retained</sub>).</li>
                                 <li><strong>Calculation:</strong> Calculate the cumulative weight retained and the cumulative percentage retained for each sieve. Finally, calculate the percentage passing by subtracting the cumulative percentage retained from 100.</li>
                                 <li><strong>Reporting:</strong> Compare the percentage passing values with the MORTH specified limits for the selected Grade (I, II, etc.) to determine if the material is suitable.</li>
                             </ol>
@@ -243,7 +245,7 @@ export default function GSBGradingCalculator() {
                 {/* Sidebar */}
                 <div ref={sidebarRef} className="sticky top-20">
                     <div className={`bg-white rounded-2xl shadow-lg border ${theme.border} mb-6`}>
-                        <div className={`px-5 py-4 ${theme.bg} rounded-t-2xl`}>
+                        <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                     <i className="fas fa-filter text-white"></i>

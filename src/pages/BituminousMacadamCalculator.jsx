@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
 
 export default function BituminousMacadamCalculator() {
-    const theme = getThemeClasses('blue');
+    const location = useLocation();
+    const isBlending = location.pathname.includes('blending-aggregates');
+    const theme = getThemeClasses(isBlending ? 'purple' : 'blue');
     const sidebarRef = useRef(null);
 
     useEffect(() => {
@@ -99,7 +102,7 @@ export default function BituminousMacadamCalculator() {
                 {/* Sidebar */}
                 <div ref={sidebarRef} className="sticky top-20">
                     <div className={`bg-white rounded-2xl shadow-lg border ${theme.border} mb-6`}>
-                        <div className={`px-5 py-4 ${theme.bg} rounded-t-2xl`}>
+                        <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                     <i className="fas fa-road text-white"></i>

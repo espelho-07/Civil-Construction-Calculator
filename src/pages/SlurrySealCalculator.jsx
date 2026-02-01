@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
@@ -51,7 +52,9 @@ const SLURRY_SEAL_DATA = {
 };
 
 export default function SlurrySealCalculator() {
-    const theme = getThemeClasses('blue');
+    const location = useLocation();
+    const isBlending = location.pathname.includes('blending-aggregates');
+    const theme = getThemeClasses(isBlending ? 'purple' : 'blue');
     const [grade, setGrade] = useState('Type II');
     const [inputs, setInputs] = useState({});
     const [results, setResults] = useState({});
@@ -123,7 +126,7 @@ export default function SlurrySealCalculator() {
                     {/* Calculator Table */}
                     <section className="mb-8">
                         <div className={`bg-white rounded-xl border ${theme.border} overflow-hidden`}>
-                            <div className={`px-5 py-4 ${theme.bg}`}>
+                            <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient}`}>
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                         <i className="fas fa-fill-drip text-white"></i>
@@ -210,7 +213,7 @@ export default function SlurrySealCalculator() {
                         <div className={`bg-white rounded-xl shadow-sm border ${theme.border} p-6`}>
                             <h2 className="text-xl font-bold text-[#0A0A0A] mb-4">Test Procedure</h2>
                             <ol className="list-decimal pl-5 text-sm text-gray-600 space-y-2 text-justify">
-                                <li><strong>Component Analysis:</strong> Test aggregates for gradation (Type I, II, or III) and cleanliness (Sand Equivalent > 50).</li>
+                                <li><strong>Component Analysis:</strong> Test aggregates for gradation (Type I, II, or III) and cleanliness (Sand Equivalent &gt; 50).</li>
                                 <li><strong>Mix Design:</strong> Determine the optimum emulsion content and water content to achieve desired consistency and set time.</li>
                                 <li><strong>Compatibility:</strong> Ensure emulsion is compatible with the aggregate (zeta potential/breaking time).</li>
                             </ol>
@@ -221,7 +224,7 @@ export default function SlurrySealCalculator() {
                 {/* Sidebar */}
                 <div ref={sidebarRef} className="sticky top-20">
                     <div className={`bg-white rounded-2xl shadow-lg border ${theme.border} mb-6`}>
-                        <div className={`px-5 py-4 ${theme.bg} rounded-t-2xl`}>
+                        <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                     <i className="fas fa-fill-drip text-white"></i>

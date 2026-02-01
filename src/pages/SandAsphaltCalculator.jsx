@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
@@ -20,7 +21,9 @@ const SAND_ASPHALT_DATA = {
 };
 
 export default function SandAsphaltCalculator() {
-    const theme = getThemeClasses('blue');
+    const location = useLocation();
+    const isBlending = location.pathname.includes('blending-aggregates');
+    const theme = getThemeClasses(isBlending ? 'purple' : 'blue');
     const [inputs, setInputs] = useState({});
     const [results, setResults] = useState({});
     const sidebarRef = useRef(null);
@@ -87,7 +90,7 @@ export default function SandAsphaltCalculator() {
                     {/* Calculator Table */}
                     <section className="mb-8">
                         <div className={`bg-white rounded-xl border ${theme.border} overflow-hidden`}>
-                            <div className={`px-5 py-4 ${theme.bg}`}>
+                            <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient}`}>
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                         <i className="fas fa-layer-group text-white"></i>
@@ -156,7 +159,7 @@ export default function SandAsphaltCalculator() {
                                 Sand Asphalt Base Course is a bituminous base course composed of a mixture of sand and bitumen, laid and compacted on a prepared subgrade or sub-base. It is typically used in areas where good quality coarse aggregates are not economically available (e.g., desert regions) or as a regulating course.
                             </p>
                             <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                                The mix consists of sand (natural, crushed, or blended) and bituminous binder (viscosity grade) mixed in a hot mix plant. MORTH specifications require the sand to be clean, non-plastic (PI &#60; 6%), and meet the specified gradation limits (Table 500-14).
+                                The mix consists of sand (natural, crushed, or blended) and bituminous binder (viscosity grade) mixed in a hot mix plant. MORTH specifications require the sand to be clean, non-plastic (PI &lt; 6%), and meet the specified gradation limits (Table 500-14).
                             </p>
                         </div>
 
@@ -185,7 +188,7 @@ export default function SandAsphaltCalculator() {
                 {/* Sidebar */}
                 <div ref={sidebarRef} className="sticky top-20">
                     <div className={`bg-white rounded-2xl shadow-lg border ${theme.border} mb-6`}>
-                        <div className={`px-5 py-4 ${theme.bg} rounded-t-2xl`}>
+                        <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                     <i className="fas fa-layer-group text-white"></i>

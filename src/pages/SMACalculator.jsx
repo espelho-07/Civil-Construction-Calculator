@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
@@ -40,7 +41,9 @@ const SMA_DATA = {
 };
 
 export default function SMACalculator() {
-    const theme = getThemeClasses('blue');
+    const location = useLocation();
+    const isBlending = location.pathname.includes('blending-aggregates');
+    const theme = getThemeClasses(isBlending ? 'purple' : 'blue');
     const [grade, setGrade] = useState('13mm SMA');
     const [inputs, setInputs] = useState({});
     const [results, setResults] = useState({});
@@ -112,7 +115,7 @@ export default function SMACalculator() {
                     {/* Calculator Table */}
                     <section className="mb-8">
                         <div className={`bg-white rounded-xl border ${theme.border} overflow-hidden`}>
-                            <div className={`px-5 py-4 ${theme.bg}`}>
+                            <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient}`}>
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                         <i className="fas fa-cubes text-white"></i>
@@ -181,7 +184,7 @@ export default function SMACalculator() {
                                 Stone Matrix Asphalt (SMA) is a gap-graded bituminous mixture that maximizes stone-on-stone contact to provide a stable, durable, and rut-resistant pavement structure. The coarse aggregate skeleton is filled with a mastic of fine aggregate, filler, and binder. Stabilizing additives (like cellulose fiber) are often used to prevent drain-down of the binder.
                             </p>
                             <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                                MORTH specifications use 13 mm SMA for wearing courses (40-50 mm thick) and 19 mm SMA for binder courses (45-75 mm thick). The gap grading ensures a high coarse aggregate content (>70%), creating a strong skeleton.
+                                MORTH specifications use 13 mm SMA for wearing courses (40-50 mm thick) and 19 mm SMA for binder courses (45-75 mm thick). The gap grading ensures a high coarse aggregate content (&gt;70%), creating a strong skeleton.
                             </p>
                         </div>
 
@@ -210,7 +213,7 @@ export default function SMACalculator() {
                 {/* Sidebar */}
                 <div ref={sidebarRef} className="sticky top-20">
                     <div className={`bg-white rounded-2xl shadow-lg border ${theme.border} mb-6`}>
-                        <div className={`px-5 py-4 ${theme.bg} rounded-t-2xl`}>
+                        <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                     <i className="fas fa-cubes text-white"></i>

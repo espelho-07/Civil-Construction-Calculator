@@ -4,7 +4,7 @@ import CategoryNav from '../components/CategoryNav';
 import { getThemeClasses } from '../constants/categories';
 
 export default function BlendingAggregatesPage() {
-    const theme = getThemeClasses('gray');
+    const theme = getThemeClasses('purple'); // Theme matched to Category Page (Screenshot)
     const sidebarRef = useRef(null);
 
     const aggregateTypes = [
@@ -160,12 +160,17 @@ export default function BlendingAggregatesPage() {
                 {/* Sidebar */}
                 <div ref={sidebarRef} className="sticky top-20">
                     {/* Related Calculators */}
-                    <div className={`bg-white rounded-xl p-4 border ${theme.border}`}>
-                        <h4 className="font-semibold text-[#0A0A0A] text-sm mb-3 flex items-center gap-2">
-                            <span className="text-gray-600">Concrete Technology</span>
-                            <span className={`text-xs ${theme.text} ${theme.bgSoft} px-2 py-0.5 rounded`}>Calculators</span>
-                        </h4>
-                        <div className="space-y-2">
+                    {/* Related Calculators */}
+                    <div className={`bg-white rounded-2xl shadow-lg border ${theme.border} mb-6`}>
+                        <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                                    <i className="fas fa-calculator text-white text-sm"></i>
+                                </div>
+                                <h3 className="font-bold text-white text-sm">Concrete Technology</h3>
+                            </div>
+                        </div>
+                        <div className="p-4 space-y-2">
                             {relatedCalculators.map((calc) => (
                                 <Link
                                     key={calc.name}
