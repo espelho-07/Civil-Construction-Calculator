@@ -66,7 +66,7 @@ export default function SandAsphaltCalculator() {
 
     return (
         <main className="min-h-screen bg-[#F7F9FF]">
-            <CategoryNav activeCategory="sieve-analysis-aggregates" />
+            <CategoryNav activeCategory={isBlending ? 'blending-aggregates' : 'sieve-analysis-aggregates'} />
 
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 items-start">
 
