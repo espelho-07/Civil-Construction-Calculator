@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
 
 export default function SteelQuantityCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [memberType, setMemberType] = useState('Footing');
     const [concreteQuantity, setConcreteQuantity] = useState(30);
     const [results, setResults] = useState(null);
@@ -70,7 +71,7 @@ export default function SteelQuantityCalculator() {
                     <p className="text-[#6b7280] mb-6">Calculate steel quantity based on member type and concrete volume</p>
 
                     <section className="mb-8">
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 ${theme.border}`}>
                             <div className="text-center mb-4">
                                 <div className="text-sm text-gray-500">Weight of steel in kg.</div>
                                 <div className={`text-4xl font-bold ${theme.text}`}>{results?.weightKg} kg.</div>
@@ -90,7 +91,7 @@ export default function SteelQuantityCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is Steel Quantity calculation?</h2>
-                        <div className="bg-white rounded-xl p-6 border flex flex-col md:flex-row gap-6">
+                        <div className={`bg-white rounded-xl p-6 ${theme.border} flex flex-col md:flex-row gap-6`}>
                             <div className="flex-1">
                                 <p className="text-gray-600 mb-4 text-justify">A steel used in building structure fabricated with steel for the internal support and for exterior cladding, as opposed to steel framed buildings which generally use other materials for floors, walls, and external envelope. Steel buildings are used for a variety of purposes including storage, work spaces and living accommodation.</p>
                                 <p className="text-gray-600 text-justify">Steel is used because it binds well to concrete, has a similar thermal expansion coefficient and is strong and relatively cost-effective. Reinforced concrete is also used to provide deep foundations and basements and is currently the world's primary building material.</p>
@@ -101,27 +102,35 @@ export default function SteelQuantityCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2"><i className={`fas fa-table ${theme.text} mr-2`}></i>How many steel quantity require for member types?</h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 ${theme.border}`}>
                             <div className="bg-red-50 border border-red-200 p-3 rounded-lg mb-4 text-sm text-red-700">
                                 <i className="fas fa-info-circle mr-2"></i>Some common types of steel construction is footing, beam, column, slab, lintle, retaining wall, stair case for that require steel weight is given below in table.
                             </div>
                             <table className="w-full text-sm">
-                                <thead><tr className="bg-gray-100"><th className="border px-3 py-2 text-left">Member Type</th><th className="border px-3 py-2 text-left">Concrete Quantity</th><th className="border px-3 py-2 text-left">Steel Weight</th></tr></thead>
-                                <tbody>{steelTable.map((row, i) => <tr key={i}><td className="border px-3 py-2">{row.type}</td><td className="border px-3 py-2">{row.concrete}</td><td className="border px-3 py-2">{row.steel}</td></tr>)}</tbody>
+                                <thead><tr className="bg-gray-100"><th className={`${theme.border} px-3 py-2 text-left`}>Member Type</th><th className={`${theme.border} px-3 py-2 text-left`}>Concrete Quantity</th><th className={`${theme.border} px-3 py-2 text-left`}>Steel Weight</th></tr></thead>
+                                <tbody>{steelTable.map((row, i) => <tr key={i}><td className={`${theme.border} px-3 py-2`}>{row.type}</td><td className={`${theme.border} px-3 py-2`}>{row.concrete}</td><td className={`${theme.border} px-3 py-2`}>{row.steel}</td></tr>)}</tbody>
                             </table>
                         </div>
                     </section>
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className={`px-5 py-4 border-b ${theme.gradient} flex items-center gap-3 bg-gradient-to-r`}>
+                    <div className={`bg-white rounded-2xl shadow-lg ${theme.border}`}>
+                        <div className={`px-5 py-4 border-b ${theme.border} ${theme.gradient} flex items-center gap-3 bg-gradient-to-r rounded-t-2xl`}>
                             <i className="fas fa-bars text-xl text-white"></i>
-                            <h2 className="font-semibold text-white">STEEL QUANTITY CALCULATION</h2>
+                            <h2 className="font-semibold text-white">Steel Quantity Calculator</h2>
                         </div>
                         <div className="p-5">
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Member Type</label><select value={memberType} onChange={(e) => setMemberType(e.target.value)} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`}>{Object.keys(memberSteelRates).map(m => <option key={m} value={m}>{m}</option>)}</select></div>
-                            <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">Concrete Quantity (m³)</label><div className="relative"><input type="number" value={concreteQuantity} onChange={(e) => setConcreteQuantity(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m³</span></div></div>
+                            <div className="mb-3">
+                                <label className="text-xs text-gray-500 mb-1 block">Member Type</label>
+                                <CustomDropdown
+                                    options={Object.keys(memberSteelRates).map(m => ({ value: m, label: m }))}
+                                    value={memberType}
+                                    onChange={setMemberType}
+                                    theme={theme}
+                                />
+                            </div>
+                            <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">Concrete Quantity (m³)</label><div className="relative"><input type="number" value={concreteQuantity} onChange={(e) => setConcreteQuantity(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m³</span></div></div>
                             <div className="flex gap-2 mb-5"><button onClick={calculate} className={`flex-1 ${theme.button} text-white py-2.5 rounded-lg font-medium`}>Calculate</button><button onClick={reset} className="bg-red-500 text-white px-4 py-2.5 rounded-lg">Reset</button></div>
                             <div className="bg-[#f8f9fa] rounded-xl p-4 text-center"><div className="text-xs text-gray-500">Weight of steel</div><div className={`text-2xl font-bold ${theme.text}`}>{results?.weightKg} kg</div><div className="text-lg font-bold text-gray-600">{results?.weightTon} ton</div></div>
                         </div>

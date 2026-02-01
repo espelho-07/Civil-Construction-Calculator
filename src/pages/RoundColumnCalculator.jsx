@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
 
 export default function RoundColumnCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [unit, setUnit] = useState('Meter');
     const [gradeOfConcrete, setGradeOfConcrete] = useState('M20 (1:1.5:3)');
     const [diameter, setDiameter] = useState(1);
@@ -98,7 +99,7 @@ export default function RoundColumnCalculator() {
                     </div>
 
                     <section className="mb-8">
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 ${theme.border}`}>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="text-center">
                                     <div className="text-sm text-gray-500">Total Volume of Round Column</div>
@@ -106,11 +107,11 @@ export default function RoundColumnCalculator() {
                                 </div>
                                 <div>
                                     <table className="w-full text-sm">
-                                        <thead><tr className="bg-gray-100"><th className="border px-2 py-1">Sr.</th><th className="border px-2 py-1">Material</th><th className="border px-2 py-1">Quantity</th></tr></thead>
+                                        <thead><tr className="bg-gray-100"><th className={`${theme.border} px-2 py-1`}>Sr.</th><th className={`${theme.border} px-2 py-1`}>Material</th><th className={`${theme.border} px-2 py-1`}>Quantity</th></tr></thead>
                                         <tbody>
-                                            <tr><td className="border px-2 py-1">1</td><td className="border px-2 py-1">Cement</td><td className="border px-2 py-1">{results?.cementBags} Bags</td></tr>
-                                            <tr><td className="border px-2 py-1">2</td><td className="border px-2 py-1">Sand</td><td className="border px-2 py-1">{results?.sandTons} Ton</td></tr>
-                                            <tr><td className="border px-2 py-1">3</td><td className="border px-2 py-1">Aggregate</td><td className="border px-2 py-1">{results?.aggregateTons} Ton</td></tr>
+                                            <tr><td className={`${theme.border} px-2 py-1`}>1</td><td className={`${theme.border} px-2 py-1`}>Cement</td><td className={`${theme.border} px-2 py-1`}>{results?.cementBags} Bags</td></tr>
+                                            <tr><td className={`${theme.border} px-2 py-1`}>2</td><td className={`${theme.border} px-2 py-1`}>Sand</td><td className={`${theme.border} px-2 py-1`}>{results?.sandTons} Ton</td></tr>
+                                            <tr><td className={`${theme.border} px-2 py-1`}>3</td><td className={`${theme.border} px-2 py-1`}>Aggregate</td><td className={`${theme.border} px-2 py-1`}>{results?.aggregateTons} Ton</td></tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -123,7 +124,7 @@ export default function RoundColumnCalculator() {
                             <i className={`fas fa-calculator ${theme.text}`}></i>
                             Round Column Calculation
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 ${theme.border}`}>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                                 <div className="bg-[#f8f9fa] p-4 rounded-lg">
                                     <div className="text-sm font-bold mb-2">Radius</div>
@@ -170,7 +171,7 @@ export default function RoundColumnCalculator() {
                             <i className={`fas fa-info-circle ${theme.text}`}></i>
                             What is circular column calculation?
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border flex flex-col md:flex-row gap-6">
+                        <div className={`bg-white rounded-xl p-6 ${theme.border} flex flex-col md:flex-row gap-6`}>
                             <div className="flex-1">
                                 <p className="text-gray-600 mb-4">Circular columns are cylindrical in shape, used in construction to carry compressive loads. A reinforced circular concrete column is a structural member designed to carry compressive loads.</p>
                                 <p className="text-gray-600">Spiral columns are cylindrical columns with a continuous helical bar wrapping around the column. The spiral acts to provide lateral confinement and prevent the column from buckling.</p>
@@ -184,7 +185,7 @@ export default function RoundColumnCalculator() {
                             <i className={`fas fa-calculator ${theme.text}`}></i>
                             Circular Column Calculation Formula
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 ${theme.border}`}>
                             <div className={`bg-[#f8f9fa] p-4 rounded-lg font-mono text-sm space-y-2 ${theme.text}`}>
                                 <p>Radius = Diameter / 2</p>
                                 <p>Volume of round column = πr²h</p>
@@ -207,18 +208,73 @@ export default function RoundColumnCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className={`px-5 py-4 border-b ${theme.gradient} flex items-center gap-3 bg-gradient-to-r`}>
-                        <i className="fas fa-circle text-xl text-white"></i>
-                        <h2 className="font-semibold text-white">ROUND COLUMN CALCULATION</h2>
-                    </div>
-                    <div className="p-5">
-                        <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Unit</label><select value={unit} onChange={(e) => setUnit(e.target.value)} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`}><option value="Meter">Meter/CM</option><option value="Feet">Feet/Inch</option></select></div>
-                        <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Grade of Concrete</label><select value={gradeOfConcrete} onChange={(e) => setGradeOfConcrete(e.target.value)} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`}>{Object.keys(gradeRatios).map(g => <option key={g} value={g}>{g}</option>)}</select></div>
-                        <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Diameter</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={diameter} onChange={(e) => setDiameter(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'meter' : 'feet'}</span></div><div className="relative"><input type="number" value={diameterCm} onChange={(e) => setDiameterCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span></div></div></div>
-                        <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Height</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={height} onChange={(e) => setHeight(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'meter' : 'feet'}</span></div><div className="relative"><input type="number" value={heightCm} onChange={(e) => setHeightCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span></div></div></div>
-                        <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">No. of Columns</label><input type="number" value={noOfColumns} onChange={(e) => setNoOfColumns(Number(e.target.value))} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`} /></div>
-                        <div className="flex gap-2 mb-5"><button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium`}>Calculate</button><button onClick={reset} className="bg-red-500 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-red-600 transition-colors">Reset</button></div>
-                        <div className={`${theme.bgLight} rounded-xl p-4 text-center`}><div className="text-xs text-gray-500">Total Volume</div><div className={`text-xl font-bold ${theme.text}`}>{results?.volume} m³</div><div className="text-sm text-gray-500">{results?.volumeFt3} ft³</div></div>
+                    <div className={`bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] ${theme.border}`}>
+                        <div className={`px-5 py-4 border-b ${theme.border} flex items-center gap-3 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
+                            <i className="fas fa-circle text-xl text-white"></i>
+                            <h2 className="font-semibold text-white">Round Column Calculator</h2>
+                        </div>
+                        <div className="p-5">
+                            <div className="mb-3">
+                                <label className="text-xs text-gray-500 mb-1 block">Unit</label>
+                                <CustomDropdown
+                                    options={[
+                                        { value: 'Meter', label: 'Meter/CM' },
+                                        { value: 'Feet', label: 'Feet/Inch' }
+                                    ]}
+                                    value={unit}
+                                    onChange={setUnit}
+                                    theme={theme}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label className="text-xs text-gray-500 mb-1 block">Grade of Concrete</label>
+                                <CustomDropdown
+                                    options={Object.keys(gradeRatios).map(g => ({ value: g, label: g }))}
+                                    value={gradeOfConcrete}
+                                    onChange={setGradeOfConcrete}
+                                    theme={theme}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label className="text-xs text-gray-500 mb-1 block">Diameter</label>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <div className="relative">
+                                        <input type="number" value={diameter} onChange={(e) => setDiameter(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'meter' : 'feet'}</span>
+                                    </div>
+                                    <div className="relative">
+                                        <input type="number" value={diameterCm} onChange={(e) => setDiameterCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                <label className="text-xs text-gray-500 mb-1 block">Height</label>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <div className="relative">
+                                        <input type="number" value={height} onChange={(e) => setHeight(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'meter' : 'feet'}</span>
+                                    </div>
+                                    <div className="relative">
+                                        <input type="number" value={heightCm} onChange={(e) => setHeightCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mb-4">
+                                <label className="text-xs text-gray-500 mb-1 block">No. of Columns</label>
+                                <input type="number" value={noOfColumns} onChange={(e) => setNoOfColumns(Number(e.target.value))} className={`w-full px-3 py-2 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} />
+                            </div>
+                            <div className="flex gap-2 mb-5">
+                                <button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium`}>Calculate</button>
+                                <button onClick={reset} className="bg-red-500 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-red-600 transition-colors">Reset</button>
+                            </div>
+                            <div className={`${theme.bgLight} rounded-xl p-4 text-center`}>
+                                <div className="text-xs text-gray-500">Total Volume</div>
+                                <div className={`text-xl font-bold ${theme.text}`}>{results?.volume} m³</div>
+                                <div className="text-sm text-gray-500">{results?.volumeFt3} ft³</div>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">

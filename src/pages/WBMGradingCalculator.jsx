@@ -68,7 +68,7 @@ function InfoTooltip({ text, theme }) {
         <div className="relative inline-block">
             <button
                 type="button"
-                className={`w-4 h-4 ${theme.bg} text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1`}
+                className="w-4 h-4 bg-gray-600 text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1"
                 onMouseEnter={() => setShow(true)}
                 onMouseLeave={() => setShow(false)}
                 onClick={() => setShow(!show)}
@@ -76,7 +76,7 @@ function InfoTooltip({ text, theme }) {
                 i
             </button>
             {show && (
-                <div className="absolute left-6 top-0 z-50 w-56 p-3 bg-white border border-[#e5e7eb] rounded-lg shadow-lg text-xs text-[#0A0A0A] leading-relaxed">
+                <div className="absolute left-6 top-0 z-50 w-56 p-3 bg-white border border-gray-200 rounded-lg shadow-lg text-xs text-[#0A0A0A] leading-relaxed text-justify">
                     {text}
                 </div>
             )}
@@ -212,6 +212,42 @@ export default function WBMGradingCalculator() {
                     <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-8 text-center text-gray-500 mb-8">
                         <i className="fas fa-ad text-3xl mb-2"></i>
                         <p className="text-sm">Advertisement</p>
+                    </div>
+
+                    <div className="space-y-6">
+                        <div className={`bg-white rounded-xl shadow-sm border ${theme.border} p-6`}>
+                            <h2 className="text-xl font-bold text-[#0A0A0A] mb-4">Theory</h2>
+                            <p className="text-sm text-gray-600 mb-4 leading-relaxed text-justify">
+                                Water Bound Macadam (WBM) is a type of road base or sub-base course consisting of crushed or broken aggregate mechanically interlocked by rolling and voids filled with screening and binding material with the assistance of water. The stability of WBM depends on the particle friction and interlocking property of the aggregates. Proper gradation of the coarse aggregates and screenings is vital to achieve a dense and stable layer capable of transmitting traffic loads to the underlying sub-grade.
+                            </p>
+                            <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                                MORTH specifications classify WBM into three grades (Grade 1, 2, and 3) based on the size range of coarse aggregates (e.g., 90-45mm, 63-45mm, 53-22.4mm). The grading ensures minimum voids and maximum strength.
+                            </p>
+                        </div>
+
+                        <div className={`bg-white rounded-xl shadow-sm border ${theme.border} p-6`}>
+                            <h2 className="text-xl font-bold text-[#0A0A0A] mb-4">Apparatus Required</h2>
+                            <ul className="list-disc pl-5 text-sm text-gray-600 space-y-2 text-justify">
+                                <li><strong>IS Sieves:</strong> A set of IS sieves depending on the grade tested (e.g., 125mm, 90mm, 63mm, 53mm, 45mm, 22.4mm, 11.2mm).</li>
+                                <li><strong>Balance:</strong> A heavy-duty balance (capacity at least 50 kg) readable to 10g or 0.1% of sample weight.</li>
+                                <li><strong>Oven:</strong> Thermostatically controlled oven.</li>
+                                <li><strong>Sieve Shaker:</strong> Mechanical sieve shaker appropriate for large apertures.</li>
+                                <li><strong>Sample Splitter:</strong> For obtaining representative samples from large bulk.</li>
+                            </ul>
+                        </div>
+
+                        <div className={`bg-white rounded-xl shadow-sm border ${theme.border} p-6`}>
+                            <h2 className="text-xl font-bold text-[#0A0A0A] mb-4">Test Procedure</h2>
+                            <ol className="list-decimal pl-5 text-sm text-gray-600 space-y-2 text-justify">
+                                <li><strong>Sampling:</strong> Obtain a representative sample of WBM aggregate (typically 25-50 kg depending on the nominal size).</li>
+                                <li><strong>Drying:</strong> Dry the sample if necessary to remove surface moisture.</li>
+                                <li><strong>Weighing:</strong> Weigh the total sample accurately.</li>
+                                <li><strong>Sieving:</strong> Place the sample on the specified nest of sieves (e.g., for Grade 1: 125mm, 90mm, 63mm, 45mm, 22.4mm). Shake thoroughly.</li>
+                                <li><strong>Weighing Retained:</strong> Weigh the material retained on each sieve.</li>
+                                <li><strong>Computation:</strong> Calculate the percentage by weight passing each sieve.</li>
+                                <li><strong>Check:</strong> Compare the results with MORTH Table 400-8 (Coarse Aggregates) or 400-9 (Screenings) to determine compliance.</li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
 

@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
 
 export default function StairCaseCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [unit, setUnit] = useState('Meter');
     const [gradeOfConcrete, setGradeOfConcrete] = useState('M20 (1:1.5:3)');
     const [numberOfRiser, setNumberOfRiser] = useState(11);
@@ -131,7 +132,8 @@ export default function StairCaseCalculator() {
                             <i className={`fas fa-calculator ${theme.text}`}></i>
                             Stair case calculation
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        {/* THEME BORDER APPLIED HERE */}
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div>
                                     <h3 className="font-bold text-gray-700 mb-3">Volume of Tread Step:</h3>
@@ -174,7 +176,8 @@ export default function StairCaseCalculator() {
                             <i className={`fas fa-cubes ${theme.text}`}></i>
                             Total Volume of Stair:
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        {/* THEME BORDER APPLIED HERE */}
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="text-sm text-gray-600">
                                     <p>Total Volume = Vol of Tread + Volume of Waist Slab</p>
@@ -219,7 +222,8 @@ export default function StairCaseCalculator() {
                             <i className={`fas fa-info-circle ${theme.text}`}></i>
                             What is stair case calculation?
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        {/* THEME BORDER APPLIED HERE */}
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <p className="text-gray-600 mb-4">A stair case or stairway, is a way of building a stair that splits the whole height into smaller heights with an equal amount of distance from one height to the other. The best height of a riser is in between 31/2 inches to 8 1/4 inches and the best width of a stair tread in a straight flight is 11 inches to 14 inches. These two are the main requirements of a stair that must be fulfilled first. Usually, we have to fix the rise and tread sizes to satisfy the range of the width and headroom.</p>
                         </div>
                     </section>
@@ -229,7 +233,8 @@ export default function StairCaseCalculator() {
                             <i className={`fas fa-list ${theme.text}`}></i>
                             Terminology of stair case calculation
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        {/* THEME BORDER APPLIED HERE */}
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <ul className="space-y-3 text-gray-600">
                                 <li><strong>Rise/Riser –</strong> The one step from the other. The length between the first floor to the second floor is known as full length/height. The best height of one rise is in between 5 inches to 8 1/4 inches.</li>
                                 <li><strong>Run/Tread –</strong> It is a horizontal surface on which people can walk while going from the place to another. It is a horizontal part of the stair on which we place our foot while going up or down from the ground floor to the first floor or from the first floor to the ground.</li>
@@ -241,21 +246,41 @@ export default function StairCaseCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className={`px-5 py-4 border-b ${theme.gradient} flex items-center gap-3 bg-gradient-to-r`}>
+                    {/* THEME BORDER APPLIED HERE */}
+                    <div className={`bg-white rounded-2xl shadow-lg border ${theme.border}`}>
+                        <div className={`px-5 py-4 border-b ${theme.border} ${theme.gradient} flex items-center gap-3 bg-gradient-to-r rounded-t-2xl`}>
                             <i className="fas fa-stairs text-xl text-white"></i>
-                            <h2 className="font-semibold text-white">STAIR CASE CALCULATION</h2>
+                            <h2 className="font-semibold text-white">Stair Case Calculator</h2>
                         </div>
                         <div className="p-5">
                             <div className="grid grid-cols-2 gap-2 mb-3">
-                                <div><label className="text-xs text-gray-500 mb-1 block">Unit</label><select value={unit} onChange={(e) => setUnit(e.target.value)} className={`w-full px-2 py-1.5 border rounded-lg text-xs ${theme.focus} outline-none`}><option value="Meter">Meter/CM</option><option value="Feet">Feet/Inch</option></select></div>
-                                <div><label className="text-xs text-gray-500 mb-1 block">Grade</label><select value={gradeOfConcrete} onChange={(e) => setGradeOfConcrete(e.target.value)} className={`w-full px-2 py-1.5 border rounded-lg text-xs ${theme.focus} outline-none`}>{Object.keys(gradeRatios).map(g => <option key={g} value={g}>{g.split(' ')[0]}</option>)}</select></div>
+                                <div>
+                                    <label className="text-xs text-gray-500 mb-1 block">Unit</label>
+                                    <CustomDropdown
+                                        options={[
+                                            { value: 'Meter', label: 'Meter/CM' },
+                                            { value: 'Feet', label: 'Feet/Inch' }
+                                        ]}
+                                        value={unit}
+                                        onChange={setUnit}
+                                        theme={theme}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs text-gray-500 mb-1 block">Grade</label>
+                                    <CustomDropdown
+                                        options={Object.keys(gradeRatios).map(g => ({ value: g, label: g.split(' ')[0] }))}
+                                        value={gradeOfConcrete}
+                                        onChange={setGradeOfConcrete}
+                                        theme={theme}
+                                    />
+                                </div>
                             </div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Number of Riser</label><input type="number" value={numberOfRiser} onChange={(e) => setNumberOfRiser(Number(e.target.value))} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`} /></div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Height of Riser</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={heightOfRiser} onChange={(e) => setHeightOfRiser(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={heightOfRiserCm} onChange={(e) => setHeightOfRiserCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Width of Tread</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={widthOfTread} onChange={(e) => setWidthOfTread(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={widthOfTreadCm} onChange={(e) => setWidthOfTreadCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Length of Stair</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={lengthOfStair} onChange={(e) => setLengthOfStair(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={lengthOfStairCm} onChange={(e) => setLengthOfStairCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
-                            <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">Thickness of Waist Slab</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={thicknessOfWaistSlab} onChange={(e) => setThicknessOfWaistSlab(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={thicknessOfWaistSlabCm} onChange={(e) => setThicknessOfWaistSlabCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Number of Riser</label><input type="number" value={numberOfRiser} onChange={(e) => setNumberOfRiser(Number(e.target.value))} className={`w-full px-3 py-2 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} /></div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Height of Riser</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={heightOfRiser} onChange={(e) => setHeightOfRiser(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={heightOfRiserCm} onChange={(e) => setHeightOfRiserCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Width of Tread</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={widthOfTread} onChange={(e) => setWidthOfTread(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={widthOfTreadCm} onChange={(e) => setWidthOfTreadCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Length of Stair</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={lengthOfStair} onChange={(e) => setLengthOfStair(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={lengthOfStairCm} onChange={(e) => setLengthOfStairCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
+                            <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">Thickness of Waist Slab</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={thicknessOfWaistSlab} onChange={(e) => setThicknessOfWaistSlab(Number(e.target.value))} className={`w-full px-3 py-2 pr-14 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">m</span></div><div className="relative"><input type="number" value={thicknessOfWaistSlabCm} onChange={(e) => setThicknessOfWaistSlabCm(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">cm</span></div></div></div>
                             <div className="flex gap-2 mb-5"><button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium`}>Calculate</button><button onClick={reset} className="bg-red-500 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-red-600 transition-colors">Reset</button></div>
                             <div className={`${theme.bgLight} rounded-xl p-4`}>
                                 <div className="text-center mb-3">

@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
 
 export default function WoodFrameCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [unit, setUnit] = useState('Meter');
     const [length, setLength] = useState(1);
     const [lengthCm, setLengthCm] = useState(0);
@@ -141,22 +142,23 @@ export default function WoodFrameCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className={`px-5 py-4 border-b ${theme.gradient} flex items-center gap-3`}>
+                    <div className={`bg-white rounded-2xl shadow-lg border ${theme.border}`}>
+                        <div className={`px-5 py-4 border-b ${theme.border} ${theme.gradient} flex items-center gap-3 bg-gradient-to-r rounded-t-2xl`}>
                             <i className="fas fa-tree text-xl text-white"></i>
-                            <h2 className="font-semibold text-white">WOOD FRAME CALCULATION</h2>
+                            <h2 className="font-semibold text-white">Wood Frame Calculator</h2>
                         </div>
                         <div className="p-5">
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Unit</label>
-                                <select
+                                <CustomDropdown
+                                    options={[
+                                        { value: 'Meter', label: 'Length in Meter, Section in CM' },
+                                        { value: 'Feet', label: 'Length in Feet, Section in Inch' }
+                                    ]}
                                     value={unit}
-                                    onChange={(e) => setUnit(e.target.value)}
-                                    className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`}
-                                >
-                                    <option value="Meter">Length in Meter, Section in CM</option>
-                                    <option value="Feet">Length in Feet, Section in Inch</option>
-                                </select>
+                                    onChange={setUnit}
+                                    theme={theme}
+                                />
                             </div>
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Quantity (Nos)</label>
@@ -164,7 +166,7 @@ export default function WoodFrameCalculator() {
                                     type="number"
                                     value={qty}
                                     onChange={(e) => setQty(Number(e.target.value))}
-                                    className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`}
+                                    className={`w-full px-3 py-2 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`}
                                 />
                             </div>
                             <div className="mb-3">
@@ -175,7 +177,7 @@ export default function WoodFrameCalculator() {
                                             type="number"
                                             value={l}
                                             onChange={(e) => setL(Number(e.target.value))}
-                                            className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`}
+                                            className={`w-full px-3 py-2 pr-14 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'meter' : 'feet'}</span>
                                     </div>
@@ -184,7 +186,7 @@ export default function WoodFrameCalculator() {
                                             type="number"
                                             value={lCm}
                                             onChange={(e) => setLCm(Number(e.target.value))}
-                                            className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`}
+                                            className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span>
                                     </div>
@@ -197,7 +199,7 @@ export default function WoodFrameCalculator() {
                                         type="number"
                                         value={w}
                                         onChange={(e) => setW(Number(e.target.value))}
-                                        className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`}
+                                        className={`w-full px-3 py-2 pr-14 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`}
                                     />
                                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span>
                                 </div>
@@ -209,7 +211,7 @@ export default function WoodFrameCalculator() {
                                         type="number"
                                         value={t}
                                         onChange={(e) => setT(Number(e.target.value))}
-                                        className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`}
+                                        className={`w-full px-3 py-2 pr-14 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`}
                                     />
                                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span>
                                 </div>
@@ -220,7 +222,7 @@ export default function WoodFrameCalculator() {
                                     type="number"
                                     value={price}
                                     onChange={(e) => setPrice(Number(e.target.value))}
-                                    className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`}
+                                    className={`w-full px-3 py-2 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`}
                                 />
                             </div>
                             <div className="flex gap-2 mb-5">

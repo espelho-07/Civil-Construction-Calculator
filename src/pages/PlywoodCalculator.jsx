@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
 
 export default function PlywoodCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [unit, setUnit] = useState('Meter');
     const [length, setLength] = useState(10);
     const [lengthCm, setLengthCm] = useState(0);
@@ -27,7 +28,7 @@ export default function PlywoodCalculator() {
         }
 
         const roomArea = roomL * roomW;
-        
+
         // Plywood Area
         const plywoodArea = plywoodLength * plywoodWidth;
 
@@ -96,22 +97,22 @@ export default function PlywoodCalculator() {
                             </div>
                         </div>
                     </section>
-                    
+
                     <section className="mb-8">
-                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
                             <i className={`fas fa-info-circle ${theme.text}`}></i>
                             What is Plywood?
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} text-justify`}>
                             <p className="text-gray-600 mb-4">Plywood is a material manufactured from thin layers or "plies" of wood veneer that are glued together with adjacent layers having their wood grain rotated up to 90 degrees to one another. It is an engineered wood from the family of manufactured boards which includes medium-density fibreboard (MDF) and particle board (chipboard).</p>
-                             <p className="text-gray-600">All plywoods bind resin and wood fibre sheets (cellulose cells are long, strong and thin) to form a composite material. This alternation of the grain is called cross-graining and has several important benefits: it reduces the tendency of wood to split when nailed at the edges; it reduces expansion and shrinkage, providing improved dimensional stability; and it makes the strength of the panel consistent across all directions.</p>
+                            <p className="text-gray-600">All plywoods bind resin and wood fibre sheets (cellulose cells are long, strong and thin) to form a composite material. This alternation of the grain is called cross-graining and has several important benefits: it reduces the tendency of wood to split when nailed at the edges; it reduces expansion and shrinkage, providing improved dimensional stability; and it makes the strength of the panel consistent across all directions.</p>
                         </div>
                     </section>
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                             <i className={`fas fa-table ${theme.text}`}></i>
-                             Standard Plywood Sizes
+                            <i className={`fas fa-table ${theme.text}`}></i>
+                            Standard Plywood Sizes
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} overflow-x-auto`}>
                             <table className="w-full text-sm text-left">
@@ -141,41 +142,42 @@ export default function PlywoodCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                         <div className={`px-5 py-4 border-b ${theme.gradient} flex items-center gap-3`}>
+                    <div className="bg-white rounded-2xl shadow-lg border border-[#e5e7eb]">
+                        <div className={`px-5 py-4 border-b border-[#e5e7eb] ${theme.gradient} flex items-center gap-3 bg-gradient-to-r rounded-t-2xl`}>
                             <i className="fas fa-layer-group text-xl text-white"></i>
                             <h2 className="font-semibold text-white">PLYWOOD CALCULATION</h2>
                         </div>
                         <div className="p-5">
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Unit</label>
-                                <select 
-                                    value={unit} 
-                                    onChange={(e) => setUnit(e.target.value)} 
-                                    className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`}
-                                >
-                                    <option value="Meter">Meter/CM</option>
-                                    <option value="Feet">Feet/Inch</option>
-                                </select>
+                                <CustomDropdown
+                                    options={[
+                                        { value: 'Meter', label: 'Meter/CM' },
+                                        { value: 'Feet', label: 'Feet/Inch' }
+                                    ]}
+                                    value={unit}
+                                    onChange={setUnit}
+                                    theme={theme}
+                                />
                             </div>
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Room Length</label>
                                 <div className="grid grid-cols-2 gap-2">
                                     <div className="relative">
-                                        <input 
-                                            type="number" 
-                                            value={length} 
-                                            onChange={(e) => setLength(Number(e.target.value))} 
-                                            className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`} 
+                                        <input
+                                            type="number"
+                                            value={length}
+                                            onChange={(e) => setLength(Number(e.target.value))}
+                                            className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'meter' : 'feet'}</span>
                                     </div>
                                     <div className="relative">
-                                        <input 
-                                            type="number" 
-                                            value={lengthCm} 
-                                            onChange={(e) => setLengthCm(Number(e.target.value))} 
-                                            className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} 
+                                        <input
+                                            type="number"
+                                            value={lengthCm}
+                                            onChange={(e) => setLengthCm(Number(e.target.value))}
+                                            className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span>
                                     </div>
@@ -185,20 +187,20 @@ export default function PlywoodCalculator() {
                                 <label className="text-xs text-gray-500 mb-1 block">Room Width</label>
                                 <div className="grid grid-cols-2 gap-2">
                                     <div className="relative">
-                                        <input 
-                                            type="number" 
-                                            value={width} 
-                                            onChange={(e) => setWidth(Number(e.target.value))} 
-                                            className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`} 
+                                        <input
+                                            type="number"
+                                            value={width}
+                                            onChange={(e) => setWidth(Number(e.target.value))}
+                                            className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'meter' : 'feet'}</span>
                                     </div>
                                     <div className="relative">
-                                        <input 
-                                            type="number" 
-                                            value={widthCm} 
-                                            onChange={(e) => setWidthCm(Number(e.target.value))} 
-                                            className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} 
+                                        <input
+                                            type="number"
+                                            value={widthCm}
+                                            onChange={(e) => setWidthCm(Number(e.target.value))}
+                                            className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span>
                                     </div>

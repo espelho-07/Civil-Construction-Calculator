@@ -84,7 +84,7 @@ function InfoTooltip({ text, theme }) {
         <div className="relative inline-block">
             <button
                 type="button"
-                className={`w-4 h-4 ${theme ? theme.bg : 'bg-gray-600'} text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1`}
+                className="w-4 h-4 bg-gray-600 text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1"
                 onMouseEnter={() => setShow(true)}
                 onMouseLeave={() => setShow(false)}
                 onClick={() => setShow(!show)}
@@ -92,7 +92,7 @@ function InfoTooltip({ text, theme }) {
                 i
             </button>
             {show && (
-                <div className="absolute left-6 top-0 z-50 w-56 p-3 bg-white border border-[#e5e7eb] rounded-lg shadow-lg text-xs text-[#0A0A0A] leading-relaxed">
+                <div className="absolute left-6 top-0 z-50 w-56 p-3 bg-white border border-gray-200 rounded-lg shadow-lg text-xs text-[#0A0A0A] leading-relaxed text-justify">
                     {text}
                 </div>
             )}

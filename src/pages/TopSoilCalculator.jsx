@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
 
 export default function TopSoilCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [unit, setUnit] = useState('Meter');
     const [length, setLength] = useState(10);
     const [lengthCm, setLengthCm] = useState(0);
@@ -146,22 +147,23 @@ export default function TopSoilCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className={`px-5 py-4 border-b ${theme.gradient} flex items-center gap-3`}>
+                    <div className={`bg-white rounded-2xl shadow-lg border ${theme.border}`}>
+                        <div className={`px-5 py-4 border-b ${theme.border} ${theme.gradient} flex items-center gap-3 bg-gradient-to-r rounded-t-2xl`}>
                             <i className="fas fa-seedling text-xl text-white"></i>
-                            <h2 className="font-semibold text-white">TOP SOIL CALCULATION</h2>
+                            <h2 className="font-semibold text-white">Top Soil Calculator</h2>
                         </div>
                         <div className="p-5">
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Unit</label>
-                                <select
+                                <CustomDropdown
+                                    options={[
+                                        { value: 'Meter', label: 'Meter/CM' },
+                                        { value: 'Feet', label: 'Feet/Inch' }
+                                    ]}
                                     value={unit}
-                                    onChange={(e) => setUnit(e.target.value)}
-                                    className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`}
-                                >
-                                    <option value="Meter">Meter/CM</option>
-                                    <option value="Feet">Feet/Inch</option>
-                                </select>
+                                    onChange={setUnit}
+                                    theme={theme}
+                                />
                             </div>
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Length</label>
@@ -171,7 +173,7 @@ export default function TopSoilCalculator() {
                                             type="number"
                                             value={length}
                                             onChange={(e) => setLength(Number(e.target.value))}
-                                            className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`}
+                                            className={`w-full px-3 py-2 pr-14 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'meter' : 'feet'}</span>
                                     </div>
@@ -180,7 +182,7 @@ export default function TopSoilCalculator() {
                                             type="number"
                                             value={lengthCm}
                                             onChange={(e) => setLengthCm(Number(e.target.value))}
-                                            className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`}
+                                            className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span>
                                     </div>
@@ -194,7 +196,7 @@ export default function TopSoilCalculator() {
                                             type="number"
                                             value={width}
                                             onChange={(e) => setWidth(Number(e.target.value))}
-                                            className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`}
+                                            className={`w-full px-3 py-2 pr-14 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'meter' : 'feet'}</span>
                                     </div>
@@ -203,7 +205,7 @@ export default function TopSoilCalculator() {
                                             type="number"
                                             value={widthCm}
                                             onChange={(e) => setWidthCm(Number(e.target.value))}
-                                            className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`}
+                                            className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span>
                                     </div>
@@ -217,7 +219,7 @@ export default function TopSoilCalculator() {
                                             type="number"
                                             value={depth}
                                             onChange={(e) => setDepth(Number(e.target.value))}
-                                            className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`}
+                                            className={`w-full px-3 py-2 pr-14 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span>
                                     </div>
@@ -226,7 +228,7 @@ export default function TopSoilCalculator() {
                                             type="number"
                                             value={depthCm}
                                             onChange={(e) => setDepthCm(Number(e.target.value))}
-                                            className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`}
+                                            className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'mm' : 'fraction'}</span>
                                     </div>

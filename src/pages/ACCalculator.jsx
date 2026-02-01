@@ -5,7 +5,7 @@ import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
 
 export default function ACCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [lengthFt, setLengthFt] = useState(16);
     const [lengthIn, setLengthIn] = useState(8);
     const [breadthFt, setBreadthFt] = useState(12);
@@ -31,19 +31,16 @@ export default function ACCalculator() {
         const breadth = breadthFt + breadthIn / 12;
         const height = heightFt + heightIn / 12;
 
-        // AC Tons = ((Length × Breadth) / 1000) + No of Person × Temperature × Height
-        // Simplified formula: Area/100 + persons factor + temp factor
         const area = length * breadth;
         const volume = area * height;
 
-        // British Thermal Units calculation
-        const btuBase = area * 25; // 25 BTU per sq ft base
-        const personBtu = noOfPerson * 400; // 400 BTU per person
+        const btuBase = area * 25;
+        const personBtu = noOfPerson * 400;
         const tempFactor = maxTemp > 35 ? 1.1 : 1;
         const heightFactor = height > 10 ? 1.1 : 1;
 
         const totalBtu = (btuBase + personBtu) * tempFactor * heightFactor;
-        const acTons = totalBtu / 12000; // 12000 BTU = 1 Ton
+        const acTons = totalBtu / 12000;
 
         setResults({
             area: area.toFixed(2),
@@ -57,16 +54,10 @@ export default function ACCalculator() {
     };
 
     useEffect(() => { calculate(); }, [lengthFt, lengthIn, breadthFt, breadthIn, heightFt, heightIn, noOfPerson, maxTemp]);
+
     useEffect(() => {
-        const update = () => {
-            if (sidebarRef.current) {
-                const vh = window.innerHeight, sh = sidebarRef.current.offsetHeight;
-                sidebarRef.current.style.top = sh > vh - 80 ? `${vh - sh - 16}px` : '80px';
-            }
-        };
-        update();
-        window.addEventListener('resize', update);
-        return () => window.removeEventListener('resize', update);
+        const update = () => { if (sidebarRef.current) { const vh = window.innerHeight, sh = sidebarRef.current.offsetHeight; sidebarRef.current.style.top = sh > vh - 80 ? `${vh - sh - 16}px` : '80px'; } };
+        update(); window.addEventListener('resize', update); return () => window.removeEventListener('resize', update);
     }, []);
 
     const acTable = [
@@ -91,61 +82,59 @@ export default function ACCalculator() {
             <CategoryNav activeCategory="quantity-estimator" />
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Air Conditioner Size Calculator</h1>
-                    <p className="text-[#6b7280] mb-6">Calculate the right AC tonnage for your room</p>
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Air Conditioner Size Calculator</h1>
+                            <p className="text-[#6b7280]">Calculate the right AC tonnage for your room</p>
+                        </div>
+                        <CalculatorActions
+                            calculatorSlug="ac-calculator"
+                            calculatorName="Air Conditioner Size Calculator"
+                            calculatorIcon="fa-snowflake"
+                            category="Quantity Estimator"
+                            inputs={{ lengthFt, breadthFt, heightFt, noOfPerson }}
+                            outputs={results || {}}
+                        />
+                    </div>
 
                     {/* Result Display */}
                     <section className="mb-8">
-                        <div className="bg-white rounded-xl p-6 border">
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
+                            <i className={`fas fa-calculator ${theme.text}`}></i>
+                            Calculation Result
+                        </h2>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="text-center">
-                                    <div className="text-sm text-gray-500">Size of Air Conditioner</div>
-                                    <div className={`text-4xl font-bold ${theme.text}`}>{results?.acTons}</div>
-                                    <div className="text-xl text-gray-600">Tons</div>
-                                    <div className="text-xs text-gray-500 mt-2">All calculations are estimates based on the information you provide.</div>
+                                <div className="bg-[#f8f9fa] p-6 rounded-xl text-center">
+                                    <div className="text-sm text-gray-500 mb-1">Recommended AC Size</div>
+                                    <div className={`text-4xl font-bold ${theme.text} mb-2`}>{results?.acTons} Tons</div>
+                                    <div className="text-xs text-gray-400">Based on room volume & occupancy</div>
                                 </div>
-                                <div className="bg-[#f8f9fa] p-4 rounded-lg">
-                                    <div className="text-sm text-gray-600 mb-2">Air Conditioner Size Calculation</div>
-                                    <div className="font-mono text-sm">
-                                        <p>AC Tons = ((L×B) / 1000) + No of Person + Temperature + Height</p>
-                                        <p className="mt-2">AC Tons = (({results?.length}×{results?.breadth}) / 1000) × {noOfPerson} × 1 × 0.15</p>
-                                        <p className={`font-bold ${theme.text} mt-2`}>AC Tons = {results?.acTons} Tons</p>
-                                    </div>
+                                <div className="bg-[#f8f9fa] p-6 rounded-xl text-center">
+                                    <div className="text-sm text-gray-500 mb-1">Cooling Load (BTU)</div>
+                                    <div className={`text-4xl font-bold ${theme.text} mb-2`}>{results?.btu}</div>
+                                    <div className="text-xs text-gray-400">British Thermal Units / Hour</div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
-
-                    {/* What is AC Size */}
-                    <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is Air Conditioner Size calculation?</h2>
-                        <div className="bg-white rounded-xl p-6 border flex flex-col md:flex-row gap-6">
-                            <div className="flex-1">
-                                <p className="text-gray-600 mb-4 text-justify">This air conditioner size calculator, also known as AC Tonnage calculator, or air conditioning size calculator helps you to choose what size of air conditioner you need for your room.</p>
-                                <p className="text-gray-600 text-justify">The air conditioner capacity need for your room will give you recommended BTU/hr by which you can understand to preferably cool or heat the room.</p>
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Air Conditioner" className="w-full md:w-48 h-40 object-cover rounded-lg" />
                         </div>
                     </section>
 
                     {/* Formula */}
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>Air Conditioner Size Calculation</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <div className={`bg-[#f8f9fa] p-4 rounded-lg font-mono text-lg text-center ${theme.text} mb-4`}>
-                                Air Conditioner Tons = ((Length × Breadth) / 1000) + No of Person + Temperature + Height
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
+                            <i className={`fas fa-flask ${theme.text}`}></i>
+                            Calculation Formula
+                        </h2>
+                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                            <div className="bg-[#f8f9fa] p-4 rounded-lg font-mono text-sm mb-4 text-gray-700">
+                                AC Tons = ((Length × Breadth) / 1000) + No of Person + Temperature + Height
                             </div>
                             <div className="text-sm text-gray-600 space-y-2">
-                                <p><strong>Where: No.of Person</strong></p>
+                                <p><strong>Adjustments:</strong></p>
                                 <ul className="list-disc pl-5">
-                                    <li>0.3 Up to 2 peoples in a room</li>
-                                    <li>0.06 for each extra person in the room, ex: 0.3 + 0.07 * No. of Extra person</li>
-                                </ul>
-                                <p className="mt-3"><strong>Where: Temperature</strong></p>
-                                <ul className="list-disc pl-5">
-                                    <li>0.0 if the highest temperature in summer exceeds 40 °c</li>
-                                    <li>-0.1 if the highest temperature in summer between 35 - 40 °c</li>
-                                    <li>-0.15 if the highest temperature is in summer between 35 - 40 °c</li>
+                                    <li>If temp > 35°C, add 10% load</li>
+                                    <li>If height > 10ft, add 10% load</li>
+                                    <li>Each person adds approx 400 BTU heat load</li>
                                 </ul>
                             </div>
                         </div>
@@ -153,21 +142,44 @@ export default function ACCalculator() {
 
                     {/* AC Size Table */}
                     <section className="mb-8">
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
+                            <i className={`fas fa-table ${theme.text}`}></i>
+                            Reference Tables
+                        </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="bg-white rounded-xl p-6 border">
-                                <h3 className="font-bold mb-4">Room Size vs AC Tonnage</h3>
-                                <table className="w-full text-sm">
-                                    <thead><tr className="bg-gray-100"><th className="border px-3 py-2">Square feet</th><th className="border px-3 py-2">Ac Tonnage</th></tr></thead>
-                                    <tbody>{acTable.map((row, i) => (<tr key={i}><td className="border px-3 py-2">{row.sqft}</td><td className="border px-3 py-2">{row.tons}</td></tr>))}</tbody>
-                                </table>
+                            <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                                <h3 className="font-bold mb-4 text-gray-800">Room Size vs AC Tonnage</h3>
+                                <div className="overflow-hidden rounded-lg border border-gray-200">
+                                    <table className="w-full text-sm">
+                                        <thead><tr className="bg-gray-50"><th className="px-4 py-2 text-left font-medium text-gray-500">Square feet</th><th className="px-4 py-2 text-left font-medium text-gray-500">Ac Tonnage</th></tr></thead>
+                                        <tbody className="divide-y divide-gray-100">{acTable.map((row, i) => (<tr key={i}><td className="px-4 py-2">{row.sqft}</td><td className="px-4 py-2">{row.tons}</td></tr>))}</tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div className="bg-white rounded-xl p-6 border">
-                                <h3 className="font-bold mb-4">BTU vs AC Tonnage</h3>
-                                <table className="w-full text-sm">
-                                    <thead><tr className="bg-gray-100"><th className="border px-3 py-2">BTU</th><th className="border px-3 py-2">AC Tonnage</th></tr></thead>
-                                    <tbody>{btuTable.map((row, i) => (<tr key={i}><td className="border px-3 py-2">{row.btu}</td><td className="border px-3 py-2">{row.tons}</td></tr>))}</tbody>
-                                </table>
+                            <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                                <h3 className="font-bold mb-4 text-gray-800">BTU vs AC Tonnage</h3>
+                                <div className="overflow-hidden rounded-lg border border-gray-200">
+                                    <table className="w-full text-sm">
+                                        <thead><tr className="bg-gray-50"><th className="px-4 py-2 text-left font-medium text-gray-500">BTU</th><th className="px-4 py-2 text-left font-medium text-gray-500">AC Tonnage</th></tr></thead>
+                                        <tbody className="divide-y divide-gray-100">{btuTable.map((row, i) => (<tr key={i}><td className="px-4 py-2">{row.btu}</td><td className="px-4 py-2">{row.tons}</td></tr>))}</tbody>
+                                    </table>
+                                </div>
                             </div>
+                        </div>
+                    </section>
+
+                    {/* What is AC Size */}
+                    <section className="mb-8">
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
+                            <i className={`fas fa-info-circle ${theme.text}`}></i>
+                            What is Air Conditioner Size calculation?
+                        </h2>
+                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] flex flex-col md:flex-row gap-6">
+                            <div className="flex-1">
+                                <p className="text-gray-600 mb-4 text-justify">This air conditioner size calculator, also known as AC Tonnage calculator, helps you to choose what size of air conditioner you need for your room.</p>
+                                <p className="text-gray-600 text-justify">The air conditioner capacity need for your room will give you recommended BTU/hr by which you can understand to preferably cool or heat the room.</p>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Air Conditioner" className="w-full md:w-48 h-40 object-cover rounded-lg" />
                         </div>
                     </section>
 
@@ -179,19 +191,70 @@ export default function ACCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className={`px-5 py-4 border-b ${theme.bgSoft} flex items-center gap-3`}>
-                            <i className={`fas fa-snowflake text-xl ${theme.text}`}></i>
-                            <h2 className="font-semibold">AC CONDITIONER TONNAGE</h2>
+                    <div className="bg-white rounded-2xl shadow-lg data-[state=open]:animate-in border border-[#e5e7eb]">
+                        <div className={`px-5 py-4 border-b border-[#e5e7eb] ${theme.gradient} flex items-center gap-3 bg-gradient-to-r rounded-t-2xl`}>
+                            <i className={`fas fa-snowflake text-xl text-white`}></i>
+                            <h2 className="font-semibold text-white">AC CONDITIONER TONNAGE</h2>
                         </div>
                         <div className="p-5">
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Length of Room</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={lengthFt} onChange={(e) => setLengthFt(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus}`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">feet</span></div><div className="relative"><input type="number" value={lengthIn} onChange={(e) => setLengthIn(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus}`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">inch</span></div></div></div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Breadth of Room</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={breadthFt} onChange={(e) => setBreadthFt(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus}`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">feet</span></div><div className="relative"><input type="number" value={breadthIn} onChange={(e) => setBreadthIn(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus}`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">inch</span></div></div></div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Height of Room</label><div className="grid grid-cols-2 gap-2"><div className="relative"><input type="number" value={heightFt} onChange={(e) => setHeightFt(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus}`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">feet</span></div><div className="relative"><input type="number" value={heightIn} onChange={(e) => setHeightIn(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus}`} /><span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">inch</span></div></div></div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">No of Person</label><input type="number" value={noOfPerson} onChange={(e) => setNoOfPerson(Number(e.target.value))} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus}`} /></div>
-                            <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">Max Temperature (°c)</label><input type="number" value={maxTemp} onChange={(e) => setMaxTemp(Number(e.target.value))} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus}`} /></div>
-                            <div className="flex gap-2 mb-5"><button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium`}>Calculate</button><button onClick={reset} className="bg-red-500 text-white px-4 py-2.5 rounded-lg hover:bg-red-600">Reset</button></div>
-                            <div className={`bg-gradient-to-r ${theme.bgSoft} to-white rounded-xl p-4 text-center`}><div className="text-xs text-gray-500">AC Size Required</div><div className={`text-3xl font-bold ${theme.text}`}>{results?.acTons} Tons</div><div className="text-sm text-gray-500 mt-2">Room Area: {results?.area} sq ft</div></div>
+                            <div className="mb-3">
+                                <label className="text-xs text-gray-500 mb-1 block">Length (L)</label>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <div className="relative">
+                                        <input type="number" value={lengthFt} onChange={(e) => setLengthFt(Number(e.target.value))} className={`w-full px-3 py-2 pr-8 border rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">ft</span>
+                                    </div>
+                                    <div className="relative">
+                                        <input type="number" value={lengthIn} onChange={(e) => setLengthIn(Number(e.target.value))} className={`w-full px-3 py-2 pr-8 border rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">in</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                <label className="text-xs text-gray-500 mb-1 block">Breadth (B)</label>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <div className="relative">
+                                        <input type="number" value={breadthFt} onChange={(e) => setBreadthFt(Number(e.target.value))} className={`w-full px-3 py-2 pr-8 border rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">ft</span>
+                                    </div>
+                                    <div className="relative">
+                                        <input type="number" value={breadthIn} onChange={(e) => setBreadthIn(Number(e.target.value))} className={`w-full px-3 py-2 pr-8 border rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">in</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                <label className="text-xs text-gray-500 mb-1 block">Height (H)</label>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <div className="relative">
+                                        <input type="number" value={heightFt} onChange={(e) => setHeightFt(Number(e.target.value))} className={`w-full px-3 py-2 pr-8 border rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">ft</span>
+                                    </div>
+                                    <div className="relative">
+                                        <input type="number" value={heightIn} onChange={(e) => setHeightIn(Number(e.target.value))} className={`w-full px-3 py-2 pr-8 border rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">in</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                <label className="text-xs text-gray-500 mb-1 block">No of Person</label>
+                                <input type="number" value={noOfPerson} onChange={(e) => setNoOfPerson(Number(e.target.value))} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`} />
+                            </div>
+                            <div className="mb-4">
+                                <label className="text-xs text-gray-500 mb-1 block">Max Temperature (°c)</label>
+                                <input type="number" value={maxTemp} onChange={(e) => setMaxTemp(Number(e.target.value))} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`} />
+                            </div>
+                            <div className="flex gap-2 mb-5">
+                                <button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium`}>Calculate</button>
+                                <button onClick={reset} className="bg-red-500 text-white px-4 py-2.5 rounded-lg hover:bg-red-600">Reset</button>
+                            </div>
+
+                            {results && (
+                                <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 text-center">
+                                    <div className="text-xs text-gray-500">AC Size Required</div>
+                                    <div className={`text-3xl font-bold ${theme.text}`}>{results.acTons} Tons</div>
+                                </div>
+                            )}
                         </div>
                     </div>
 

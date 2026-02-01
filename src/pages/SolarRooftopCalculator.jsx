@@ -5,7 +5,7 @@ import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
 
 export default function SolarRooftopCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [consumptionType, setConsumptionType] = useState('monthly');
     const [units, setUnits] = useState(600);
     const [results, setResults] = useState(null);
@@ -13,13 +13,9 @@ export default function SolarRooftopCalculator() {
 
     const calculate = () => {
         const dailyUnits = consumptionType === 'monthly' ? units / 30 : units;
-        const kwCapacity = dailyUnits / 4; // Assuming 4 units per kW per day
-        const noOfPanels = Math.ceil(kwCapacity * 1000 / 335); // 335W panels (approx logic fix: kw to w)
-        // Original logic was kw / 0.335 which is correct if panel is 0.335 kW.
-        // Let's stick to original logic: kwCapacity / 0.335
+        const kwCapacity = dailyUnits / 4;
         const panels = Math.ceil(kwCapacity / 0.335);
-
-        const rooftopAreaSqm = kwCapacity * 10; // 10 sqm per kW
+        const rooftopAreaSqm = kwCapacity * 10;
         const rooftopAreaSqft = rooftopAreaSqm * 10.764;
 
         setResults({
@@ -81,68 +77,57 @@ export default function SolarRooftopCalculator() {
 
                     {/* Result Cards */}
                     <section className="mb-8">
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div className={`bg-white rounded-xl p-4 border ${theme.border} text-center`}>
-                                <div className="w-12 h-12 bg-red-100 rounded-full mx-auto mb-2 flex items-center justify-center"><i className="fas fa-solar-panel text-red-500"></i></div>
-                                <div className="text-sm text-gray-500">No of Solar Panels</div>
-                                <div className="text-2xl font-bold text-red-500">{results?.noOfPanels} Panels</div>
+                        <section className="mb-8">
+                            <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
+                                <i className={`fas fa-calculator ${theme.text}`}></i>
+                                Calculation Result
+                            </h2>
+                            <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <div className="bg-[#f8f9fa] p-4 rounded-xl text-center border-b-2 border-transparent hover:border-green-500 transition-colors">
+                                        <div className="text-sm text-gray-500 mb-2">Solar Panels</div>
+                                        <div className={`text-2xl font-bold ${theme.text}`}>{results?.noOfPanels}</div>
+                                        <div className="text-xs text-gray-400">Modules</div>
+                                    </div>
+                                    <div className="bg-[#f8f9fa] p-4 rounded-xl text-center border-b-2 border-transparent hover:border-green-500 transition-colors">
+                                        <div className="text-sm text-gray-500 mb-2">System Size</div>
+                                        <div className={`text-2xl font-bold ${theme.text}`}>{results?.kwCapacity}</div>
+                                        <div className="text-xs text-gray-400">Kilowatts</div>
+                                    </div>
+                                    <div className="bg-[#f8f9fa] p-4 rounded-xl text-center border-b-2 border-transparent hover:border-green-500 transition-colors">
+                                        <div className="text-sm text-gray-500 mb-2">Area (Sqft)</div>
+                                        <div className={`text-2xl font-bold ${theme.text}`}>{results?.rooftopAreaSqft}</div>
+                                        <div className="text-xs text-gray-400">Square Feet</div>
+                                    </div>
+                                    <div className="bg-[#f8f9fa] p-4 rounded-xl text-center border-b-2 border-transparent hover:border-green-500 transition-colors">
+                                        <div className="text-sm text-gray-500 mb-2">Daily Usage</div>
+                                        <div className={`text-2xl font-bold ${theme.text}`}>{results?.dailyUnits}</div>
+                                        <div className="text-xs text-gray-400">Units/Day</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div className={`bg-white rounded-xl p-4 border ${theme.border} text-center`}>
-                                <div className="w-12 h-12 bg-blue-100 rounded-full mx-auto mb-2 flex items-center justify-center"><i className="fas fa-bolt text-blue-500"></i></div>
-                                <div className="text-sm text-gray-500">KW SYSTEM RECOMMENDED</div>
-                                <div className="text-2xl font-bold text-blue-500">{results?.kwCapacity} Kw</div>
-                            </div>
-                            <div className={`bg-white rounded-xl p-4 border ${theme.border} text-center`}>
-                                <div className="w-12 h-12 bg-amber-100 rounded-full mx-auto mb-2 flex items-center justify-center"><i className="fas fa-tachometer-alt text-amber-500"></i></div>
-                                <div className="text-sm text-gray-500">Daily Unit Consumption</div>
-                                <div className="text-2xl font-bold text-amber-500">{results?.dailyUnits} units/day</div>
-                            </div>
-                            <div className={`bg-white rounded-xl p-4 border ${theme.border} text-center`}>
-                                <div className="w-12 h-12 bg-green-100 rounded-full mx-auto mb-2 flex items-center justify-center"><i className="fas fa-home text-green-500"></i></div>
-                                <div className="text-sm text-gray-500">Area For RoofTop</div>
-                                <div className="text-lg font-bold text-green-500">{results?.rooftopAreaSqft} Sq ft</div>
-                                <div className="text-sm font-bold text-gray-500">{results?.rooftopAreaSqm} Sq m</div>
-                            </div>
-                        </div>
+                        </section>
                     </section>
 
                     {/* Calculation Details */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className={`fas fa-calculator ${theme.text}`}></i>
-                            Solar Roof Top Calculation
+                            <i className={`fas fa-list-ul ${theme.text}`}></i>
+                            Calculation Breakdown
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <div className="text-sm text-gray-600 mb-2">Daily Unit Consumption</div>
-                                    <div className={`${theme.bgLight} p-3 rounded font-mono text-sm`}>
-                                        <p>= Monthly Unit Consumption ÷ 30</p>
-                                        <p>= {units} ÷ 30</p>
-                                        <p className={`font-bold ${theme.text}`}>= {results?.dailyUnits} units/day</p>
-                                    </div>
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-center border-b pb-2">
+                                    <span className="text-gray-600">Daily Unit Consumption</span>
+                                    <span className="font-mono">{units} ÷ 30 = <strong>{results?.dailyUnits}</strong></span>
                                 </div>
-                                <div>
-                                    <div className="text-sm text-gray-600 mb-2">RoofTop Capacity</div>
-                                    <div className={`${theme.bgLight} p-3 rounded font-mono text-sm`}>
-                                        <p>= Daily Consumption ÷ 4</p>
-                                        <p>= {results?.dailyUnits} ÷ 4</p>
-                                        <p className={`font-bold ${theme.text}`}>= {results?.kwCapacity} Kw</p>
-                                    </div>
+                                <div className="flex justify-between items-center border-b pb-2">
+                                    <span className="text-gray-600">RoofTop Capacity (Kw)</span>
+                                    <span className="font-mono">{results?.dailyUnits} ÷ 4 = <strong>{results?.kwCapacity}</strong></span>
                                 </div>
-                                <div>
-                                    <div className="text-sm text-gray-600 mb-2">Number of Solar Panel</div>
-                                    <div className={`${theme.bgLight} p-3 rounded font-mono text-sm`}>
-                                        <p>= RoofTop Capacity ÷ 0.335</p>
-                                        <p className="font-bold text-red-500">= {results?.noOfPanels} units/day</p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div className="text-sm text-gray-600 mb-2">Area Require for Rooftop</div>
-                                    <div className={`${theme.bgLight} p-3 rounded font-mono text-sm`}>
-                                        <p>= RoofTop Capacity × 10 (Sqm) or 95 (Sqft approx)</p>
-                                        <p className="font-bold text-green-500">= {results?.rooftopAreaSqft} Sq feet</p>
-                                    </div>
+                                <div className="flex justify-between items-center border-b pb-2">
+                                    <span className="text-gray-600">Number of Solar Panels (335W)</span>
+                                    <span className="font-mono">{results?.kwCapacity} ÷ 0.335 = <strong>{results?.noOfPanels}</strong></span>
                                 </div>
                             </div>
                         </div>
@@ -152,35 +137,33 @@ export default function SolarRooftopCalculator() {
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
                             <i className={`fas fa-table ${theme.text}`}></i>
-                            Common Solar RoofTop Style Available in Market
+                            Standard Market Capacities
                         </h2>
-                        <div className={`bg-white rounded-xl p-6 border ${theme.border} overflow-x-auto`}>
-                            <table className="w-full text-sm text-left">
-                                <thead className="bg-[#f8f9fa] border-b">
-                                    <tr>
-                                        <th className="px-2 py-2 font-semibold">Sr.</th>
-                                        <th className="px-2 py-2 font-semibold">KW Capacity</th>
-                                        <th className="px-2 py-2 font-semibold">No. Modules</th>
-                                        <th className="px-2 py-2 font-semibold">Area (Sq ft)</th>
-                                        <th className="px-2 py-2 font-semibold">Area (Sq m)</th>
-                                        <th className="px-2 py-2 font-semibold">Yearly Avg</th>
-                                        <th className="px-2 py-2 font-semibold">Monthly Avg</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y">
-                                    {solarData.map((row, i) => (
-                                        <tr key={i} className="hover:bg-gray-50">
-                                            <td className="px-2 py-1 text-center">{i + 1}</td>
-                                            <td className="px-2 py-1">{row.capacity}</td>
-                                            <td className="px-2 py-1 text-center">{row.panels}</td>
-                                            <td className="px-2 py-1">{row.areaSqft}</td>
-                                            <td className="px-2 py-1">{row.areaSqm}</td>
-                                            <td className="px-2 py-1">{row.yearly}</td>
-                                            <td className="px-2 py-1">{row.monthly}</td>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border} overflow-hidden`}>
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-sm text-left">
+                                    <thead className="bg-[#f8f9fa]">
+                                        <tr>
+                                            <th className="px-4 py-3 font-semibold text-gray-600">KW Capacity</th>
+                                            <th className="px-4 py-3 font-semibold text-gray-600">No. Modules</th>
+                                            <th className="px-4 py-3 font-semibold text-gray-600">Area (Sq ft)</th>
+                                            <th className="px-4 py-3 font-semibold text-gray-600">Area (Sq m)</th>
+                                            <th className="px-4 py-3 font-semibold text-gray-600">Yearly Units</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody className="divide-y">
+                                        {solarData.map((row, i) => (
+                                            <tr key={i} className="hover:bg-gray-50">
+                                                <td className="px-4 py-3 font-medium text-gray-900">{row.capacity}</td>
+                                                <td className="px-4 py-3">{row.panels}</td>
+                                                <td className="px-4 py-3 text-gray-500">{row.areaSqft}</td>
+                                                <td className="px-4 py-3 text-gray-500">{row.areaSqm}</td>
+                                                <td className="px-4 py-3 text-gray-500">{row.yearly}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </section>
 
@@ -207,8 +190,8 @@ export default function SolarRooftopCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className={`px-5 py-4 border-b ${theme.gradient} flex items-center gap-3`}>
+                    <div className="bg-white rounded-2xl shadow-lg border border-[#e5e7eb]">
+                        <div className={`px-5 py-4 border-b border-[#e5e7eb] ${theme.gradient} flex items-center gap-3 bg-gradient-to-r rounded-t-2xl`}>
                             <i className="fas fa-solar-panel text-xl text-white"></i>
                             <h2 className="font-semibold text-white">SOLAR-ROOFTOP CALCULATION</h2>
                         </div>
@@ -237,14 +220,14 @@ export default function SolarRooftopCalculator() {
                                 <button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium`}>Calculate</button>
                                 <button onClick={reset} className="bg-red-500 text-white px-4 py-2.5 rounded-lg hover:bg-red-600">Reset</button>
                             </div>
-                            <div className={`${theme.bgLight} rounded-xl p-4`}>
-                                <div className="grid grid-cols-2 gap-3 text-center">
-                                    <div><div className="text-xs text-gray-500">Solar Panels</div><div className="text-xl font-bold text-red-500">{results?.noOfPanels}</div></div>
-                                    <div><div className="text-xs text-gray-500">KW System</div><div className="text-xl font-bold text-blue-500">{results?.kwCapacity} Kw</div></div>
-                                    <div><div className="text-xs text-gray-500">Daily Units</div><div className="text-lg font-bold text-amber-500">{results?.dailyUnits}</div></div>
-                                    <div><div className="text-xs text-gray-500">Area Required</div><div className="text-lg font-bold text-green-500">{results?.rooftopAreaSqft} ft²</div></div>
+
+                            {results && (
+                                <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 text-center">
+                                    <div className="text-xs text-gray-500">System Capacity</div>
+                                    <div className={`text-3xl font-bold ${theme.text}`}>{results.kwCapacity} Kw</div>
+                                    <div className="text-sm text-gray-500 mt-2">{results.noOfPanels} Panels Required</div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     </div>
 

@@ -5,7 +5,7 @@ import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
 
 export default function UCSTestCalculator() {
-    const theme = getThemeClasses('soil-test');
+    const theme = getThemeClasses('amber');
     const [diameter, setDiameter] = useState(38);
     const [length, setLength] = useState(76);
     const [density, setDensity] = useState(1.65);
@@ -75,17 +75,17 @@ export default function UCSTestCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What Unconfined Compressive Strength?</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <p className="text-gray-600 mb-4">A measure of a material's strength. The unconfined compressive strength (UCS) is the maximum axial compressive stress that a right cylindrical sample of material can withstand under unconfined conditions—the confining stress is zero. It is also known as the uniaxial compressive strength of a medium.</p>
-                            <p className="text-gray-600 mb-4"><strong>Alternate Form:</strong> UCS, uniaxial compressive strength.</p>
-                            <p className="text-gray-600"><strong>Note:</strong> If the axial compressive force per unit area has not reached a maximum value up to 20 percent, axial strain, shall be considered the value obtained at 20 percent axial strain.</p>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <p className="text-gray-600 mb-4 text-justify">A measure of a material's strength. The unconfined compressive strength (UCS) is the maximum axial compressive stress that a right cylindrical sample of material can withstand under unconfined conditions—the confining stress is zero. It is also known as the uniaxial compressive strength of a medium.</p>
+                            <p className="text-gray-600 mb-4 text-justify"><strong>Alternate Form:</strong> UCS, uniaxial compressive strength.</p>
+                            <p className="text-gray-600 text-justify"><strong>Note:</strong> If the axial compressive force per unit area has not reached a maximum value up to 20 percent, axial strain, shall be considered the value obtained at 20 percent axial strain.</p>
                         </div>
                     </section>
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <ol className="list-decimal pl-5 text-gray-600 space-y-2">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <ol className="list-decimal pl-5 text-gray-600 space-y-2 text-justify">
                                 <li><strong>Compression Device:</strong> Platform weighing scale equipped with a screw jack activated yoke, Hydraulic loading device, Screw jack with spring load measuring device, Any of live loading device</li>
                                 <li><strong>Sample Ejector:</strong> When samples are pushed from the drive sampling tube, the ejecting device shall be capable of ejecting the soil core from the sampling tube in the same direction of travel in which the sample entered</li>
                                 <li><strong>Deformation Dial Gauge:</strong> a dial gauge with 0.01 mm graduations and specific travel to permit 20 percent axial strain</li>
@@ -99,7 +99,7 @@ export default function UCSTestCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>The Unconfined Compressive Strength is calculated as</h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="space-y-2 text-gray-600">
                                 <p>1. Initial Area Of Specimen (A₀) = π/4 × D₀²</p>
                                 <p>2. Change in Length or Deformation: ΔL = Dial Reading in mm</p>
@@ -118,7 +118,7 @@ export default function UCSTestCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
+                    <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
                             <i className="fas fa-compress text-xl text-white"></i>
                             <h2 className="font-semibold text-sm text-white">UCS TEST</h2>

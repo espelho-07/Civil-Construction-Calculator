@@ -9,7 +9,7 @@ import { Pie, Bar } from 'react-chartjs-2';
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 export default function ConstructionCostCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [builtUpArea, setBuiltUpArea] = useState(1000);
     const [costPerSqFt, setCostPerSqFt] = useState(1800);
 
@@ -134,7 +134,8 @@ export default function ConstructionCostCalculator() {
                             <i className={`fas fa-calculator ${theme.text}`}></i>
                             1. Calculation of Cost | Approx amount of cost for given construction is ₹{formatCurrency(results?.totalCost || 0)}
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        {/* THEME BORDER APPLIED HERE */}
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <div className="text-sm text-gray-600 mb-2">Approximate cost for various work of material per/Square Feet</div>
@@ -162,7 +163,8 @@ export default function ConstructionCostCalculator() {
                             <i className={`fas fa-boxes ${theme.text}`}></i>
                             2. Quantity of material required for given construction area
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        {/* THEME BORDER APPLIED HERE */}
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="text-center mb-4">
                                 <span className="text-sm text-gray-600">Quantity of material required for <span className={`${theme.text} font-bold`}>{builtUpArea} ft²</span></span>
                             </div>
@@ -176,7 +178,6 @@ export default function ConstructionCostCalculator() {
                             {/* Material Cards Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {/* Total Cost */}
-                                {/* Total Cost */}
                                 <div className={`bg-white border-2 border-green-200 rounded-xl p-4 shadow-sm`}>
                                     <div className="flex items-center gap-2 mb-2">
                                         <i className="fas fa-rupee-sign text-green-600"></i>
@@ -188,7 +189,8 @@ export default function ConstructionCostCalculator() {
                                 </div>
 
                                 {/* Cement */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                                {/* THEME BORDER APPLIED TO CARDS HERE */}
+                                <div className={`bg-white border ${theme.border} rounded-xl p-4 shadow-sm`}>
                                     <div className="flex items-center gap-2 mb-2">
                                         <i className="fas fa-cubes text-blue-500"></i>
                                         <span className="font-bold text-gray-800">Amount of Cement Required</span>
@@ -205,7 +207,7 @@ export default function ConstructionCostCalculator() {
                                 </div>
 
                                 {/* Steel */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                                <div className={`bg-white border ${theme.border} rounded-xl p-4 shadow-sm`}>
                                     <div className="flex items-center gap-2 mb-2">
                                         <i className="fas fa-hammer text-red-500"></i>
                                         <span className="font-bold text-gray-800">Amount of Steel Required</span>
@@ -219,7 +221,7 @@ export default function ConstructionCostCalculator() {
                                 </div>
 
                                 {/* Aggregate */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                                <div className={`bg-white border ${theme.border} rounded-xl p-4 shadow-sm`}>
                                     <div className="flex items-center gap-2 mb-2">
                                         <i className="fas fa-gem text-green-500"></i>
                                         <span className="font-bold text-gray-800">Amount of Aggregate Required</span>
@@ -232,7 +234,7 @@ export default function ConstructionCostCalculator() {
                                 </div>
 
                                 {/* Sand */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                                <div className={`bg-white border ${theme.border} rounded-xl p-4 shadow-sm`}>
                                     <div className="flex items-center gap-2 mb-2">
                                         <i className="fas fa-truck-loading text-amber-500"></i>
                                         <span className="font-bold text-gray-800">Amount of Sand Required</span>
@@ -245,7 +247,7 @@ export default function ConstructionCostCalculator() {
                                 </div>
 
                                 {/* Paint */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                                <div className={`bg-white border ${theme.border} rounded-xl p-4 shadow-sm`}>
                                     <div className="flex items-center gap-2 mb-2">
                                         <i className="fas fa-paint-roller text-purple-500"></i>
                                         <span className="font-bold text-gray-800">Amount of Paint Required</span>
@@ -258,7 +260,7 @@ export default function ConstructionCostCalculator() {
                                 </div>
 
                                 {/* Bricks */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                                <div className={`bg-white border ${theme.border} rounded-xl p-4 shadow-sm`}>
                                     <div className="flex items-center gap-2 mb-2">
                                         <i className="fas fa-th-large text-orange-500"></i>
                                         <span className="font-bold text-gray-800">Amount of Bricks Required</span>
@@ -271,7 +273,7 @@ export default function ConstructionCostCalculator() {
                                 </div>
 
                                 {/* Flooring */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                                <div className={`bg-white border ${theme.border} rounded-xl p-4 shadow-sm`}>
                                     <div className="flex items-center gap-2 mb-2">
                                         <i className="fas fa-border-all text-cyan-500"></i>
                                         <span className="font-bold text-gray-800">Flooring</span>
@@ -284,7 +286,7 @@ export default function ConstructionCostCalculator() {
                                 </div>
 
                                 {/* Fittings */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                                <div className={`bg-white border ${theme.border} rounded-xl p-4 shadow-sm`}>
                                     <div className="flex items-center gap-2 mb-2">
                                         <i className="fas fa-faucet text-teal-500"></i>
                                         <span className="font-bold text-gray-800">Fittings</span>
@@ -306,7 +308,8 @@ export default function ConstructionCostCalculator() {
                             <i className={`fas fa-info-circle ${theme.text}`}></i>
                             3. Construction Cost Estimator Calculator
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        {/* THEME BORDER APPLIED HERE */}
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                 This is a tool to calculate a Average cost of constructing a residential in terms that equals the area of 1 sq.ft that = 144 square inch. Construction cost in India can vary significantly depending on several factors, including location, type of construction, labor costs, material costs, etc.
                             </p>
@@ -325,7 +328,8 @@ export default function ConstructionCostCalculator() {
                             <i className={`fas fa-thumbs-up ${theme.text}`}></i>
                             Thumb Rule of Quantity of Material for 1000 sq. ft.
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        {/* THEME BORDER APPLIED HERE */}
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <p className="text-gray-600 mb-4">
                                 Thumb rule is an approximate value according to which various engineers, architects based on their experience estimates the quantity of material per square ft. and other.
                             </p>
@@ -354,7 +358,7 @@ export default function ConstructionCostCalculator() {
                         </h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {relatedCalculators.map((calc) => (
-                                <Link key={calc.name} to={calc.slug} className={`bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
+                                <Link key={calc.name} to={calc.slug} className={`bg-white border rounded-lg p-4 hover:shadow-lg ${theme.border} ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
                                     <div className="flex items-center gap-3">
                                         <i className={`fas ${calc.icon} ${theme.text} group-hover:scale-110 transition-transform`}></i>
                                         <span className={`text-sm font-medium text-[#0A0A0A] group-hover:${theme.text}`}>{calc.name}</span>
@@ -373,10 +377,11 @@ export default function ConstructionCostCalculator() {
 
                 {/* Calculator Widget (Sidebar) */}
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-hidden border border-[#e5e7eb]">
-                        <div className={`px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3 bg-gradient-to-r ${theme.gradient}`}>
+                    {/* THEME BORDER APPLIED HERE */}
+                    <div className={`bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border ${theme.border}`}>
+                        <div className={`px-5 py-4 border-b ${theme.border} flex items-center gap-3 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
                             <i className="fas fa-rupee-sign text-xl text-white"></i>
-                            <h2 className="font-semibold text-white">CONSTRUCTION COST ESTIMATOR</h2>
+                            <h2 className="font-semibold text-white">Construction Cost Estimator</h2>
                         </div>
 
                         <div className="p-5">
@@ -384,7 +389,7 @@ export default function ConstructionCostCalculator() {
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Built-up Area</label>
                                 <div className="relative">
-                                    <input type="number" value={builtUpArea} onChange={(e) => setBuiltUpArea(Number(e.target.value))} className={`w-full px-3 py-2 pr-16 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus}`} />
+                                    <input type="number" value={builtUpArea} onChange={(e) => setBuiltUpArea(Number(e.target.value))} className={`w-full px-3 py-2 pr-16 border rounded-lg text-sm ${theme.focus} ${theme.border}`} />
                                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">ft²</span>
                                 </div>
                             </div>
@@ -392,7 +397,7 @@ export default function ConstructionCostCalculator() {
                             <div className="mb-4">
                                 <label className="text-xs text-gray-500 mb-1 block">Approx Cost (Per Square Feet)</label>
                                 <div className="relative">
-                                    <input type="number" value={costPerSqFt} onChange={(e) => setCostPerSqFt(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus}`} />
+                                    <input type="number" value={costPerSqFt} onChange={(e) => setCostPerSqFt(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} ${theme.border}`} />
                                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">Rs.</span>
                                 </div>
                             </div>

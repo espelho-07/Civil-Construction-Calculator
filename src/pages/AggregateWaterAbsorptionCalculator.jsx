@@ -2,15 +2,16 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 // Info Tooltip Component
-function InfoTooltip({ text }) {
+function InfoTooltip({ text, theme }) {
     const [show, setShow] = useState(false);
     return (
         <div className="relative inline-block">
             <button
                 type="button"
-                className="w-4 h-4 bg-[#3B68FC] text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1"
+                className={`w-4 h-4 ${theme?.bg || 'bg-gray-600'} text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1`}
                 onMouseEnter={() => setShow(true)}
                 onMouseLeave={() => setShow(false)}
                 onClick={() => setShow(!show)}
@@ -18,7 +19,7 @@ function InfoTooltip({ text }) {
                 i
             </button>
             {show && (
-                <div className="absolute left-6 top-0 z-50 w-56 p-3 bg-white border border-[#e5e7eb] rounded-lg shadow-lg text-xs text-[#0A0A0A] leading-relaxed">
+                <div className={`absolute left-6 top-0 z-50 w-56 p-3 bg-white border ${theme?.border || 'border-gray-200'} rounded-lg shadow-lg text-xs text-[#0A0A0A] leading-relaxed text-justify`}>
                     {text}
                 </div>
             )}
@@ -27,6 +28,7 @@ function InfoTooltip({ text }) {
 }
 
 export default function AggregateWaterAbsorptionCalculator() {
+    const theme = getThemeClasses('gray');
     const [dryWeight, setDryWeight] = useState('');
     const [saturatedWeight, setSaturatedWeight] = useState('');
     const [result, setResult] = useState(null);
@@ -116,15 +118,15 @@ export default function AggregateWaterAbsorptionCalculator() {
 
                     {/* Calculator */}
                     <section className="mb-8">
-                        <div className="bg-white rounded-xl border border-[#e5e7eb] overflow-hidden">
-                            <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-5 py-4">
+                        <div className={`bg-white rounded-xl border ${theme.border} overflow-hidden`}>
+                            <div className={`bg-gradient-to-r ${theme.gradient} px-5 py-4`}>
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                         <i className="fas fa-tint text-white"></i>
                                     </div>
                                     <div>
                                         <h3 className="font-bold text-white">DETERMINE AGGREGATE WATER ABSORPTION</h3>
-                                        <p className="text-blue-100 text-xs">Enter dry and saturated weights</p>
+                                        <p className="text-white/80 text-xs">Enter dry and saturated weights</p>
                                     </div>
                                 </div>
                             </div>
@@ -136,7 +138,7 @@ export default function AggregateWaterAbsorptionCalculator() {
                                         <div>
                                             <label className="flex items-center text-sm text-[#0A0A0A] mb-2">
                                                 Dry weight of aggregate (W<sub>d</sub>)
-                                                <InfoTooltip text="Weight of oven-dried aggregate in gm" />
+                                                <InfoTooltip text="Weight of oven-dried aggregate in gm" theme={theme} />
                                             </label>
                                             <div className="relative">
                                                 <input
@@ -144,7 +146,7 @@ export default function AggregateWaterAbsorptionCalculator() {
                                                     value={dryWeight}
                                                     onChange={(e) => setDryWeight(e.target.value)}
                                                     placeholder="Enter weight"
-                                                    className="w-full px-4 py-3 pr-12 border border-[#e5e7eb] rounded-lg outline-none focus:border-[#3B68FC] text-sm"
+                                                    className={`w-full px-4 py-3 pr-12 ${theme.border} border rounded-lg outline-none ${theme.focus} text-sm`}
                                                 />
                                                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#6b7280]">gm</span>
                                             </div>
@@ -153,7 +155,7 @@ export default function AggregateWaterAbsorptionCalculator() {
                                         <div>
                                             <label className="flex items-center text-sm text-[#0A0A0A] mb-2">
                                                 Weight of aggregate immersed in water (W<sub>s</sub>)
-                                                <InfoTooltip text="Weight of saturated surface-dry aggregate in gm" />
+                                                <InfoTooltip text="Weight of saturated surface-dry aggregate in gm" theme={theme} />
                                             </label>
                                             <div className="relative">
                                                 <input
@@ -161,7 +163,7 @@ export default function AggregateWaterAbsorptionCalculator() {
                                                     value={saturatedWeight}
                                                     onChange={(e) => setSaturatedWeight(e.target.value)}
                                                     placeholder="Enter weight"
-                                                    className="w-full px-4 py-3 pr-12 border border-[#e5e7eb] rounded-lg outline-none focus:border-[#3B68FC] text-sm"
+                                                    className={`w-full px-4 py-3 pr-12 ${theme.border} border rounded-lg outline-none ${theme.focus} text-sm`}
                                                 />
                                                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#6b7280]">gm</span>
                                             </div>
@@ -170,7 +172,7 @@ export default function AggregateWaterAbsorptionCalculator() {
                                         <div className="flex gap-3">
                                             <button
                                                 onClick={() => { }}
-                                                className="flex-1 py-3 bg-[#3B68FC] text-white rounded-lg text-sm font-medium hover:bg-[#2952d9] transition-colors"
+                                                className={`flex-1 py-3 ${theme.button} text-white rounded-lg text-sm font-medium transition-colors`}
                                             >
                                                 Calculate
                                             </button>
@@ -186,7 +188,7 @@ export default function AggregateWaterAbsorptionCalculator() {
                                     {/* Results */}
                                     <div className="bg-[#f8f9fa] rounded-xl p-5">
                                         <div className="text-center mb-4">
-                                            <div className="text-5xl font-bold text-blue-600">{result || '0'} %</div>
+                                            <div className={`text-5xl font-bold ${theme.text}`}>{result || '0'} %</div>
                                             <div className="text-sm text-[#6b7280] mt-1">Water Absorption %</div>
                                         </div>
 
@@ -200,7 +202,7 @@ export default function AggregateWaterAbsorptionCalculator() {
                                                     <div className="font-mono text-[#6b7280]">
                                                         = <sup>{saturatedWeight} - {dryWeight}</sup>/<sub>{dryWeight}</sub> × 100
                                                     </div>
-                                                    <div className="font-mono font-bold text-blue-600">
+                                                    <div className={`font-mono font-bold ${theme.text}`}>
                                                         Aggregate Water Absorption = {result} %
                                                     </div>
                                                 </>
@@ -222,10 +224,10 @@ export default function AggregateWaterAbsorptionCalculator() {
                     {/* What is Water Absorption? */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-info-circle text-[#3B68FC]"></i>
+                            <i className={`fas fa-info-circle ${theme.text}`}></i>
                             What is Aggregate Water Absorption Test?
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <p className="text-[#0A0A0A] leading-relaxed mb-4">
                                 Water absorption gives an idea of strength of aggregate. Aggregates having more water absorption are more porous in nature and are generally considered unsuitable unless they are found to be acceptable based on strength, impact and hardness tests.
                             </p>
@@ -235,10 +237,10 @@ export default function AggregateWaterAbsorptionCalculator() {
                     {/* Apparatus */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-tools text-[#3B68FC]"></i>
+                            <i className={`fas fa-tools ${theme.text}`}></i>
                             Apparatus
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <ol className="list-decimal list-inside space-y-2 text-sm text-[#0A0A0A]">
                                 <li><strong>Balance</strong> – A balance of capacity not less than 3 kg, readable and accurate to 0.5 g and of such a type and shape as to permit the basket containing the sample to be suspended from the beam and weighed in water.</li>
                                 <li><strong>Oven</strong> – A well ventilated oven thermostatically controlled to maintain a temperature of 100 to 110°C.</li>
@@ -254,10 +256,10 @@ export default function AggregateWaterAbsorptionCalculator() {
                     {/* Procedure */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-list-ol text-[#3B68FC]"></i>
+                            <i className={`fas fa-list-ol ${theme.text}`}></i>
                             Procedure
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <p className="text-[#0A0A0A] leading-relaxed mb-4">
                                 The sample shall be thoroughly washed to remove finer particles and dust, drained and then placed in the wire basket and immersed in distilled water at a temperature between 22°C and 32°C with a cover of at least 5 cm of water above the top of the basket.
                             </p>
@@ -273,14 +275,14 @@ export default function AggregateWaterAbsorptionCalculator() {
                     {/* Formula Section */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-calculator text-[#3B68FC]"></i>
+                            <i className={`fas fa-calculator ${theme.text}`}></i>
                             Formula
                         </h2>
-                        <div className="bg-gradient-to-r from-[#EEF2FF] to-blue-50 rounded-xl p-6 border border-[#3B68FC]/20">
+                        <div className={`bg-gradient-to-r ${theme.bgSoft} to-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="text-center">
                                 <div className="inline-block bg-white px-6 py-4 rounded-lg shadow-sm">
                                     <code className="text-lg font-mono text-[#0A0A0A]">
-                                        <span className="text-blue-600">Water absorption (% of dry weight)</span> = <sup>W<sub>s</sub> - W<sub>d</sub></sup>/<sub>W<sub>d</sub></sub> × 100 %
+                                        <span className={`${theme.text}`}>Water absorption (% of dry weight)</span> = <sup>W<sub>s</sub> - W<sub>d</sub></sup>/<sub>W<sub>d</sub></sub> × 100 %
                                     </code>
                                 </div>
                             </div>
@@ -298,26 +300,26 @@ export default function AggregateWaterAbsorptionCalculator() {
                     {/* Specifications Table */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-table text-[#3B68FC]"></i>
+                            <i className={`fas fa-table ${theme.text}`}></i>
                             Specifications: Water Absorption Values
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <p className="text-sm text-[#6b7280] mb-4">Maximum Permissible Water absorption % for the different types of pavements</p>
                             <div className="overflow-x-auto">
-                                <table className="w-full text-sm border border-[#e5e7eb]">
+                                <table className={`w-full text-sm border ${theme.border}`}>
                                     <thead className="bg-[#f8f9fa]">
                                         <tr>
-                                            <th className="border border-[#e5e7eb] px-4 py-2 text-left">Sr.</th>
-                                            <th className="border border-[#e5e7eb] px-4 py-2 text-left">Type of Pavements</th>
-                                            <th className="border border-[#e5e7eb] px-4 py-2 text-center">Maximum Water absorption %<br />(IRC Recommendations)</th>
+                                            <th className={`border ${theme.border} px-4 py-2 text-left`}>Sr.</th>
+                                            <th className={`border ${theme.border} px-4 py-2 text-left`}>Type of Pavements</th>
+                                            <th className={`border ${theme.border} px-4 py-2 text-center`}>Maximum Water absorption %<br />(IRC Recommendations)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {maxAbsorptionTable.map((row, i) => (
                                             <tr key={i}>
-                                                <td className="border border-[#e5e7eb] px-4 py-2">{i + 1}</td>
-                                                <td className="border border-[#e5e7eb] px-4 py-2">{row.type}</td>
-                                                <td className="border border-[#e5e7eb] px-4 py-2 text-center font-medium">{row.max}</td>
+                                                <td className={`border ${theme.border} px-4 py-2`}>{i + 1}</td>
+                                                <td className={`border ${theme.border} px-4 py-2`}>{row.type}</td>
+                                                <td className={`border ${theme.border} px-4 py-2 text-center font-medium`}>{row.max}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -337,12 +339,12 @@ export default function AggregateWaterAbsorptionCalculator() {
                 <div ref={sidebarRef} className="sticky top-20">
                     {/* Result Card */}
                     {result && (
-                        <div className="bg-white rounded-2xl shadow-lg border border-[#e5e7eb] overflow-hidden mb-4">
-                            <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-5 py-4">
+                        <div className={`bg-white rounded-2xl shadow-lg border ${theme.border} overflow-hidden mb-4`}>
+                            <div className={`bg-gradient-to-r ${theme.gradient} px-5 py-4`}>
                                 <h3 className="font-bold text-white text-sm">Water Absorption Result</h3>
                             </div>
                             <div className="p-5 text-center">
-                                <div className="text-4xl font-bold text-blue-600">{result} %</div>
+                                <div className={`text-4xl font-bold ${theme.text}`}>{result} %</div>
                                 <div className="text-sm text-[#6b7280] mt-1">Water Absorption</div>
                                 {status && (
                                     <div className={`mt-3 text-xs px-3 py-1 rounded-full inline-block ${parseFloat(result) <= 2 ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
@@ -354,17 +356,17 @@ export default function AggregateWaterAbsorptionCalculator() {
                     )}
 
                     {/* Related Calculators */}
-                    <div className="bg-white rounded-xl p-4 border border-[#e5e7eb]">
+                    <div className={`bg-white rounded-xl p-4 border ${theme.border}`}>
                         <h4 className="font-semibold text-[#0A0A0A] text-sm mb-3 flex items-center gap-2">
                             <span className="text-gray-600">Concrete Technology</span>
-                            <span className="text-xs text-[#3B68FC] bg-blue-50 px-2 py-0.5 rounded">Calculators</span>
+                            <span className={`text-xs ${theme.text} ${theme.bgSoft} px-2 py-0.5 rounded`}>Calculators</span>
                         </h4>
                         <div className="space-y-2">
                             {relatedCalculators.map((calc) => (
                                 <Link
                                     key={calc.name}
                                     to={calc.slug}
-                                    className={`flex items-center gap-3 p-2 rounded-lg transition-all text-sm ${calc.active ? 'bg-blue-50 text-blue-600 font-medium' : 'hover:bg-[#f8f9fa] text-[#6b7280]'}`}
+                                    className={`flex items-center gap-3 p-2 rounded-lg transition-all text-sm ${calc.active ? `${theme.bgSoft} ${theme.text} font-medium` : 'hover:bg-[#f8f9fa] text-[#6b7280]'}`}
                                 >
                                     <i className={`fas ${calc.icon}`}></i>
                                     {calc.name}

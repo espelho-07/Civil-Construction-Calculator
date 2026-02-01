@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
@@ -9,7 +10,7 @@ import { Pie } from 'react-chartjs-2';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function FlooringCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [unit, setUnit] = useState('Feet');
     const [length, setLength] = useState(10);
     const [width, setWidth] = useState(10);
@@ -134,10 +135,11 @@ export default function FlooringCalculator() {
                     {/* Flooring Calculation */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className={`fas fa-calculator ${theme.text}`}></i>
+                            <i className={`fa-solid fa-calculator ${theme.text}`}></i>
                             Flooring calculation
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        {/* THEME BORDER APPLIED HERE */}
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
 
                             {/* Total Area & No of Tiles */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -164,9 +166,9 @@ export default function FlooringCalculator() {
 
                             {/* Cement & Sand Cards */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+                                <div className={`bg-white border ${theme.border} rounded-xl p-5 shadow-sm`}>
                                     <div className="flex items-center gap-2 mb-3">
-                                        <i className="fas fa-cubes text-blue-500"></i>
+                                        <i className="fa-solid fa-cubes text-blue-500"></i>
                                         <span className="font-bold text-gray-800">Amount of Cement</span>
                                     </div>
                                     <div className="text-xs text-gray-500 mb-2">Mortar Wet Volume = Flooring Area × 0.012m</div>
@@ -185,9 +187,9 @@ export default function FlooringCalculator() {
                                     </div>
                                 </div>
 
-                                <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+                                <div className={`bg-white border ${theme.border} rounded-xl p-5 shadow-sm`}>
                                     <div className="flex items-center gap-2 mb-3">
-                                        <i className="fas fa-truck-loading text-amber-500"></i>
+                                        <i className="fa-solid fa-truck-loading text-amber-500"></i>
                                         <span className="font-bold text-gray-800">Amount of Sand</span>
                                     </div>
                                     <div className="text-xs text-gray-500 mb-2">Volume of Cement = Dry Volume × Ratio</div>
@@ -211,10 +213,11 @@ export default function FlooringCalculator() {
                     {/* What is Flooring calculation */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className={`fas fa-info-circle ${theme.text}`}></i>
+                            <i className={`fa-solid fa-info-circle ${theme.text}`}></i>
                             What is Flooring calculation?
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] flex flex-col md:flex-row gap-6">
+                        {/* THEME BORDER APPLIED HERE */}
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border} flex flex-col md:flex-row gap-6`}>
                             <div className="flex-1">
                                 <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                     Flooring calculator is calculating how many numbers of tiles required for flooring. We use length, width, and depth to calculate the flooring. Here, three shapes are available to calculate the flooring: Square, U-shape, and L-shape.
@@ -235,10 +238,11 @@ export default function FlooringCalculator() {
                     {/* Important factors */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-exclamation-triangle text-yellow-500"></i>
+                            <i className="fa-solid fa-exclamation-triangle text-yellow-500"></i>
                             What are the important factors in Flooring?
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        {/* THEME BORDER APPLIED HERE */}
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <p className="text-gray-600 mb-4">
                                 It can be said that flooring kind of adds value to the area. But there are factors to consider while choosing the right type of flooring that would meet your requirements.
                             </p>
@@ -250,7 +254,7 @@ export default function FlooringCalculator() {
                                     { title: 'Mortar Ratio', desc: '1:4, 1:5, 1:6 cement:sand', icon: 'fa-percentage' },
                                 ].map((item) => (
                                     <div key={item.title} className="flex items-start gap-3 p-3 bg-[#f8f9fa] rounded-lg">
-                                        <i className={`fas ${item.icon} ${theme.text} mt-1`}></i>
+                                        <i className={`fa-solid ${item.icon} ${theme.text} mt-1`}></i>
                                         <div>
                                             <div className="font-medium text-[#0A0A0A]">{item.title}</div>
                                             <div className="text-sm text-[#6b7280]">{item.desc}</div>
@@ -264,10 +268,11 @@ export default function FlooringCalculator() {
                     {/* What is tile? */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className={`fas fa-th ${theme.text}`}></i>
+                            <i className={`fa-solid fa-th ${theme.text}`}></i>
                             What is tile calculation?
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        {/* THEME BORDER APPLIED HERE */}
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <p className="text-gray-600 mb-4 text-justify">
                                 Tiles are thin, flat slabs or pieces of material such as ceramic, stone, metal, baked clay, or glass. Tiles are often used for covering walls, floors, and other objects such as shower enclosures, bathtubs, and tabletops.
                             </p>
@@ -291,14 +296,14 @@ export default function FlooringCalculator() {
                     {/* Related Calculators */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className={`fas fa-th-large ${theme.text}`}></i>
+                            <i className={`fa-solid fa-th-large ${theme.text}`}></i>
                             Related Calculators
                         </h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {relatedCalculators.map((calc) => (
-                                <Link key={calc.name} to={calc.slug} className={`bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
+                                <Link key={calc.name} to={calc.slug} className={`bg-white border rounded-lg p-4 hover:shadow-lg ${theme.border} ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
                                     <div className="flex items-center gap-3">
-                                        <i className={`fas ${calc.icon} ${theme.text} group-hover:scale-110 transition-transform`}></i>
+                                        <i className={`fa-solid ${calc.icon} ${theme.text} group-hover:scale-110 transition-transform`}></i>
                                         <span className={`text-sm font-medium text-[#0A0A0A] group-hover:${theme.text}`}>{calc.name}</span>
                                     </div>
                                 </Link>
@@ -308,24 +313,25 @@ export default function FlooringCalculator() {
 
                     {/* Inline Ad */}
                     <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-8 text-center text-gray-500 mb-8">
-                        <i className="fas fa-ad text-3xl mb-2"></i>
+                        <i className="fa-solid fa-ad text-3xl mb-2"></i>
                         <p className="text-sm">Advertisement</p>
                     </div>
                 </div>
 
                 {/* Calculator Widget (Sidebar) */}
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-hidden border border-[#e5e7eb]">
-                        <div className={`px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3 bg-gradient-to-r ${theme.gradient}`}>
-                            <i className="fas fa-border-all text-xl text-white"></i>
-                            <h2 className="font-semibold text-white">FLOORING CALCULATION</h2>
+                    {/* THEME BORDER APPLIED HERE */}
+                    <div className={`bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border ${theme.border}`}>
+                        <div className={`px-5 py-4 border-b ${theme.border} flex items-center gap-3 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
+                            <i className="fa-solid fa-th-large text-xl text-white"></i>
+                            <h2 className="font-semibold text-white">Flooring Calculator</h2>
                         </div>
 
                         <div className="p-5">
                             {/* Unit Toggle */}
                             <div className="mb-4">
                                 <label className="text-xs text-gray-500 mb-1 block">Unit</label>
-                                <div className="flex border border-[#e5e7eb] rounded-lg overflow-hidden">
+                                <div className={`flex ${theme.border} rounded-lg overflow-hidden`}>
                                     <button onClick={() => setUnit('Feet')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Feet' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Feet</button>
                                     <button onClick={() => setUnit('Meter')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Meter' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Meter</button>
                                 </div>
@@ -335,33 +341,39 @@ export default function FlooringCalculator() {
                             <div className="grid grid-cols-2 gap-3 mb-3">
                                 <div>
                                     <label className="text-xs text-gray-500 mb-1 block">Length</label>
-                                    <input type="number" value={length} onChange={(e) => setLength(Number(e.target.value))} className={`w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`} />
+                                    <input type="number" value={length} onChange={(e) => setLength(Number(e.target.value))} className={`w-full px-3 py-2 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} />
                                 </div>
                                 <div>
                                     <label className="text-xs text-gray-500 mb-1 block">Width</label>
-                                    <input type="number" value={width} onChange={(e) => setWidth(Number(e.target.value))} className={`w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`} />
+                                    <input type="number" value={width} onChange={(e) => setWidth(Number(e.target.value))} className={`w-full px-3 py-2 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} />
                                 </div>
                             </div>
 
                             {/* Tile Size */}
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Tile Dimension</label>
-                                <select value={tileSize} onChange={(e) => setTileSize(e.target.value)} className={`w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`}>
-                                    {Object.entries(tileSizes).map(([key, val]) => (
-                                        <option key={key} value={key}>{val.label}</option>
-                                    ))}
-                                </select>
+                                <CustomDropdown
+                                    options={Object.entries(tileSizes).map(([key, val]) => ({ value: key, label: val.label }))}
+                                    value={tileSize}
+                                    onChange={setTileSize}
+                                    theme={theme}
+                                />
                             </div>
 
                             {/* Ratio */}
                             <div className="mb-4">
                                 <label className="text-xs text-gray-500 mb-1 block">Mortar Ratio</label>
-                                <select value={ratio} onChange={(e) => setRatio(e.target.value)} className={`w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`}>
-                                    <option value="1:3">1:3</option>
-                                    <option value="1:4">1:4</option>
-                                    <option value="1:5">1:5</option>
-                                    <option value="1:6">1:6</option>
-                                </select>
+                                <CustomDropdown
+                                    options={[
+                                        { value: '1:3', label: '1:3' },
+                                        { value: '1:4', label: '1:4' },
+                                        { value: '1:5', label: '1:5' },
+                                        { value: '1:6', label: '1:6' }
+                                    ]}
+                                    value={ratio}
+                                    onChange={setRatio}
+                                    theme={theme}
+                                />
                             </div>
 
                             {/* Calculate Button */}

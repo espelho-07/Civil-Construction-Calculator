@@ -5,7 +5,7 @@ import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
 
 export default function InSituDensityCalculator() {
-    const theme = getThemeClasses('soil-test');
+    const theme = getThemeClasses('amber');
     const [diameterCore, setDiameterCore] = useState(10);
     const [heightCore, setHeightCore] = useState(12.73);
     const [massCore, setMassCore] = useState(1600);
@@ -80,21 +80,21 @@ export default function InSituDensityCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is IN-SITU Density By Core Cutter Method?</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <p className="text-gray-600 mb-4">The Core cutter method is a fast and economical method for determining the field dry unit weight of fine grained also free from coarse particles like Pebbles or Gravels. This test is simple and gives accurate results and hence the test is used very commonly. If the soil contain particles more than 20% it is nor advisable.</p>
-                            <p className="text-gray-600"><strong>Applications:</strong> Highway Construction, Embankment, Dam Construction, Sub-grade, Earthwork</p>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <p className="text-gray-600 mb-4 text-justify">The Core cutter method is a fast and economical method for determining the field dry unit weight of fine grained also free from coarse particles like Pebbles or Gravels. This test is simple and gives accurate results and hence the test is used very commonly. If the soil contain particles more than 20% it is nor advisable.</p>
+                            <p className="text-gray-600 text-justify"><strong>Applications:</strong> Highway Construction, Embankment, Dam Construction, Sub-grade, Earthwork</p>
                         </div>
                     </section>
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="grid grid-cols-2 gap-6">
                                 <div>
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Core_Cutter.jpg/220px-Core_Cutter.jpg" alt="Core Cutter" className="w-full rounded-lg mb-2" />
                                     <p className="text-center text-sm text-gray-500">Fig: Plane Earth Core Cutter</p>
                                 </div>
-                                <ol className="list-decimal pl-5 text-gray-600 space-y-2">
+                                <ol className="list-decimal pl-5 text-gray-600 space-y-2 text-justify">
                                     <li><strong>Cylindrical Core Cutter</strong> – 100 mm internal diameter, 130 mm Long</li>
                                     <li><strong>Steel Dolly</strong> – 100 mm internal diameter, 25 mm Height</li>
                                     <li><strong>Steel Rammer</strong> – Weight of 9 kg or 14 kg</li>
@@ -108,7 +108,7 @@ export default function InSituDensityCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>Calculations</h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="bg-[#f8f9fa] p-4 rounded-lg space-y-3 font-mono text-center">
                                 <div>Volume of core cutter (V) = π/4 × D² × H cm³</div>
                                 <div>Bulk Density (γ) = M/V g/cm³</div>
@@ -136,7 +136,7 @@ export default function InSituDensityCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
+                    <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
                             <i className="fas fa-circle text-xl text-white"></i>
                             <h2 className="font-semibold text-sm text-white">IN-SITU DENSITY BY CORE CUTTER METHOD</h2>

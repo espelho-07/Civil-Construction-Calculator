@@ -5,7 +5,7 @@ import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
 
 export default function SpecificGravityCalculator() {
-    const theme = getThemeClasses('soil-test');
+    const theme = getThemeClasses('amber');
     const [m1, setM1] = useState(31.45);
     const [m2, setM2] = useState(39.9);
     const [m3, setM3] = useState(86.61);
@@ -52,16 +52,16 @@ export default function SpecificGravityCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is the need of specific gravity determination of Soil?</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <p className="text-gray-600 mb-4">Specific gravity G is defined as the ratio of the weight of a given volume of soil solids to the weight of a equal volume of distilled water.</p>
-                            <p className="text-gray-600">It deals with the method of test for determination of specific gravity of soils which finds application in finding out the degree of saturation and unit weight of most soils. The unit weights are needed in pressure, settlement and stability problems in soil engineering.</p>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <p className="text-gray-600 mb-4 text-justify">Specific gravity G is defined as the ratio of the weight of a given volume of soil solids to the weight of a equal volume of distilled water.</p>
+                            <p className="text-gray-600 text-justify">It deals with the method of test for determination of specific gravity of soils which finds application in finding out the degree of saturation and unit weight of most soils. The unit weights are needed in pressure, settlement and stability problems in soil engineering.</p>
                         </div>
                     </section>
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <ol className="list-decimal pl-5 text-gray-600 space-y-2">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <ol className="list-decimal pl-5 text-gray-600 space-y-2 text-justify">
                                 <li><strong>Two density bottles</strong> (Pycnometer) of approximately 50 ml capacity with stoppers.</li>
                                 <li>A <strong>water-bath</strong> maintained at a constant temperature to within ± 0.20C (if standard density bottles are used, this constant temperature is 27°C.)</li>
                                 <li>A <strong>vacuum desiccator</strong> (a convenient size is one about 200 mm to 250 mm in diameter)</li>
@@ -79,9 +79,9 @@ export default function SpecificGravityCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-clipboard-list ${theme.text} mr-2`}></i>How to determine the Specific Gravity of Soil?</h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <h3 className="font-bold text-gray-800 mb-2">Procedures</h3>
-                            <ol className="list-decimal pl-5 text-gray-600 space-y-2">
+                            <ol className="list-decimal pl-5 text-gray-600 space-y-2 text-justify">
                                 <li>The complete density bottle with stopper shall be dried at 105 to 110°C, cooled in the desiccator and weighed to the nearest 0.001 g (m1)</li>
                                 <li>The 50 g sample obtained as described in the procedure for the preparation of disturbed samples for testing shall, if necessary, be ground to pass a 2-mm IS test sieve.</li>
                                 <li>A 5 to 10 g subsample shall be obtained by riffling, and oven-dried at 105 to 1100 C.</li>
@@ -106,7 +106,7 @@ export default function SpecificGravityCalculator() {
                                     <li>M₄ is mass of bottle when full of liquid only in gram</li>
                                 </ul>
                             </div>
-                            <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg text-sm mt-4">
+                            <div className={`${theme.bgLight} border ${theme.border} p-3 rounded-lg text-sm mt-4`}>
                                 <strong>Note:</strong> The specific gravity of the soil particles lie with in the range of 2.65 to 2.85. Soils containing organic matter and porous particles may have specific gravity values below 2.0. Soils having heavy substances may have values above 3.0.
                             </div>
                         </div>
@@ -114,7 +114,7 @@ export default function SpecificGravityCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
+                    <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
                             <i className="fas fa-balance-scale-right text-xl text-white"></i>
                             <h2 className="font-semibold text-white">DETERMINATION OF SPECIFIC GRAVITY OF SOIL</h2>

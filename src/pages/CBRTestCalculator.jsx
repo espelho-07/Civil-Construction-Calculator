@@ -5,7 +5,7 @@ import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
 
 export default function CBRTestCalculator() {
-    const theme = getThemeClasses('soil-test');
+    const theme = getThemeClasses('amber');
     const [surcharge, setSurcharge] = useState(5);
     const [penetrationRate, setPenetrationRate] = useState(1.25);
     const [readings, setReadings] = useState([
@@ -93,9 +93,9 @@ export default function CBRTestCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is California Bearing Ratio?</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <p className="text-gray-600 mb-4">The California Bearing Ratio (CBR) is a penetration test for evaluation of the mechanical strength of natural ground, subgrades and basecourses beneath new carriageway construction. It was developed by the California Department of Transportation.</p>
-                            <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <p className="text-gray-600 mb-4 text-justify">The California Bearing Ratio (CBR) is a penetration test for evaluation of the mechanical strength of natural ground, subgrades and basecourses beneath new carriageway construction. It was developed by the California Department of Transportation.</p>
+                            <div className={`${theme.bgLight} border ${theme.border} p-3 rounded-lg`}>
                                 <strong>CBR Value</strong> = (Test Load / Standard Load) × 100
                             </div>
                         </div>
@@ -103,7 +103,7 @@ export default function CBRTestCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-table ${theme.text} mr-2`}></i>Standard CBR Loads</h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <table className="w-full text-sm">
                                 <thead><tr className="bg-gray-100"><th className="border px-3 py-2">Penetration (mm)</th><th className="border px-3 py-2">Unit Std. Load (kg/cm²)</th><th className="border px-3 py-2">Total Std. Load (kg)</th></tr></thead>
                                 <tbody>
@@ -116,8 +116,8 @@ export default function CBRTestCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <ol className="list-decimal pl-5 text-gray-600 space-y-2">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <ol className="list-decimal pl-5 text-gray-600 space-y-2 text-justify">
                                 <li><strong>CBR Mould:</strong> Cylindrical mould - 150mm dia × 175mm height with detachable collar (50mm) and base plate</li>
                                 <li><strong>Spacer Disc:</strong> 148mm dia × 47.7mm thick metal disc</li>
                                 <li><strong>Surcharge Weights:</strong> Annular metal weights 147mm dia with central hole of 53mm</li>
@@ -130,14 +130,14 @@ export default function CBRTestCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>CBR Calculation Formula</h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="bg-[#f8f9fa] p-4 rounded-lg text-center space-y-3 font-mono">
                                 <div className={`text-lg ${theme.text}`}>CBR at 2.5mm = (Load at 2.5mm / 1370) × 100 %</div>
                                 <div className={`text-lg ${theme.text}`}>CBR at 5.0mm = (Load at 5.0mm / 2055) × 100 %</div>
                                 <div className="text-lg font-bold">CBR Value = Maximum of (CBR at 2.5mm, CBR at 5.0mm)</div>
                             </div>
                             <div className="mt-4 text-sm text-gray-600">
-                                <p><strong>Note:</strong> Generally CBR at 2.5mm penetration is greater than that at 5.0mm. If CBR at 5.0mm is greater, repeat the test. If the same result is obtained again, CBR at 5.0mm is reported.</p>
+                                <p className="text-justify"><strong>Note:</strong> Generally CBR at 2.5mm penetration is greater than that at 5.0mm. If CBR at 5.0mm is greater, repeat the test. If the same result is obtained again, CBR at 5.0mm is reported.</p>
                             </div>
                         </div>
                     </section>
@@ -150,7 +150,7 @@ export default function CBRTestCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
+                    <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
                             <i className="fas fa-road text-xl text-white"></i>
                             <h2 className="font-semibold text-sm text-white">CALIFORNIA BEARING RATIO (CBR) TEST</h2>

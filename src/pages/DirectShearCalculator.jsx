@@ -5,7 +5,7 @@ import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
 
 export default function DirectShearCalculator() {
-    const theme = getThemeClasses('soil-test');
+    const theme = getThemeClasses('amber');
     const [provingRingConstant, setProvingRingConstant] = useState(1);
     const [tests, setTests] = useState([
         { area: 36, dialGauge: 0, provingRing: 1, normalStress: 0.5 },
@@ -84,15 +84,15 @@ export default function DirectShearCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What Is Direct Shear Test?</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <p className="text-gray-600 mb-4">A Direct shear test is a laboratory or field test used by geotechnical engineers to measure the shear strength properties of soil or rock material, or of discontinuities in soil or rock masses.</p>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <p className="text-gray-600 mb-4 text-justify">A Direct shear test is a laboratory or field test used by geotechnical engineers to measure the shear strength properties of soil or rock material, or of discontinuities in soil or rock masses.</p>
                         </div>
                     </section>
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <ol className="list-decimal pl-5 text-gray-600 space-y-2">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <ol className="list-decimal pl-5 text-gray-600 space-y-2 text-justify">
                                 <li>The shear box grid plates, porous stones, base plate, and loading pad and water jacket/cell</li>
                                 <li>Loading Yoke with arrangement to measure compression</li>
                                 <li>Weights for applying normal force</li>
@@ -107,7 +107,7 @@ export default function DirectShearCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>Direct Shear Test Calculation</h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="bg-[#f8f9fa] p-4 rounded-lg text-center space-y-3">
                                 <div className="font-mono text-lg">Horizontal Load(kg) = Proving Ring Reading × Proving Ring Constant</div>
                                 <div className="font-mono text-lg">Corrected Area = A₀ × (1 - δ/L) cm²</div>
@@ -132,7 +132,7 @@ export default function DirectShearCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
+                    <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
                             <i className="fas fa-compress-arrows-alt text-xl text-white"></i>
                             <h2 className="font-semibold text-sm text-white">DIRECT SHEAR TEST</h2>

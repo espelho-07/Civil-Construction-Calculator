@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 
+import { getThemeClasses } from '../constants/categories';
+
 export default function SoilSieveAnalysisCalculator() {
+    const theme = getThemeClasses('amber');
     const [sieveData, setSieveData] = useState([
         { size: '80 mm', retained: 0, cumRetained: 0, passing: 100 },
         { size: '40 mm', retained: 0, cumRetained: 0, passing: 100 },
@@ -79,17 +82,17 @@ export default function SoilSieveAnalysisCalculator() {
                     </div>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-info-circle text-[#3B68FC] mr-2"></i>What is Sieve analysis (grain size analysis) of the soil?</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <p className="text-gray-600 mb-4">Sieve analysis which is also called the definite way of grain size distribution of coarslly- The analysis of the fractions under this great difference in sizes of soil like gravel, sands, etc.., that would greatly limit usual sieve size range (from 0.075 mm to 80 mm) can be separated effectively Sieving is used to get particle size distributions for data are plotted on how fine a particles materials.</p>
-                            <p className="text-gray-600">The results from soil sieve analysis are helpful to define the engineering properties of the The particle size distribution helps to give an idea of grading, describing the fine or medium coarse-grained to gravel or sandy soils.</p>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is Sieve analysis (grain size analysis) of the soil?</h2>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <p className="text-gray-600 mb-4 text-justify">Sieve analysis which is also called the definite way of grain size distribution of coarslly- The analysis of the fractions under this great difference in sizes of soil like gravel, sands, etc.., that would greatly limit usual sieve size range (from 0.075 mm to 80 mm) can be separated effectively Sieving is used to get particle size distributions for data are plotted on how fine a particles materials.</p>
+                            <p className="text-gray-600 text-justify">The results from soil sieve analysis are helpful to define the engineering properties of the The particle size distribution helps to give an idea of grading, describing the fine or medium coarse-grained to gravel or sandy soils.</p>
                         </div>
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-flask text-[#3B68FC] mr-2"></i>Apparatus</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <ol className="list-decimal pl-5 text-gray-600 space-y-2">
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <ol className="list-decimal pl-5 text-gray-600 space-y-2 text-justify">
                                 <li><strong>Sieves:</strong> IS Sieves conform to IS: 460-1978 (80 mm, 40 mm, 20 mm, 10 mm, 4.75 mm, 2.36 mm, 1.18 mm, 600 µm, 300 µm, 150 µm, 75 µm) and Pan</li>
                                 <li>Balance: 0.1% in the least accurate range of 0.001</li>
                                 <li>Thermostatically controlled drying oven</li>
@@ -100,8 +103,8 @@ export default function SoilSieveAnalysisCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-table text-[#3B68FC] mr-2"></i>The mass of soil samples taken for analysis</h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-table ${theme.text} mr-2`}></i>The mass of soil samples taken for analysis</h2>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <table className="w-full text-sm">
                                 <thead><tr className="bg-gray-100"><th className="border px-3 py-2 text-left">Sr.</th><th className="border px-3 py-2 text-left">Max size of material present in substantial proportions of soil</th><th className="border px-3 py-2 text-left">Mass to be Taken for Test (kg)</th></tr></thead>
                                 <tbody>
@@ -117,11 +120,11 @@ export default function SoilSieveAnalysisCalculator() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className="fas fa-chart-line text-[#3B68FC] mr-2"></i>Result</h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-chart-line ${theme.text} mr-2`}></i>Result</h2>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <p className="text-gray-600 mb-4">Cu (uniformity coefficient), Cc (curvature coefficient) & expressed as the percentage passing each of sieves is as follows:</p>
                             <table className="w-full text-sm mb-4">
-                                <thead><tr className="bg-blue-50"><th className="border px-3 py-2">Sr.</th><th className="border px-3 py-2">Sieve Designation</th><th className="border px-3 py-2">% Finer To Sieve (kg)</th><th className="border px-3 py-2">Min Finer To Sieve (kg)</th></tr></thead>
+                                <thead><tr className={`${theme.bgLight}`}><th className="border px-3 py-2">Sr.</th><th className="border px-3 py-2">Sieve Designation</th><th className="border px-3 py-2">% Finer To Sieve (kg)</th><th className="border px-3 py-2">Min Finer To Sieve (kg)</th></tr></thead>
                                 <tbody>
                                     <tr><td className="border px-3 py-2">1</td><td className="border px-3 py-2">300 mm</td><td className="border px-3 py-2">10</td><td className="border px-3 py-2">0</td></tr>
                                     <tr><td className="border px-3 py-2">2</td><td className="border px-3 py-2">75 µm</td><td className="border px-3 py-2">5</td><td className="border px-3 py-2">0</td></tr>
@@ -132,10 +135,10 @@ export default function SoilSieveAnalysisCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className="px-5 py-4 border-b bg-gradient-to-r from-orange-50 to-amber-50 flex items-center gap-3">
-                            <i className="fas fa-filter text-xl text-orange-600"></i>
-                            <h2 className="font-semibold text-sm">GRAIN SIZE ANALYSIS</h2>
+                    <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
+                        <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
+                            <i className="fas fa-filter text-xl text-white"></i>
+                            <h2 className="font-semibold text-sm text-white">GRAIN SIZE ANALYSIS</h2>
                         </div>
                         <div className="p-4">
                             <div className="mb-3">
@@ -151,18 +154,18 @@ export default function SoilSieveAnalysisCalculator() {
                                                 <td className="px-2 py-1 font-medium">{row.size}</td>
                                                 <td className="px-2 py-1"><input type="number" step="0.001" value={row.retained} onChange={(e) => updateRetained(i, e.target.value)} className="w-16 px-1 py-0.5 border rounded text-xs" /></td>
                                                 <td className="px-2 py-1">{row.cumRetained}</td>
-                                                <td className="px-2 py-1 font-bold text-[#3B68FC]">{row.passing}</td>
+                                                <td className={`px-2 py-1 font-bold ${theme.text}`}>{row.passing}</td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
                             </div>
-                            <button onClick={calculate} className="w-full bg-[#3B68FC] text-white py-2.5 rounded-lg font-medium mb-4">Calculate</button>
-                            <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl p-4">
+                            <button onClick={calculate} className={`w-full ${theme.button} py-2.5 rounded-lg font-medium mb-4`}>Calculate</button>
+                            <div className={`${theme.bgLight} rounded-xl p-4`}>
                                 <div className="text-sm font-bold text-gray-700 mb-2">RESULTS OF GRAIN SIZE ANALYSIS</div>
                                 <div className="grid grid-cols-2 gap-2 text-xs">
                                     <div className="bg-white p-2 rounded"><span className="text-gray-500">Particle Type:</span> <span className="font-bold">Sand</span></div>
-                                    <div className="bg-white p-2 rounded"><span className="text-gray-500">FM:</span> <span className="font-bold text-[#3B68FC]">{results.fm}</span></div>
+                                    <div className="bg-white p-2 rounded"><span className="text-gray-500">FM:</span> <span className={`font-bold ${theme.text}`}>{results.fm}</span></div>
                                     <div className="bg-white p-2 rounded"><span className="text-gray-500">D10:</span> <span className="font-bold">{results.d10}</span></div>
                                     <div className="bg-white p-2 rounded"><span className="text-gray-500">D30:</span> <span className="font-bold">{results.d30}</span></div>
                                     <div className="bg-white p-2 rounded"><span className="text-gray-500">D60:</span> <span className="font-bold">{results.d60}</span></div>

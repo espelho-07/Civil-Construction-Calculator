@@ -5,7 +5,7 @@ import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
 
 export default function SolarWaterHeaterCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [noOfPersons, setNoOfPersons] = useState(7);
     const [results, setResults] = useState(null);
     const sidebarRef = useRef(null);
@@ -59,14 +59,18 @@ export default function SolarWaterHeaterCalculator() {
 
                     {/* Result Display */}
                     <section className="mb-8">
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
+                            <i className={`fas fa-calculator ${theme.text}`}></i>
+                            Calculation Result
+                        </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="text-center">
                                     <div className="text-sm text-gray-500">Capacity of Solar Water Heater</div>
                                     <div className={`text-4xl font-bold ${theme.text}`}>{results?.capacity}</div>
                                     <div className="text-xl text-gray-600">liters</div>
-                                    <div className="text-xs text-gray-500 mt-2 bg-amber-50 p-2 rounded">
-                                        <i className="fas fa-info-circle text-amber-500 mr-1"></i>
+                                    <div className={`text-xs text-gray-500 mt-2 ${theme.bgLight} p-2 rounded`}>
+                                        <i className={`fas fa-info-circle ${theme.text} mr-1`}></i>
                                         The thumb rule in deciding the capacity is that a person requires 30-50 litres of water per day.
                                     </div>
                                 </div>
@@ -100,16 +104,16 @@ export default function SolarWaterHeaterCalculator() {
 
                     {/* Thumb Rule */}
                     <section className="mb-8">
-                        <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
-                            <h3 className="font-bold text-amber-800 mb-2"><i className="fas fa-lightbulb mr-2"></i>Thumb Rule</h3>
-                            <p className="text-amber-700 text-justify">The thumb rule in deciding the capacity is that a person requires 30-50 litres of water per day for bathing. And considering average size of the family 3 - 4 person 250 Liter capacity solar water heater is ideal.</p>
+                        <div className={`bg-white border ${theme.border} rounded-xl p-6`}>
+                            <h3 className={`font-bold ${theme.text} mb-2 flex items-center gap-2`}><i className="fas fa-lightbulb"></i>Thumb Rule</h3>
+                            <p className="text-gray-600 text-justify">The thumb rule in deciding the capacity is that a person requires 30-50 litres of water per day for bathing. And considering average size of the family 3 - 4 person 250 Liter capacity solar water heater is ideal.</p>
                         </div>
                     </section>
 
                     {/* Formula */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className={`fas fa-calculator ${theme.text}`}></i>
+                            <i className={`fas fa-flask ${theme.text}`}></i>
                             Solar-Water-Heater calculation
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} flex flex-col md:flex-row gap-6`}>
@@ -133,22 +137,22 @@ export default function SolarWaterHeaterCalculator() {
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
                             <i className={`fas fa-exclamation-circle ${theme.text}`}></i>
-                            What are the important Solar-Water-Heater
+                            Important Factors
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <p className="text-gray-600 mb-4 text-justify">A solar water heater is a solar energy system that uses the sun to heat your domestic hot water. Just like a solar electric system, it uses panels to collect solar energy.</p>
                             <div className="space-y-4">
                                 <div className="flex items-start gap-3">
-                                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center shrink-0"><span className="text-green-600 font-bold">1</span></div>
-                                    <div><strong className="text-green-600">Smaller carbon footprint</strong><p className="text-sm text-gray-600 text-justify">Although many homes use electricity for their water heating system, other systems use oil or natural gas. By installing a solar system, you reduce your dependency on natural resources and limit your carbon footprint.</p></div>
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${theme.bgLight} ${theme.text} font-bold`}>1</div>
+                                    <div><strong className={theme.text}>Smaller carbon footprint</strong><p className="text-sm text-gray-600 text-justify">Although many homes use electricity for their water heating system, other systems use oil or natural gas. By installing a solar system, you reduce your dependency on natural resources and limit your carbon footprint.</p></div>
                                 </div>
                                 <div className="flex items-start gap-3">
-                                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center shrink-0"><span className="text-blue-600 font-bold">2</span></div>
-                                    <div><strong className="text-blue-600">Financial incentives</strong><p className="text-sm text-gray-600 text-justify">The federal government may offer tax credits to homeowners installing solar water heaters. Many city and state governments also offer tax credits, rebates and other incentives.</p></div>
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${theme.bgLight} ${theme.text} font-bold`}>2</div>
+                                    <div><strong className={theme.text}>Financial incentives</strong><p className="text-sm text-gray-600 text-justify">The federal government may offer tax credits to homeowners installing solar water heaters. Many city and state governments also offer tax credits, rebates and other incentives.</p></div>
                                 </div>
                                 <div className="flex items-start gap-3">
-                                    <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center shrink-0"><span className="text-amber-600 font-bold">3</span></div>
-                                    <div><strong className="text-amber-600">Lower energy bills</strong><p className="text-sm text-gray-600 text-justify">Homeowners with solar hot water heating systems can save a considerable amount money on their monthly gas and electric bills.</p></div>
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${theme.bgLight} ${theme.text} font-bold`}>3</div>
+                                    <div><strong className={theme.text}>Lower energy bills</strong><p className="text-sm text-gray-600 text-justify">Homeowners with solar hot water heating systems can save a considerable amount money on their monthly gas and electric bills.</p></div>
                                 </div>
                             </div>
                         </div>
@@ -162,9 +166,9 @@ export default function SolarWaterHeaterCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className={`px-5 py-4 border-b ${theme.gradient} flex items-center gap-3`}>
-                            <i className="fas fa-sun text-xl text-white"></i>
+                    <div className="bg-white rounded-2xl shadow-lg border border-[#e5e7eb]">
+                        <div className={`px-5 py-4 border-b border-[#e5e7eb] ${theme.gradient} flex items-center gap-3 bg-gradient-to-r rounded-t-2xl`}>
+                            <i className="fas fa-temperature-high text-xl text-white"></i>
                             <h2 className="font-semibold text-white">SOLAR WATER HEATER CALCULATION</h2>
                         </div>
                         <div className="p-5">
@@ -184,11 +188,13 @@ export default function SolarWaterHeaterCalculator() {
                                 <button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium`}>Calculate</button>
                                 <button onClick={reset} className="bg-red-500 text-white px-4 py-2.5 rounded-lg hover:bg-red-600">Reset</button>
                             </div>
-                            <div className={`${theme.bgLight} rounded-xl p-4 text-center`}>
-                                <div className="text-xs text-gray-500">Capacity of Solar Water Heater</div>
-                                <div className={`text-3xl font-bold ${theme.text}`}>{results?.capacity}</div>
-                                <div className="text-lg text-gray-600">liters</div>
-                            </div>
+                            {results && (
+                                <div className={`${theme.bgLight} rounded-xl p-4 text-center border border-gray-100`}>
+                                    <div className="text-xs text-gray-500">Capacity of Solar Water Heater</div>
+                                    <div className={`text-3xl font-bold ${theme.text}`}>{results?.capacity}</div>
+                                    <div className="text-lg text-gray-600">liters</div>
+                                </div>
+                            )}
                         </div>
                     </div>
 

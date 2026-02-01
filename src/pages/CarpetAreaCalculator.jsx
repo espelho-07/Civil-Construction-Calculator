@@ -5,7 +5,7 @@ import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
 
 export default function CarpetAreaCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [unit, setUnit] = useState('Feet');
     const [builtUpArea, setBuiltUpArea] = useState(1200);
     const [loading, setLoading] = useState(10);
@@ -84,7 +84,8 @@ export default function CarpetAreaCalculator() {
                             <i className={`fas fa-info-circle ${theme.text}`}></i>
                             What is Carpet area?
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        {/* THEME BORDER APPLIED HERE */}
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                 Carpet area is The actual usable floor area of an apartment, or the area covered by the carpet. It includes bedrooms, living room, kitchen, bathroom, study and toilets but excludes the external and internal walls, balcony, terrace. Under RERA, carpet area includes usable space within the outer walls.
                             </p>
@@ -156,7 +157,8 @@ export default function CarpetAreaCalculator() {
                             <i className={`fas fa-building ${theme.text}`}></i>
                             What is Built-up area?
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        {/* THEME BORDER APPLIED HERE */}
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                 Built-up area as the Total area measured on the outer line of your apartment. It includes carpet area, area of walls, ducts, exclusive balcony. It specifically excludes common area such as lifts, stairs, lobbies, play area, common corridor, etc.
                             </p>
@@ -205,7 +207,8 @@ export default function CarpetAreaCalculator() {
                             <i className={`fas fa-city ${theme.text}`}></i>
                             What is Super Built-up area?
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        {/* THEME BORDER APPLIED HERE */}
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                 Super Built-up area is your built-up area plus your proportionate share in the common area. Common areas such as lobby, staircase, lift area, clubhouse, gym, swimming pool, garden etc. The super built-up area is also called <strong>'saleable area'</strong>. In the case of RERA, common areas include lift shaft, lobby, corridor, staircase, common entrances and exits of buildings, common basement and terrace.
                             </p>
@@ -271,7 +274,7 @@ export default function CarpetAreaCalculator() {
                         </h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {relatedCalculators.map((calc) => (
-                                <Link key={calc.name} to={calc.slug} className={`bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
+                                <Link key={calc.name} to={calc.slug} className={`bg-white border rounded-lg p-4 hover:shadow-lg ${theme.border} ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
                                     <div className="flex items-center gap-3">
                                         <i className={`fas ${calc.icon} ${theme.text} group-hover:scale-110 transition-transform`}></i>
                                         <span className={`text-sm font-medium text-[#0A0A0A] group-hover:${theme.text}`}>{calc.name}</span>
@@ -290,10 +293,11 @@ export default function CarpetAreaCalculator() {
 
                 {/* Calculator Widget (Sidebar) */}
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-hidden border border-[#e5e7eb]">
-                        <div className={`px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3 bg-gradient-to-r ${theme.gradient}`}>
+                    {/* THEME BORDER APPLIED HERE */}
+                    <div className={`bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border ${theme.border}`}>
+                        <div className={`px-5 py-4 border-b ${theme.border} flex items-center gap-3 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
                             <i className="fas fa-vector-square text-xl text-white"></i>
-                            <h2 className="font-semibold text-white">CARPET AREA CALCULATOR</h2>
+                            <h2 className="font-semibold text-white">Carpet Area Calculator</h2>
                         </div>
 
                         <div className="p-5">
@@ -310,14 +314,14 @@ export default function CarpetAreaCalculator() {
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Area (Builtup)</label>
                                 <div className="relative">
-                                    <input type="number" value={builtUpArea} onChange={(e) => setBuiltUpArea(Number(e.target.value))} className="w-full px-3 py-2 pr-16 border border-[#e5e7eb] rounded-lg text-sm" />
+                                    <input type="number" value={builtUpArea} onChange={(e) => setBuiltUpArea(Number(e.target.value))} className={`w-full px-3 py-2 pr-16 border rounded-lg text-sm ${theme.border} ${theme.focus}`} />
                                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Feet' ? 'sq.ft' : 'sq.m'}</span>
                                 </div>
                             </div>
 
                             <div className="mb-4">
                                 <label className="text-xs text-gray-500 mb-1 block">Loading % (for Super Built-up)</label>
-                                <input type="number" value={loading} onChange={(e) => setLoading(Number(e.target.value))} className={`w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus}`} />
+                                <input type="number" value={loading} onChange={(e) => setLoading(Number(e.target.value))} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} ${theme.border}`} />
                             </div>
 
                             <div className="flex gap-2 mb-5">

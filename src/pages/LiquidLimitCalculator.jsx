@@ -5,7 +5,7 @@ import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
 
 export default function LiquidLimitCalculator() {
-    const theme = getThemeClasses('soil-test');
+    const theme = getThemeClasses('amber');
     const [trials, setTrials] = useState([
         { blows: 35, wetSoil: 57, drySoil: 47, container: 20, waterContent: 0 },
         { blows: 28, wetSoil: 49, drySoil: 41, container: 17, waterContent: 0 },
@@ -75,10 +75,10 @@ export default function LiquidLimitCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is Liquid Limit of Soil?</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <p className="text-gray-600 mb-4 italic">A knowledge of the Atterberg limits is common in the construction of levees, earthen dams & the prediction of the level of subsidence that naturally occur when fine-grained deposits are drained. Liquid limit is used to calculate the activity of a clay and is also used in the classification of soils.</p>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <p className="text-gray-600 mb-4 italic text-justify">A knowledge of the Atterberg limits is common in the construction of levees, earthen dams & the prediction of the level of subsidence that naturally occur when fine-grained deposits are drained. Liquid limit is used to calculate the activity of a clay and is also used in the classification of soils.</p>
                             <h3 className="font-bold text-gray-800 mb-2">Why we need to determine Liquid Limit?</h3>
-                            <ul className="list-disc pl-5 text-gray-600 space-y-1">
+                            <ul className="list-disc pl-5 text-gray-600 space-y-1 text-justify">
                                 <li>The liquid limit of soil is used as a parameter for calculating the compression index used for settlement calculations of buildings and structures.</li>
                                 <li>This is used in calculating the activity of clay, which is used for description of soils.</li>
                                 <li>The liquid limit together with plastic limit is used for the engineering classification of fine soil as per IS soil classification.</li>
@@ -88,9 +88,9 @@ export default function LiquidLimitCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-clipboard-list ${theme.text} mr-2`}></i>Procedure to conduct Liquid Limit of Soil</h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <h3 className="font-bold text-gray-800 mb-2">Apparatus</h3>
-                            <ol className="list-decimal pl-5 text-gray-600 space-y-1 mb-4">
+                            <ol className="list-decimal pl-5 text-gray-600 space-y-1 mb-4 text-justify">
                                 <li><strong>Mechanical liquid limit device</strong> - (Casagrande Apparatus IS: 9259-1979)</li>
                                 <li><strong>Grooving Tool</strong> – (As per IS: 9259-1979)</li>
                                 <li>Porcelain dish with flat bottom</li>
@@ -105,7 +105,7 @@ export default function LiquidLimitCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>Liquid Limit Calculation</h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="grid grid-cols-2 gap-4 mb-4">
                                 <div className="bg-[#f8f9fa] p-4 rounded-lg text-center">
                                     <div className="text-sm text-gray-600 mb-2">Liquid Level of given Soil is</div>
@@ -119,7 +119,7 @@ export default function LiquidLimitCalculator() {
                                     </table>
                                 </div>
                             </div>
-                            <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg text-sm">
+                            <div className={`${theme.bgLight} border ${theme.border} p-3 rounded-lg text-sm`}>
                                 The moisture content corresponding to 25 drops (as read from the flow curve-semi log graph) can be considered as the <strong>liquid limit of the soil</strong>.
                             </div>
                         </div>
@@ -133,7 +133,7 @@ export default function LiquidLimitCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
+                    <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
                             <i className="fas fa-water text-xl text-white"></i>
                             <h2 className="font-semibold text-sm text-white">DETERMINE LIQUID LIMIT OF SOIL</h2>

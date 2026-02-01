@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
 
 export default function RoofPitchCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [unit, setUnit] = useState('Meter');
     const [rise, setRise] = useState(10);
     const [riseCm, setRiseCm] = useState(0);
@@ -74,8 +75,8 @@ export default function RoofPitchCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                             <i className={`fas fa-calculator ${theme.text}`}></i>
-                             Roof Pitch Calculation
+                            <i className={`fas fa-calculator ${theme.text}`}></i>
+                            Roof Pitch Calculation
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -113,15 +114,15 @@ export default function RoofPitchCalculator() {
                             What is roof pitch calculation?
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} text-justify`}>
-                             <p className="text-gray-600 mb-4">Roof pitch is the measure of the slant of your roof. It is one of the many important elements of your roof. Roof pitch is one of the most visible aspects of a roof. It's the measure of the steepness of a roof, or its slope. Roof pitch is expressed as a ratio of the roof's vertical rise to its horizontal span, or "run".</p>
-                             <p className="text-gray-600">The most commonly used roof pitches fall in a range between 4/12 and 9/12. Pitches lower than 4/12 have a slight angle, and they are defined as low-slope roofs. Pitches of less than 2/12 are considered flat roofs, even though they may be very slightly angled.</p>
+                            <p className="text-gray-600 mb-4">Roof pitch is the measure of the slant of your roof. It is one of the many important elements of your roof. Roof pitch is one of the most visible aspects of a roof. It's the measure of the steepness of a roof, or its slope. Roof pitch is expressed as a ratio of the roof's vertical rise to its horizontal span, or "run".</p>
+                            <p className="text-gray-600">The most commonly used roof pitches fall in a range between 4/12 and 9/12. Pitches lower than 4/12 have a slight angle, and they are defined as low-slope roofs. Pitches of less than 2/12 are considered flat roofs, even though they may be very slightly angled.</p>
                         </div>
                     </section>
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                             <i className={`fas fa-calculator ${theme.text}`}></i>
-                             Roof pitch calculation
+                            <i className={`fas fa-calculator ${theme.text}`}></i>
+                            Roof pitch calculation
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} flex flex-col md:flex-row gap-6`}>
                             <div className="flex-1">
@@ -170,7 +171,7 @@ export default function RoofPitchCalculator() {
                             Importance of roof pitch
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} text-justify`}>
-                             <p className="text-gray-600">The roof covering that is intended to allow run-off of rain and snow, heat, wind, ultraviolet rays and all the other environmental effects that tend to cause materials to deteriorate. Most roof covers are installed over a water resistant underlayment frequently felt paper, the black material you may have noticed on roofs before application of the final roof covering that, as long as it stays in place, provides an extra surface where water that gets past the roof covering can drain off the roof. Most of the time, areas where higher levels of snow or rainfall are common prefer to build roofs with steeper pitch. Well-built roofs are designed to prevent pooling of water or accumulation of snow.</p>
+                            <p className="text-gray-600">The roof covering that is intended to allow run-off of rain and snow, heat, wind, ultraviolet rays and all the other environmental effects that tend to cause materials to deteriorate. Most roof covers are installed over a water resistant underlayment frequently felt paper, the black material you may have noticed on roofs before application of the final roof covering that, as long as it stays in place, provides an extra surface where water that gets past the roof covering can drain off the roof. Most of the time, areas where higher levels of snow or rainfall are common prefer to build roofs with steeper pitch. Well-built roofs are designed to prevent pooling of water or accumulation of snow.</p>
                         </div>
                     </section>
 
@@ -182,41 +183,42 @@ export default function RoofPitchCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                         <div className={`px-5 py-4 border-b ${theme.gradient} flex items-center gap-3`}>
+                    <div className="bg-white rounded-2xl shadow-lg border border-[#e5e7eb]">
+                        <div className={`px-5 py-4 border-b border-[#e5e7eb] ${theme.gradient} flex items-center gap-3 bg-gradient-to-r rounded-t-2xl`}>
                             <i className="fas fa-home text-xl text-white"></i>
-                            <h2 className="font-semibold text-white">ROOF PITCH CALCULATION</h2>
+                            <h2 className="font-semibold text-white">Roof Pitch Calculator</h2>
                         </div>
                         <div className="p-5">
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Unit</label>
-                                <select 
-                                    value={unit} 
-                                    onChange={(e) => setUnit(e.target.value)} 
-                                    className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`}
-                                >
-                                    <option value="Meter">Meter/CM</option>
-                                    <option value="Feet">Feet/Inch</option>
-                                </select>
+                                <CustomDropdown
+                                    options={[
+                                        { value: 'Meter', label: 'Meter/CM' },
+                                        { value: 'Feet', label: 'Feet/Inch' }
+                                    ]}
+                                    value={unit}
+                                    onChange={setUnit}
+                                    theme={theme}
+                                />
                             </div>
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Rise (S)</label>
                                 <div className="grid grid-cols-2 gap-2">
                                     <div className="relative">
-                                        <input 
-                                            type="number" 
-                                            value={rise} 
-                                            onChange={(e) => setRise(Number(e.target.value))} 
-                                            className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`} 
+                                        <input
+                                            type="number"
+                                            value={rise}
+                                            onChange={(e) => setRise(Number(e.target.value))}
+                                            className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'meter' : 'feet'}</span>
                                     </div>
                                     <div className="relative">
-                                        <input 
-                                            type="number" 
-                                            value={riseCm} 
-                                            onChange={(e) => setRiseCm(Number(e.target.value))} 
-                                            className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} 
+                                        <input
+                                            type="number"
+                                            value={riseCm}
+                                            onChange={(e) => setRiseCm(Number(e.target.value))}
+                                            className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span>
                                     </div>
@@ -226,20 +228,20 @@ export default function RoofPitchCalculator() {
                                 <label className="text-xs text-gray-500 mb-1 block">Run (N)</label>
                                 <div className="grid grid-cols-2 gap-2">
                                     <div className="relative">
-                                        <input 
-                                            type="number" 
-                                            value={run} 
-                                            onChange={(e) => setRun(Number(e.target.value))} 
-                                            className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`} 
+                                        <input
+                                            type="number"
+                                            value={run}
+                                            onChange={(e) => setRun(Number(e.target.value))}
+                                            className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'meter' : 'feet'}</span>
                                     </div>
                                     <div className="relative">
-                                        <input 
-                                            type="number" 
-                                            value={runCm} 
-                                            onChange={(e) => setRunCm(Number(e.target.value))} 
-                                            className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`} 
+                                        <input
+                                            type="number"
+                                            value={runCm}
+                                            onChange={(e) => setRunCm(Number(e.target.value))}
+                                            className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`}
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span>
                                     </div>

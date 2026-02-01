@@ -4,7 +4,7 @@ import CategoryNav from '../components/CategoryNav';
 import { getThemeClasses } from '../constants/categories';
 
 export default function SieveAnalysisPage() {
-    const theme = getThemeClasses('sieve-analysis-aggregates');
+    const theme = getThemeClasses('gray');
     const sidebarRef = useRef(null);
 
     const aggregateTypes = [
@@ -75,7 +75,7 @@ export default function SieveAnalysisPage() {
 
     return (
         <main className="min-h-screen bg-[#F7F9FF]">
-            <CategoryNav activeCategory="sieve-analysis-aggregates" />
+            <CategoryNav activeCategory="quantity-estimator" />
 
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 items-start">
                 {/* Main Content */}
@@ -85,7 +85,7 @@ export default function SieveAnalysisPage() {
 
                     {/* What is Sieve Analysis */}
                     <section className="mb-8">
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <h2 className="text-lg font-bold text-[#0A0A0A] mb-3 flex items-center gap-2">
                                 <i className={`fas fa-info-circle ${theme.text}`}></i>
                                 What is Sieve Analysis of Aggregates?
@@ -103,8 +103,8 @@ export default function SieveAnalysisPage() {
 
                     {/* Selection List */}
                     <section className="mb-8">
-                        <div className="bg-white rounded-xl border border-[#e5e7eb] overflow-hidden">
-                            <div className={`${theme.bg} px-5 py-4 flex items-center justify-between`}>
+                        <div className={`bg-white rounded-xl border ${theme.border} overflow-hidden`}>
+                            <div className={`px-5 py-4 flex items-center justify-between bg-gradient-to-r ${theme.gradient}`}>
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                         <i className="fas fa-filter text-white"></i>
@@ -127,14 +127,14 @@ export default function SieveAnalysisPage() {
                                 {aggregateTypes.map((type, index) => (
                                     <div
                                         key={index}
-                                        className={`flex items-center justify-between px-5 py-3 border-b border-[#e5e7eb] hover:bg-[#f8f9fa] transition-colors ${selectedTypes[index] ? 'bg-blue-50/50' : ''}`}
+                                        className={`flex items-center justify-between px-5 py-3 border-b ${theme.border} hover:bg-[#f8f9fa] transition-colors ${selectedTypes[index] ? 'bg-gray-50/50' : ''}`}
                                     >
                                         <label className="flex items-center gap-3 cursor-pointer flex-1">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedTypes[index]}
                                                 onChange={() => toggleType(index)}
-                                                className={`w-4 h-4 ${theme.text} rounded border-gray-300 focus:ring-blue-500`}
+                                                className={`w-4 h-4 ${theme.text} rounded border-gray-300 focus:ring-gray-500`}
                                             />
                                             <span className="text-sm text-[#0A0A0A]">
                                                 <Link to={type.slug} className={`${theme.text} hover:underline`}>{type.name}</Link>
@@ -165,9 +165,9 @@ export default function SieveAnalysisPage() {
                 {/* Sidebar */}
                 <div ref={sidebarRef} className="sticky top-20">
                     {/* Related Calculators */}
-                    <div className="bg-white rounded-xl p-4 border border-[#e5e7eb]">
+                    <div className={`bg-white rounded-xl p-4 border ${theme.border}`}>
                         <h4 className="font-semibold text-[#0A0A0A] text-sm mb-3 flex items-center gap-2">
-                            <span className="text-gray-600">Concrete Technology</span>
+                            <span className="text-gray-600">Quantity Estimator</span>
                             <span className={`text-xs ${theme.text} ${theme.bgSoft} px-2 py-0.5 rounded`}>Calculators</span>
                         </h4>
                         <div className="space-y-2">

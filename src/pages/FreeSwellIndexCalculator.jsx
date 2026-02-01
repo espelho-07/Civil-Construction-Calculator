@@ -5,7 +5,7 @@ import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
 
 export default function FreeSwellIndexCalculator() {
-    const theme = getThemeClasses('soil-test');
+    const theme = getThemeClasses('amber');
     const [vd, setVd] = useState(110);
     const [vk, setVk] = useState(106);
     const [results, setResults] = useState(null);
@@ -45,18 +45,18 @@ export default function FreeSwellIndexCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is Free Swell Index of Soil?</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <p className="text-gray-600 mb-4"><strong>Free swell</strong> is the increase in volume of a soil, without any external constraints, on submergence in water.</p>
-                            <p className="text-gray-600 mb-4">The possibility of damage to structures due to swelling of expensive clays need be identified, at the outset, by an investigation of those soils likely to possess undesirable expansion characteristics. Inferential testing is resorted to reflect the potential of the system to swell under different simulated conditions. Actual magnitude of swelling pressures developed depends upon the dry density, initial water content, surcharge loading and several other environmental factors.</p>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <p className="text-gray-600 mb-4 text-justify"><strong>Free swell</strong> is the increase in volume of a soil, without any external constraints, on submergence in water.</p>
+                            <p className="text-gray-600 mb-4 text-justify">The possibility of damage to structures due to swelling of expensive clays need be identified, at the outset, by an investigation of those soils likely to possess undesirable expansion characteristics. Inferential testing is resorted to reflect the potential of the system to swell under different simulated conditions. Actual magnitude of swelling pressures developed depends upon the dry density, initial water content, surcharge loading and several other environmental factors.</p>
                             <h3 className="font-bold text-gray-800 mb-2">Why need to determine Free swell index of Soil?</h3>
-                            <p className="text-gray-600">Free swell index determination of soil helps to identify the potential of a soil to swell which might need further detailed investigation regarding swelling and swelling pressures under different field conditions.</p>
+                            <p className="text-gray-600 text-justify">Free swell index determination of soil helps to identify the potential of a soil to swell which might need further detailed investigation regarding swelling and swelling pressures under different field conditions.</p>
                         </div>
                     </section>
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <ol className="list-decimal pl-5 text-gray-600 space-y-2">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <ol className="list-decimal pl-5 text-gray-600 space-y-2 text-justify">
                                 <li><strong>Sieve</strong> - 425-micron IS Sieve.</li>
                                 <li><strong>Glass Graduated Cylinders</strong> - 100-ml capacity 2 Numbers (IS: 878 -1956)</li>
                                 <li><strong>Glass rod</strong> for stirring</li>
@@ -67,8 +67,8 @@ export default function FreeSwellIndexCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-clipboard-list ${theme.text} mr-2`}></i>Procedure to determine Free Swell Index of Soil</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <ol className="list-decimal pl-5 text-gray-600 space-y-2">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <ol className="list-decimal pl-5 text-gray-600 space-y-2 text-justify">
                                 <li>Take two 10 g soil specimens of oven dry soil passing through 425 micron IS Sieve.</li>
                                 <li>Each soil specimen shall be poured in each of the two glass graduated cylinders of 100 ml capacity.</li>
                                 <li>One cylinder shall then be filled with kerosene oil and the other with distilled water up to the 100 ml mark. After removal of entrapped air (by gentle shaking or stirring with a glass rod), the soils in both the cylinders shall be allowed to settle. Sufficient time (not less than 24 h) shall be allowed for the soil sample to attain equilibrium state of volume without any further change in the volume of the soils.</li>
@@ -79,8 +79,8 @@ export default function FreeSwellIndexCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>How to Calculate Free swell Index of soil?</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <p className="text-gray-600 mb-4">The level of the soil in the kerosene graduated cylinder shall be read as the original volume of the soil sample & kerosene being a non-polar liquid does not cause swelling of the soil. The level of the soil in the distilled water cylinder shall be read as the free swell level.</p>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <p className="text-gray-600 mb-4 text-justify">The level of the soil in the kerosene graduated cylinder shall be read as the original volume of the soil sample & kerosene being a non-polar liquid does not cause swelling of the soil. The level of the soil in the distilled water cylinder shall be read as the free swell level.</p>
                             <h3 className="font-bold text-gray-800 mb-2">The free swell index of the soil shall be calculated as follows:</h3>
                             <div className="bg-[#f8f9fa] p-4 rounded-lg text-center">
                                 <div className={`font-mono text-xl ${theme.text}`}>Free swell index = (V<sub>d</sub> - V<sub>k</sub>) / V<sub>k</sub> × 100 %</div>
@@ -103,7 +103,7 @@ export default function FreeSwellIndexCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
+                    <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
                             <i className="fas fa-expand-arrows-alt text-xl text-white"></i>
                             <h2 className="font-semibold text-white">CALCULATE FREE SWELL INDEX OF SOIL</h2>

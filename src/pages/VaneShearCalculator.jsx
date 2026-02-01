@@ -5,7 +5,7 @@ import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
 
 export default function VaneShearCalculator() {
-    const theme = getThemeClasses('soil-test');
+    const theme = getThemeClasses('amber');
     const [springConstant, setSpringConstant] = useState(4);
     const [tests, setTests] = useState([
         { initialReading: 0, finalReading: 30, diameter: 3.75, height: 7.5 },
@@ -73,15 +73,15 @@ export default function VaneShearCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is Vane Shear Test?</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <p className="text-gray-600 mb-4">Vane shear test for the measurement of shear strength of cohesive soils is useful for soils of low shear strength (0-1 kN/m² to 6 kN/m²). This test gives the undrained strength of the soil and the same cannot be realized through other methods on account of the sensitivity of the soil.</p>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <p className="text-gray-600 mb-4 text-justify">Vane shear test for the measurement of shear strength of cohesive soils is useful for soils of low shear strength (0-1 kN/m² to 6 kN/m²). This test gives the undrained strength of the soil and the same cannot be realized through other methods on account of the sensitivity of the soil.</p>
                         </div>
                     </section>
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <ul className="list-disc pl-5 text-gray-600 space-y-2">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <ul className="list-disc pl-5 text-gray-600 space-y-2 text-justify">
                                 <li>The apparatus may be either of the hand operated type or motorized</li>
                                 <li>A set of vanes and shaft to the apparatus is such a way that the vane can be moved vertically and can rotate about the vane axis</li>
                                 <li>Fixing the tube containing the soil specimen in the base of the equipment</li>
@@ -93,7 +93,7 @@ export default function VaneShearCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-calculator ${theme.text} mr-2`}></i>Vane Shear Test Calculations</h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="bg-[#f8f9fa] p-4 rounded-lg text-center space-y-3">
                                 <div className="font-mono text-lg">Torque(T) = K × (Difference of Reading / 100)</div>
                                 <div className="font-mono text-lg">Cohesion(C<sub>u</sub>) = T / (π × D² × (H/2 + D/6))</div>
@@ -118,7 +118,7 @@ export default function VaneShearCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
+                    <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
                             <i className="fas fa-fan text-xl text-white"></i>
                             <h2 className="font-semibold text-sm text-white">VANE SHEAR CALCULATION</h2>
@@ -127,7 +127,7 @@ export default function VaneShearCalculator() {
                             <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Spring Constant (K) kg/cm²</label><input type="number" value={springConstant} onChange={(e) => setSpringConstant(Number(e.target.value))} className="w-full px-3 py-2 border rounded-lg text-sm" /></div>
 
                             {tests.map((test, i) => (
-                                <div key={i} className="bg-gray-50 p-3 rounded-lg mb-3">
+                                <div key={i} className={`${theme.bgLight} p-3 rounded-lg mb-3`}>
                                     <div className="text-xs font-bold text-gray-700 mb-2">Test-{i + 1}</div>
                                     <div className="grid grid-cols-2 gap-2 text-xs mb-2">
                                         <div><label className="text-gray-500">Initial Reading</label><input type="number" value={test.initialReading} onChange={(e) => updateTest(i, 'initialReading', e.target.value)} className="w-full px-2 py-1 border rounded text-xs" /></div>

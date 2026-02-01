@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
+import { getThemeClasses } from '../constants/categories';
 
 export default function BlendingAggregatesPage() {
+    const theme = getThemeClasses('gray');
     const sidebarRef = useRef(null);
 
     const aggregateTypes = [
@@ -73,7 +75,7 @@ export default function BlendingAggregatesPage() {
 
     return (
         <main className="min-h-screen bg-[#F7F9FF]">
-            <CategoryNav activeCategory="blending-aggregates" />
+            <CategoryNav activeCategory="concrete-technology" />
 
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 items-start">
                 {/* Main Content */}
@@ -83,9 +85,9 @@ export default function BlendingAggregatesPage() {
 
                     {/* What is Blending */}
                     <section className="mb-8">
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <h2 className="text-lg font-bold text-[#0A0A0A] mb-3 flex items-center gap-2">
-                                <i className="fas fa-info-circle text-[#3B68FC]"></i>
+                                <i className={`fas fa-info-circle ${theme.text}`}></i>
                                 What is Blending of Aggregates?
                             </h2>
                             <p className="text-sm text-[#0A0A0A] leading-relaxed">
@@ -96,8 +98,8 @@ export default function BlendingAggregatesPage() {
 
                     {/* Selection List */}
                     <section className="mb-8">
-                        <div className="bg-white rounded-xl border border-[#e5e7eb] overflow-hidden">
-                            <div className="bg-gradient-to-r from-green-600 to-green-700 px-5 py-4 flex items-center justify-between">
+                        <div className={`bg-white rounded-xl border ${theme.border} overflow-hidden`}>
+                            <div className={`px-5 py-4 flex items-center justify-between bg-gradient-to-r ${theme.gradient}`}>
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                         <i className="fas fa-blender text-white"></i>
@@ -120,17 +122,17 @@ export default function BlendingAggregatesPage() {
                                 {aggregateTypes.map((type, index) => (
                                     <div
                                         key={index}
-                                        className={`flex items-center justify-between px-5 py-3 border-b border-[#e5e7eb] hover:bg-[#f8f9fa] transition-colors ${selectedTypes[index] ? 'bg-green-50/50' : ''}`}
+                                        className={`flex items-center justify-between px-5 py-3 border-b ${theme.border} hover:bg-[#f8f9fa] transition-colors ${selectedTypes[index] ? 'bg-gray-50/50' : ''}`}
                                     >
                                         <label className="flex items-center gap-3 cursor-pointer flex-1">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedTypes[index]}
                                                 onChange={() => toggleType(index)}
-                                                className="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500"
+                                                className={`w-4 h-4 ${theme.text} rounded border-gray-300 focus:ring-gray-500`}
                                             />
                                             <span className="text-sm text-[#0A0A0A]">
-                                                <Link to={type.slug} className="text-[#3B68FC] hover:underline">{type.name}</Link>
+                                                <Link to={type.slug} className={`${theme.text} hover:underline`}>{type.name}</Link>
                                                 {type.grading && (
                                                     <span className="text-[#6b7280]"> ({type.grading})</span>
                                                 )}
@@ -138,7 +140,7 @@ export default function BlendingAggregatesPage() {
                                         </label>
                                         <Link
                                             to={type.slug}
-                                            className="text-xs text-green-600 hover:underline bg-green-50 px-2 py-1 rounded"
+                                            className={`text-xs ${theme.text} hover:underline ${theme.bgSoft} px-2 py-1 rounded`}
                                         >
                                             Blending of Aggregates →
                                         </Link>
@@ -158,17 +160,17 @@ export default function BlendingAggregatesPage() {
                 {/* Sidebar */}
                 <div ref={sidebarRef} className="sticky top-20">
                     {/* Related Calculators */}
-                    <div className="bg-white rounded-xl p-4 border border-[#e5e7eb]">
+                    <div className={`bg-white rounded-xl p-4 border ${theme.border}`}>
                         <h4 className="font-semibold text-[#0A0A0A] text-sm mb-3 flex items-center gap-2">
                             <span className="text-gray-600">Concrete Technology</span>
-                            <span className="text-xs text-[#3B68FC] bg-blue-50 px-2 py-0.5 rounded">Calculators</span>
+                            <span className={`text-xs ${theme.text} ${theme.bgSoft} px-2 py-0.5 rounded`}>Calculators</span>
                         </h4>
                         <div className="space-y-2">
                             {relatedCalculators.map((calc) => (
                                 <Link
                                     key={calc.name}
                                     to={calc.slug}
-                                    className={`flex items-center gap-3 p-2 rounded-lg transition-all text-sm ${calc.active ? 'bg-green-50 text-green-600 font-medium' : 'hover:bg-[#f8f9fa] text-[#6b7280]'}`}
+                                    className={`flex items-center gap-3 p-2 rounded-lg transition-all text-sm ${calc.active ? `${theme.bgSoft} ${theme.text} font-medium` : 'hover:bg-[#f8f9fa] text-[#6b7280]'}`}
                                 >
                                     <i className={`fas ${calc.icon}`}></i>
                                     {calc.name}

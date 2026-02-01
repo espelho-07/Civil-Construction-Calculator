@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
 
 export default function AsphaltCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [unit, setUnit] = useState('Meter');
     const [length, setLength] = useState(10);
     const [lengthCm, setLengthCm] = useState(0);
@@ -142,22 +143,23 @@ export default function AsphaltCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className={`px-5 py-4 border-b ${theme.gradient} flex items-center gap-3`}>
+                    <div className="bg-white rounded-2xl shadow-lg border border-[#e5e7eb]">
+                        <div className={`px-5 py-4 border-b border-[#e5e7eb] ${theme.gradient} flex items-center gap-3 bg-gradient-to-r rounded-t-2xl`}>
                             <i className="fas fa-road text-xl text-white"></i>
                             <h2 className="font-semibold text-white">ASPHALT CALCULATION</h2>
                         </div>
                         <div className="p-5">
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Unit</label>
-                                <select
+                                <CustomDropdown
+                                    options={[
+                                        { value: 'Meter', label: 'Meter/CM' },
+                                        { value: 'Feet', label: 'Feet/Inch' }
+                                    ]}
                                     value={unit}
-                                    onChange={(e) => setUnit(e.target.value)}
-                                    className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`}
-                                >
-                                    <option value="Meter">Meter/CM</option>
-                                    <option value="Feet">Feet/Inch</option>
-                                </select>
+                                    onChange={setUnit}
+                                    theme={theme}
+                                />
                             </div>
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Length</label>

@@ -5,7 +5,7 @@ import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
 
 export default function WaterContentCalculator() {
-    const theme = getThemeClasses('soil-test');
+    const theme = getThemeClasses('amber');
     const [w1, setW1] = useState(30);
     const [w2, setW2] = useState(50);
     const [w3, setW3] = useState(45);
@@ -58,8 +58,8 @@ export default function WaterContentCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is the need of water content determination (determination of moisture) of Soil?</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <p className="text-gray-600 mb-4 italic">In almost all soil tests natural moisture content of the soil is to be determined. The knowledge of the natural moisture content is essential in all studies of soil mechanics. To sight a few, natural moisture content is used in determining the index properties of the Soil. The natural moisture content will give an idea of the state of soil in the field.</p>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <p className="text-gray-600 mb-4 italic text-justify">In almost all soil tests natural moisture content of the soil is to be determined. The knowledge of the natural moisture content is essential in all studies of soil mechanics. To sight a few, natural moisture content is used in determining the index properties of the Soil. The natural moisture content will give an idea of the state of soil in the field.</p>
                             <h3 className="font-bold text-gray-800 mb-2">Apparatus</h3>
                             <ol className="list-decimal pl-5 text-gray-600 space-y-1">
                                 <li><strong>Container:</strong> Any suitable non-corrodible airtight container</li>
@@ -72,8 +72,8 @@ export default function WaterContentCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-vial ${theme.text} mr-2`}></i>Soil Specimen</h2>
-                        <div className="bg-white rounded-xl p-6 border">
-                            <p className="text-gray-600 mb-4">The soil specimen taken shall be representative of the soil mass. The size of the specimen selected depends on the quantity required for good representation, which is influenced by the gradation and the maximum size of particles, and on the accuracy of weighing.</p>
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <p className="text-gray-600 mb-4 text-justify">The soil specimen taken shall be representative of the soil mass. The size of the specimen selected depends on the quantity required for good representation, which is influenced by the gradation and the maximum size of particles, and on the accuracy of weighing.</p>
                             <h3 className="font-bold text-gray-800 mb-2">Recommended quantities for general laboratory use:</h3>
                             <table className="w-full text-sm">
                                 <thead><tr className="bg-gray-100"><th className="border px-3 py-2 text-left">Sr.</th><th className="border px-3 py-2 text-left">Size of Particles More Than 90 Percent Passing</th><th className="border px-3 py-2 text-left">Minimum Quantity of Soil Specimen to be Taken for Test, Mass in g</th></tr></thead>
@@ -84,10 +84,10 @@ export default function WaterContentCalculator() {
 
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-clipboard-list ${theme.text} mr-2`}></i>How to determine the water content (moisture) of Soil?</h2>
-                        <div className="bg-white rounded-xl p-6 border">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <h3 className="font-bold text-gray-800 mb-2">Procedure</h3>
-                            <p className="text-gray-600 mb-4">Clean the container with lid, dry and weigh (W₁). Take the required quantity of the soil specimen in the container crumbled and placed loosely, and weigh with lid (W₂). Then keep it in an oven with the lid removed, and maintain the temperature of the oven at 110 ± 5°C (see Note). Dry the specimen in the oven for 24 h. Every time the container is taken out for weighing, replace the lid on the container and cool the container in a desiccator. Record the final mass (W₃) of the container with lid with dried soil sample.</p>
-                            <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg text-sm mb-4">
+                            <p className="text-gray-600 mb-4 text-justify">Clean the container with lid, dry and weigh (W₁). Take the required quantity of the soil specimen in the container crumbled and placed loosely, and weigh with lid (W₂). Then keep it in an oven with the lid removed, and maintain the temperature of the oven at 110 ± 5°C (see Note). Dry the specimen in the oven for 24 h. Every time the container is taken out for weighing, replace the lid on the container and cool the container in a desiccator. Record the final mass (W₃) of the container with lid with dried soil sample.</p>
+                            <div className={`${theme.bgLight} border ${theme.border} p-3 rounded-lg text-sm mb-4`}>
                                 <strong>Note:</strong> Oven-drying at 110 ± 5°C does not result in reliable water content values for soil containing gypsum or other minerals having loosely bound water of hydration or for soil containing significant amounts of organic material. Reliable water content values for these soils can be obtained by drying in an oven at approximately 60 to 80°C.
                             </div>
                             <h3 className="font-bold text-gray-800 mb-2">The percent of water content shall be calculated as follows:</h3>
@@ -114,7 +114,7 @@ export default function WaterContentCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
+                    <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
                             <i className="fas fa-tint text-xl text-white"></i>
                             <h2 className="font-semibold text-white">DETERMINATION OF WATER CONTENT</h2>

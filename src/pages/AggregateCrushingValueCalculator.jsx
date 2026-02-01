@@ -1,16 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
-import CalculatorActions from '../components/CalculatorActions';
+import { getThemeClasses } from '../constants/categories';
 
 // Info Tooltip Component
-function InfoTooltip({ text }) {
+function InfoTooltip({ text, theme }) {
     const [show, setShow] = useState(false);
     return (
         <div className="relative inline-block">
             <button
                 type="button"
-                className="w-4 h-4 bg-[#3B68FC] text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1"
+                className={`w-4 h-4 ${theme?.bg || 'bg-gray-600'} text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1`}
                 onMouseEnter={() => setShow(true)}
                 onMouseLeave={() => setShow(false)}
                 onClick={() => setShow(!show)}
@@ -18,7 +18,7 @@ function InfoTooltip({ text }) {
                 i
             </button>
             {show && (
-                <div className="absolute left-6 top-0 z-50 w-56 p-3 bg-white border border-[#e5e7eb] rounded-lg shadow-lg text-xs text-[#0A0A0A] leading-relaxed">
+                <div className={`absolute left-6 top-0 z-50 w-56 p-3 bg-white border ${theme?.border || 'border-gray-200'} rounded-lg shadow-lg text-xs text-[#0A0A0A] leading-relaxed text-justify`}>
                     {text}
                 </div>
             )}
@@ -27,6 +27,7 @@ function InfoTooltip({ text }) {
 }
 
 export default function AggregateCrushingValueCalculator() {
+    const theme = getThemeClasses('gray');
     // Test I and Test II
     const [test1, setTest1] = useState({ originalWt: '', passingWt: '', retainedWt: '' });
     const [test2, setTest2] = useState({ originalWt: '', passingWt: '', retainedWt: '' });
@@ -121,15 +122,15 @@ export default function AggregateCrushingValueCalculator() {
 
                     {/* Calculator */}
                     <section className="mb-8">
-                        <div className="bg-white rounded-xl border border-[#e5e7eb] overflow-hidden">
-                            <div className="bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-4">
+                        <div className={`bg-white rounded-xl border ${theme.border} overflow-hidden`}>
+                            <div className={`bg-gradient-to-r ${theme.gradient} px-5 py-4`}>
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                                         <i className="fas fa-compress-alt text-white"></i>
                                     </div>
                                     <div>
                                         <h3 className="font-bold text-white">DETERMINE AGGREGATE CRUSHING VALUE</h3>
-                                        <p className="text-orange-100 text-xs">Enter weights for Test-I and Test-II</p>
+                                        <p className="text-white/80 text-xs">Enter weights for Test-I and Test-II</p>
                                     </div>
                                 </div>
                             </div>
@@ -140,102 +141,102 @@ export default function AggregateCrushingValueCalculator() {
                                     <table className="w-full text-sm border-collapse">
                                         <thead>
                                             <tr className="bg-[#f8f9fa]">
-                                                <th className="border border-[#e5e7eb] px-4 py-2 text-left">Parameter</th>
-                                                <th className="border border-[#e5e7eb] px-4 py-2 text-center" colSpan={2}>Test I</th>
-                                                <th className="border border-[#e5e7eb] px-4 py-2 text-center" colSpan={2}>Test II</th>
+                                                <th className={`border ${theme.border} px-4 py-2 text-left`}>Parameter</th>
+                                                <th className={`border ${theme.border} px-4 py-2 text-center`} colSpan={2}>Test I</th>
+                                                <th className={`border ${theme.border} px-4 py-2 text-center`} colSpan={2}>Test II</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td className="border border-[#e5e7eb] px-4 py-2">
+                                                <td className={`border ${theme.border} px-4 py-2`}>
                                                     <div className="flex items-center">
                                                         Original wt of the Sample (W<sub>1</sub>)
-                                                        <InfoTooltip text="Weight of oven-dried sample before test in grams" />
+                                                        <InfoTooltip text="Weight of oven-dried sample before test in grams" theme={theme} />
                                                     </div>
                                                 </td>
-                                                <td className="border border-[#e5e7eb] px-2 py-1">
+                                                <td className={`border ${theme.border} px-2 py-1`}>
                                                     <input
                                                         type="number"
                                                         value={test1.originalWt}
                                                         onChange={(e) => setTest1({ ...test1, originalWt: e.target.value })}
                                                         placeholder="gm"
-                                                        className="w-full px-2 py-2 border border-[#e5e7eb] rounded text-center text-sm focus:border-[#3B68FC] outline-none"
+                                                        className={`w-full px-2 py-2 ${theme.border} border rounded text-center text-sm ${theme.focus} outline-none`}
                                                     />
                                                 </td>
-                                                <td className="border border-[#e5e7eb] px-2 py-1 text-center text-xs text-[#6b7280]">gm</td>
-                                                <td className="border border-[#e5e7eb] px-2 py-1">
+                                                <td className={`border ${theme.border} px-2 py-1 text-center text-xs text-[#6b7280]`}>gm</td>
+                                                <td className={`border ${theme.border} px-2 py-1`}>
                                                     <input
                                                         type="number"
                                                         value={test2.originalWt}
                                                         onChange={(e) => setTest2({ ...test2, originalWt: e.target.value })}
                                                         placeholder="gm"
-                                                        className="w-full px-2 py-2 border border-[#e5e7eb] rounded text-center text-sm focus:border-[#3B68FC] outline-none"
+                                                        className={`w-full px-2 py-2 ${theme.border} border rounded text-center text-sm ${theme.focus} outline-none`}
                                                     />
                                                 </td>
-                                                <td className="border border-[#e5e7eb] px-2 py-1 text-center text-xs text-[#6b7280]">gm</td>
+                                                <td className={`border ${theme.border} px-2 py-1 text-center text-xs text-[#6b7280]`}>gm</td>
                                             </tr>
                                             <tr>
-                                                <td className="border border-[#e5e7eb] px-4 py-2">
+                                                <td className={`border ${theme.border} px-4 py-2`}>
                                                     <div className="flex items-center">
                                                         Weight of the Sample passing 2.36 mm Sieve (W<sub>2</sub>)
-                                                        <InfoTooltip text="Weight of material passing 2.36mm sieve after test" />
+                                                        <InfoTooltip text="Weight of material passing 2.36mm sieve after test" theme={theme} />
                                                     </div>
                                                 </td>
-                                                <td className="border border-[#e5e7eb] px-2 py-1">
+                                                <td className={`border ${theme.border} px-2 py-1`}>
                                                     <input
                                                         type="number"
                                                         value={test1.passingWt}
                                                         onChange={(e) => setTest1({ ...test1, passingWt: e.target.value })}
                                                         placeholder="gm"
-                                                        className="w-full px-2 py-2 border border-[#e5e7eb] rounded text-center text-sm focus:border-[#3B68FC] outline-none"
+                                                        className={`w-full px-2 py-2 ${theme.border} border rounded text-center text-sm ${theme.focus} outline-none`}
                                                     />
                                                 </td>
-                                                <td className="border border-[#e5e7eb] px-2 py-1 text-center text-xs text-[#6b7280]">gm</td>
-                                                <td className="border border-[#e5e7eb] px-2 py-1">
+                                                <td className={`border ${theme.border} px-2 py-1 text-center text-xs text-[#6b7280]`}>gm</td>
+                                                <td className={`border ${theme.border} px-2 py-1`}>
                                                     <input
                                                         type="number"
                                                         value={test2.passingWt}
                                                         onChange={(e) => setTest2({ ...test2, passingWt: e.target.value })}
                                                         placeholder="gm"
-                                                        className="w-full px-2 py-2 border border-[#e5e7eb] rounded text-center text-sm focus:border-[#3B68FC] outline-none"
+                                                        className={`w-full px-2 py-2 ${theme.border} border rounded text-center text-sm ${theme.focus} outline-none`}
                                                     />
                                                 </td>
-                                                <td className="border border-[#e5e7eb] px-2 py-1 text-center text-xs text-[#6b7280]">gm</td>
+                                                <td className={`border ${theme.border} px-2 py-1 text-center text-xs text-[#6b7280]`}>gm</td>
                                             </tr>
                                             <tr>
-                                                <td className="border border-[#e5e7eb] px-4 py-2">
+                                                <td className={`border ${theme.border} px-4 py-2`}>
                                                     <div className="flex items-center">
                                                         Weight of the Sample retained 2.36 mm Sieve (W<sub>3</sub>)
-                                                        <InfoTooltip text="Weight of material retained on 2.36mm sieve after test" />
+                                                        <InfoTooltip text="Weight of material retained on 2.36mm sieve after test" theme={theme} />
                                                     </div>
                                                 </td>
-                                                <td className="border border-[#e5e7eb] px-2 py-1">
+                                                <td className={`border ${theme.border} px-2 py-1`}>
                                                     <input
                                                         type="number"
                                                         value={test1.retainedWt}
                                                         onChange={(e) => setTest1({ ...test1, retainedWt: e.target.value })}
                                                         placeholder="gm"
-                                                        className="w-full px-2 py-2 border border-[#e5e7eb] rounded text-center text-sm focus:border-[#3B68FC] outline-none"
+                                                        className={`w-full px-2 py-2 ${theme.border} border rounded text-center text-sm ${theme.focus} outline-none`}
                                                     />
                                                 </td>
-                                                <td className="border border-[#e5e7eb] px-2 py-1 text-center text-xs text-[#6b7280]">gm</td>
-                                                <td className="border border-[#e5e7eb] px-2 py-1">
+                                                <td className={`border ${theme.border} px-2 py-1 text-center text-xs text-[#6b7280]`}>gm</td>
+                                                <td className={`border ${theme.border} px-2 py-1`}>
                                                     <input
                                                         type="number"
                                                         value={test2.retainedWt}
                                                         onChange={(e) => setTest2({ ...test2, retainedWt: e.target.value })}
                                                         placeholder="gm"
-                                                        className="w-full px-2 py-2 border border-[#e5e7eb] rounded text-center text-sm focus:border-[#3B68FC] outline-none"
+                                                        className={`w-full px-2 py-2 ${theme.border} border rounded text-center text-sm ${theme.focus} outline-none`}
                                                     />
                                                 </td>
-                                                <td className="border border-[#e5e7eb] px-2 py-1 text-center text-xs text-[#6b7280]">gm</td>
+                                                <td className={`border ${theme.border} px-2 py-1 text-center text-xs text-[#6b7280]`}>gm</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
 
                                 <div className="flex justify-center gap-3 mb-6">
-                                    <button className="px-6 py-2 bg-[#3B68FC] text-white rounded-lg text-sm font-medium hover:bg-[#2952d9] transition-colors">
+                                    <button className={`px-6 py-2 ${theme.button} rounded-lg text-sm font-medium transition-colors`}>
                                         Calculate
                                     </button>
                                     <button onClick={reset} className="px-6 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors">
@@ -245,26 +246,26 @@ export default function AggregateCrushingValueCalculator() {
 
                                 {/* Results */}
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div className="bg-orange-50 rounded-xl p-4 text-center border border-orange-200">
-                                        <div className="text-3xl font-bold text-orange-600">{result1 || '0'} %</div>
+                                    <div className={`${theme.bgSoft} rounded-xl p-4 text-center border ${theme.border}`}>
+                                        <div className={`text-3xl font-bold ${theme.text}`}>{result1 || '0'} %</div>
                                         <div className="text-sm text-[#6b7280] mt-1">Crushing Value %</div>
-                                        <div className="text-xs text-orange-500 mt-2 font-medium">Result of Test - I</div>
+                                        <div className={`text-xs ${theme.text} mt-2 font-medium`}>Result of Test - I</div>
                                         <div className="text-xs text-[#6b7280] mt-1">
                                             <sup>W<sub>2</sub></sup>/<sub>W<sub>1</sub></sub> × 100
                                         </div>
                                     </div>
-                                    <div className="bg-orange-50 rounded-xl p-4 text-center border border-orange-200">
-                                        <div className="text-3xl font-bold text-orange-600">{result2 || '0'} %</div>
+                                    <div className={`${theme.bgSoft} rounded-xl p-4 text-center border ${theme.border}`}>
+                                        <div className={`text-3xl font-bold ${theme.text}`}>{result2 || '0'} %</div>
                                         <div className="text-sm text-[#6b7280] mt-1">Crushing Value %</div>
-                                        <div className="text-xs text-orange-500 mt-2 font-medium">Result of Test - II</div>
+                                        <div className={`text-xs ${theme.text} mt-2 font-medium`}>Result of Test - II</div>
                                         <div className="text-xs text-[#6b7280] mt-1">
                                             <sup>W<sub>2</sub></sup>/<sub>W<sub>1</sub></sub> × 100
                                         </div>
                                     </div>
-                                    <div className="bg-orange-100 rounded-xl p-4 text-center border border-orange-300">
-                                        <div className="text-3xl font-bold text-orange-700">{meanResult || '0'} %</div>
+                                    <div className={`${theme.bgSoft} rounded-xl p-4 text-center border ${theme.border}`}>
+                                        <div className={`text-3xl font-bold ${theme.text}`}>{meanResult || '0'} %</div>
                                         <div className="text-sm text-[#6b7280] mt-1">Aggregate Crushing Value</div>
-                                        <div className="text-xs text-orange-600 mt-2 font-medium">Mean Aggregate Crushing Value</div>
+                                        <div className={`text-xs ${theme.text} mt-2 font-medium`}>Mean Value</div>
                                     </div>
                                 </div>
                             </div>
@@ -274,10 +275,10 @@ export default function AggregateCrushingValueCalculator() {
                     {/* What is Crushing Value? */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-info-circle text-[#3B68FC]"></i>
+                            <i className={`fas fa-info-circle ${theme.text}`}></i>
                             What is Aggregate Crushing Value?
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <p className="text-[#0A0A0A] leading-relaxed mb-4">
                                 The aggregate crushing value provides a relative measure of resistance to crushing under a gradually applied compressive load. To achieve a high quality of pavement, aggregates possessing low aggregate crushing value should be preferred.
                             </p>
@@ -295,14 +296,14 @@ export default function AggregateCrushingValueCalculator() {
                     {/* Formula Section */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-calculator text-[#3B68FC]"></i>
+                            <i className={`fas fa-calculator ${theme.text}`}></i>
                             Calculate Aggregate Crushing Value
                         </h2>
-                        <div className="bg-gradient-to-r from-[#EEF2FF] to-blue-50 rounded-xl p-6 border border-[#3B68FC]/20">
+                        <div className={`bg-gradient-to-r ${theme.bgSoft} to-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="text-center">
                                 <div className="inline-block bg-white px-6 py-4 rounded-lg shadow-sm">
                                     <code className="text-lg font-mono text-[#0A0A0A]">
-                                        <span className="text-orange-600">Aggregate Crushing Value</span> = <sup>W<sub>2</sub></sup>/<sub>W<sub>1</sub></sub> × 100
+                                        <span className={`${theme.text}`}>Aggregate Crushing Value</span> = <sup>W<sub>2</sub></sup>/<sub>W<sub>1</sub></sub> × 100
                                     </code>
                                 </div>
                             </div>
@@ -317,10 +318,10 @@ export default function AggregateCrushingValueCalculator() {
                     {/* Apparatus */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-tools text-[#3B68FC]"></i>
+                            <i className={`fas fa-tools ${theme.text}`}></i>
                             Apparatus
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <ol className="list-decimal list-inside space-y-2 text-sm text-[#0A0A0A]">
                                 <li>A 15-cm diameter open-ended steel cylinder, with plunger and base plate, of the general form and dimensions.</li>
                                 <li>A straight metal tamping rod of circular cross-section 16 mm in diameter and 45 to 60 cm long, rounded at one end.</li>
@@ -330,8 +331,8 @@ export default function AggregateCrushingValueCalculator() {
                                 <li>An electric oven to heat the aggregate samples at 100-110°C.</li>
                             </ol>
                             <div className="mt-4 flex justify-center">
-                                <div className="bg-[#f8f9fa] p-4 rounded-lg text-center">
-                                    <i className="fas fa-compress-alt text-4xl text-orange-500 mb-2"></i>
+                                <div className={`bg-[#f8f9fa] p-4 rounded-lg text-center border ${theme.border}`}>
+                                    <i className={`fas fa-compress-alt text-4xl ${theme.text} mb-2`}></i>
                                     <p className="text-xs text-[#6b7280]">MODEL: AIMIL, H1-2018</p>
                                     <p className="text-xs text-[#6b7280]">MAKER: DU PIP LAB</p>
                                 </div>
@@ -342,42 +343,42 @@ export default function AggregateCrushingValueCalculator() {
                     {/* Sieve Table */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-filter text-[#3B68FC]"></i>
+                            <i className={`fas fa-filter ${theme.text}`}></i>
                             Size of IS Sieve for Separating Fines
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="overflow-x-auto">
-                                <table className="w-full text-sm border border-[#e5e7eb]">
+                                <table className={`w-full text-sm border ${theme.border}`}>
                                     <thead className="bg-[#f8f9fa]">
                                         <tr>
-                                            <th className="border border-[#e5e7eb] px-4 py-2">Sr.</th>
-                                            <th className="border border-[#e5e7eb] px-4 py-2">Nominal Size(s)</th>
-                                            <th className="border border-[#e5e7eb] px-4 py-2">Retained on Sieve</th>
-                                            <th className="border border-[#e5e7eb] px-4 py-2">Character of Particles (minimum)</th>
-                                            <th className="border border-[#e5e7eb] px-4 py-2">Size of IS. Sieve for Separating Fines</th>
+                                            <th className={`border ${theme.border} px-4 py-2`}>Sr.</th>
+                                            <th className={`border ${theme.border} px-4 py-2`}>Nominal Size(s)</th>
+                                            <th className={`border ${theme.border} px-4 py-2`}>Retained on Sieve</th>
+                                            <th className={`border ${theme.border} px-4 py-2`}>Character of Particles (minimum)</th>
+                                            <th className={`border ${theme.border} px-4 py-2`}>Size of IS. Sieve for Separating Fines</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td className="border border-[#e5e7eb] px-4 py-2 text-center">1</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2">12.5 mm</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2">10 mm</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2">2.50 kg</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2">2.36 mm</td>
+                                            <td className={`border ${theme.border} px-4 py-2 text-center`}>1</td>
+                                            <td className={`border ${theme.border} px-4 py-2`}>12.5 mm</td>
+                                            <td className={`border ${theme.border} px-4 py-2`}>10 mm</td>
+                                            <td className={`border ${theme.border} px-4 py-2`}>2.50 kg</td>
+                                            <td className={`border ${theme.border} px-4 py-2`}>2.36 mm</td>
                                         </tr>
                                         <tr>
-                                            <td className="border border-[#e5e7eb] px-4 py-2 text-center">2</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2">10 mm</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2">6.3 mm</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2">1.00 kg</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2">1.18 mm</td>
+                                            <td className={`border ${theme.border} px-4 py-2 text-center`}>2</td>
+                                            <td className={`border ${theme.border} px-4 py-2`}>10 mm</td>
+                                            <td className={`border ${theme.border} px-4 py-2`}>6.3 mm</td>
+                                            <td className={`border ${theme.border} px-4 py-2`}>1.00 kg</td>
+                                            <td className={`border ${theme.border} px-4 py-2`}>1.18 mm</td>
                                         </tr>
                                         <tr>
-                                            <td className="border border-[#e5e7eb] px-4 py-2 text-center">3</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2">6.3 mm</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2">3.35 mm</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2">0.40 kg</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2">600 mic</td>
+                                            <td className={`border ${theme.border} px-4 py-2 text-center`}>3</td>
+                                            <td className={`border ${theme.border} px-4 py-2`}>6.3 mm</td>
+                                            <td className={`border ${theme.border} px-4 py-2`}>3.35 mm</td>
+                                            <td className={`border ${theme.border} px-4 py-2`}>0.40 kg</td>
+                                            <td className={`border ${theme.border} px-4 py-2`}>600 mic</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -388,34 +389,34 @@ export default function AggregateCrushingValueCalculator() {
                     {/* Recommended Values */}
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
-                            <i className="fas fa-check-circle text-[#3B68FC]"></i>
+                            <i className={`fas fa-check-circle ${theme.text}`}></i>
                             Recommended Aggregate Crushing Value
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="overflow-x-auto">
-                                <table className="w-full text-sm border border-[#e5e7eb]">
+                                <table className={`w-full text-sm border ${theme.border}`}>
                                     <thead className="bg-[#f8f9fa]">
                                         <tr>
-                                            <th className="border border-[#e5e7eb] px-4 py-2">Sr.</th>
-                                            <th className="border border-[#e5e7eb] px-4 py-2 text-left">Description</th>
-                                            <th className="border border-[#e5e7eb] px-4 py-2">Maximum crushing value</th>
+                                            <th className={`border ${theme.border} px-4 py-2`}>Sr.</th>
+                                            <th className={`border ${theme.border} px-4 py-2 text-left`}>Description</th>
+                                            <th className={`border ${theme.border} px-4 py-2`}>Maximum crushing value</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td className="border border-[#e5e7eb] px-4 py-2 text-center">1</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2">Sub-base course</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2 text-center font-medium">45%</td>
+                                            <td className={`border ${theme.border} px-4 py-2 text-center`}>1</td>
+                                            <td className={`border ${theme.border} px-4 py-2`}>Sub-base course</td>
+                                            <td className={`border ${theme.border} px-4 py-2 text-center font-medium`}>45%</td>
                                         </tr>
                                         <tr>
-                                            <td className="border border-[#e5e7eb] px-4 py-2 text-center">2</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2">Sub base course</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2 text-center font-medium">40%</td>
+                                            <td className={`border ${theme.border} px-4 py-2 text-center`}>2</td>
+                                            <td className={`border ${theme.border} px-4 py-2`}>Sub base course</td>
+                                            <td className={`border ${theme.border} px-4 py-2 text-center font-medium`}>40%</td>
                                         </tr>
                                         <tr>
-                                            <td className="border border-[#e5e7eb] px-4 py-2 text-center">3</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2">Bituminous base course / Water bound macadam</td>
-                                            <td className="border border-[#e5e7eb] px-4 py-2 text-center font-medium">35%</td>
+                                            <td className={`border ${theme.border} px-4 py-2 text-center`}>3</td>
+                                            <td className={`border ${theme.border} px-4 py-2`}>Bituminous base course / Water bound macadam</td>
+                                            <td className={`border ${theme.border} px-4 py-2 text-center font-medium`}>35%</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -434,29 +435,29 @@ export default function AggregateCrushingValueCalculator() {
                 <div ref={sidebarRef} className="sticky top-20">
                     {/* Result Card */}
                     {meanResult && (
-                        <div className="bg-white rounded-2xl shadow-lg border border-[#e5e7eb] overflow-hidden mb-4">
-                            <div className="bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-4">
+                        <div className={`bg-white rounded-2xl shadow-lg border ${theme.border} overflow-hidden mb-4`}>
+                            <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient}`}>
                                 <h3 className="font-bold text-white text-sm">Aggregate Crushing Value</h3>
                             </div>
                             <div className="p-5 text-center">
-                                <div className="text-4xl font-bold text-orange-600">{meanResult} %</div>
+                                <div className={`text-4xl font-bold ${theme.text}`}>{meanResult} %</div>
                                 <div className="text-sm text-[#6b7280] mt-1">Mean Crushing Value</div>
                             </div>
                         </div>
                     )}
 
                     {/* Related Calculators */}
-                    <div className="bg-white rounded-xl p-4 border border-[#e5e7eb]">
+                    <div className={`bg-white rounded-xl p-4 border ${theme.border}`}>
                         <h4 className="font-semibold text-[#0A0A0A] text-sm mb-3 flex items-center gap-2">
                             <span className="text-gray-600">Concrete Technology</span>
-                            <span className="text-xs text-[#3B68FC] bg-blue-50 px-2 py-0.5 rounded">Calculators</span>
+                            <span className={`text-xs ${theme.text} ${theme.bgSoft} px-2 py-0.5 rounded`}>Calculators</span>
                         </h4>
                         <div className="space-y-2">
                             {relatedCalculators.map((calc) => (
                                 <Link
                                     key={calc.name}
                                     to={calc.slug}
-                                    className={`flex items-center gap-3 p-2 rounded-lg transition-all text-sm ${calc.active ? 'bg-orange-50 text-orange-600 font-medium' : 'hover:bg-[#f8f9fa] text-[#6b7280]'}`}
+                                    className={`flex items-center gap-3 p-2 rounded-lg transition-all text-sm ${calc.active ? `${theme.bgSoft} ${theme.text} font-medium` : 'hover:bg-[#f8f9fa] text-[#6b7280]'}`}
                                 >
                                     <i className={`fas ${calc.icon}`}></i>
                                     {calc.name}

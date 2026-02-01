@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
@@ -9,7 +10,7 @@ import { Pie } from 'react-chartjs-2';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function CementConcreteCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [unit, setUnit] = useState('Meter');
     const [grade, setGrade] = useState('M20');
     const [length, setLength] = useState(10);
@@ -130,7 +131,7 @@ export default function CementConcreteCalculator() {
                             <i className={`fas fa-calculator ${theme.text}`}></i>
                             Cement Concrete Calculation
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] space-y-4">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border} space-y-4`}>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
@@ -158,7 +159,7 @@ export default function CementConcreteCalculator() {
                             {/* Material Cards */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                                 {/* Cement */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                                <div className={`bg-white border ${theme.border} rounded-xl p-4 shadow-sm`}>
                                     <div className="flex items-center gap-2 mb-3">
                                         <i className="fas fa-cubes text-blue-500"></i>
                                         <span className="font-bold text-gray-800">1. Amount of Cement Required</span>
@@ -179,7 +180,7 @@ export default function CementConcreteCalculator() {
                                 </div>
 
                                 {/* Sand */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                                <div className={`bg-white border ${theme.border} rounded-xl p-4 shadow-sm`}>
                                     <div className="flex items-center gap-2 mb-3">
                                         <i className="fas fa-truck-loading text-amber-500"></i>
                                         <span className="font-bold text-gray-800">2. Amount of Sand Required</span>
@@ -200,7 +201,7 @@ export default function CementConcreteCalculator() {
                                 </div>
 
                                 {/* Aggregate */}
-                                <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                                <div className={`bg-white border ${theme.border} rounded-xl p-4 shadow-sm`}>
                                     <div className="flex items-center gap-2 mb-3">
                                         <i className="fas fa-gem text-green-500"></i>
                                         <span className="font-bold text-gray-800">3. Amount of Aggregate Required</span>
@@ -229,7 +230,7 @@ export default function CementConcreteCalculator() {
                             <i className={`fas fa-info-circle ${theme.text}`}></i>
                             What is RCC (Plain Cement Concrete) Calculation?
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] flex flex-col md:flex-row gap-6">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border} flex flex-col md:flex-row gap-6`}>
                             <div className="flex-1">
                                 <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                     Cement concrete is one of the main building materials used in today's construction industry. It can be moulded to any desired shape, does not corrode, is not combustible, and is resistant to abrasion. Concrete is a mixture of sand or aggregate combined with cement.
@@ -248,36 +249,36 @@ export default function CementConcreteCalculator() {
                             <i className={`fas fa-table ${theme.text}`}></i>
                             Concrete grade and proportion/mix ratio:
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="overflow-x-auto">
                                 <table className="w-full text-sm border-collapse">
                                     <thead>
                                         <tr className="bg-gray-100">
-                                            <th className="border border-gray-300 px-3 py-2 text-left">Concrete Grade</th>
-                                            <th className="border border-gray-300 px-3 py-2 text-left">Proportion (Cement: Sand: Aggregate)</th>
-                                            <th className="border border-gray-300 px-3 py-2 text-left">Expected Compressive Strength (28 days)</th>
+                                            <th className={`border ${theme.border} px-3 py-2 text-left`}>Concrete Grade</th>
+                                            <th className={`border ${theme.border} px-3 py-2 text-left`}>Proportion (Cement: Sand: Aggregate)</th>
+                                            <th className={`border ${theme.border} px-3 py-2 text-left`}>Expected Compressive Strength (28 days)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td className="border border-gray-300 px-3 py-2 font-medium">M10</td>
-                                            <td className="border border-gray-300 px-3 py-2">1 : 3 : 6</td>
-                                            <td className="border border-gray-300 px-3 py-2">10 N/mm²</td>
+                                            <td className={`border ${theme.border} px-3 py-2 font-medium`}>M10</td>
+                                            <td className={`border ${theme.border} px-3 py-2`}>1 : 3 : 6</td>
+                                            <td className={`border ${theme.border} px-3 py-2`}>10 N/mm²</td>
                                         </tr>
                                         <tr className="bg-gray-50">
-                                            <td className="border border-gray-300 px-3 py-2 font-medium">M15</td>
-                                            <td className="border border-gray-300 px-3 py-2">1 : 2 : 4</td>
-                                            <td className="border border-gray-300 px-3 py-2">15 N/mm²</td>
+                                            <td className={`border ${theme.border} px-3 py-2 font-medium`}>M15</td>
+                                            <td className={`border ${theme.border} px-3 py-2`}>1 : 2 : 4</td>
+                                            <td className={`border ${theme.border} px-3 py-2`}>15 N/mm²</td>
                                         </tr>
                                         <tr>
-                                            <td className="border border-gray-300 px-3 py-2 font-medium">M20</td>
-                                            <td className="border border-gray-300 px-3 py-2">1 : 1.5 : 3</td>
-                                            <td className="border border-gray-300 px-3 py-2">20 N/mm²</td>
+                                            <td className={`border ${theme.border} px-3 py-2 font-medium`}>M20</td>
+                                            <td className={`border ${theme.border} px-3 py-2`}>1 : 1.5 : 3</td>
+                                            <td className={`border ${theme.border} px-3 py-2`}>20 N/mm²</td>
                                         </tr>
                                         <tr className="bg-gray-50">
-                                            <td className="border border-gray-300 px-3 py-2 font-medium">M25</td>
-                                            <td className="border border-gray-300 px-3 py-2">1 : 1 : 2</td>
-                                            <td className="border border-gray-300 px-3 py-2">25 N/mm²</td>
+                                            <td className={`border ${theme.border} px-3 py-2 font-medium`}>M25</td>
+                                            <td className={`border ${theme.border} px-3 py-2`}>1 : 1 : 2</td>
+                                            <td className={`border ${theme.border} px-3 py-2`}>25 N/mm²</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -293,7 +294,7 @@ export default function CementConcreteCalculator() {
                         </h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {relatedCalculators.map((calc) => (
-                                <Link key={calc.name} to={calc.slug} className={`bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
+                                <Link key={calc.name} to={calc.slug} className={`bg-white border rounded-lg p-4 hover:shadow-lg ${theme.border} ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
                                     <div className="flex items-center gap-3">
                                         <i className={`fas ${calc.icon} ${theme.text} group-hover:scale-110 transition-transform`}></i>
                                         <span className={`text-sm font-medium text-[#0A0A0A] group-hover:${theme.text}`}>{calc.name}</span>
@@ -312,17 +313,17 @@ export default function CementConcreteCalculator() {
 
                 {/* Calculator Widget (Sidebar) */}
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-hidden border border-[#e5e7eb]">
-                        <div className={`px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3 bg-gradient-to-r ${theme.gradient}`}>
+                    <div className={`bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border ${theme.border}`}>
+                        <div className={`px-5 py-4 border-b ${theme.border} flex items-center gap-3 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
                             <i className="fas fa-cubes text-xl text-white"></i>
-                            <h2 className="font-semibold text-white">CEMENT CONCRETE CALCULATOR</h2>
+                            <h2 className="font-semibold text-white">Cement Concrete Calculator</h2>
                         </div>
 
                         <div className="p-5">
                             {/* Unit Toggle */}
                             <div className="mb-4">
                                 <label className="text-xs text-gray-500 mb-1 block">Unit</label>
-                                <div className="flex border border-[#e5e7eb] rounded-lg overflow-hidden">
+                                <div className={`flex ${theme.border} rounded-lg overflow-hidden`}>
                                     <button onClick={() => setUnit('Meter')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Meter' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Meter</button>
                                     <button onClick={() => setUnit('Feet')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Feet' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Feet</button>
                                 </div>
@@ -331,26 +332,27 @@ export default function CementConcreteCalculator() {
                             {/* Grade */}
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Grade of Concrete</label>
-                                <select value={grade} onChange={(e) => setGrade(e.target.value)} className={`w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`}>
-                                    {Object.entries(grades).map(([key, val]) => (
-                                        <option key={key} value={key}>{val.label}</option>
-                                    ))}
-                                </select>
+                                <CustomDropdown
+                                    options={Object.entries(grades).map(([key, val]) => ({ value: key, label: val.label }))}
+                                    value={grade}
+                                    onChange={setGrade}
+                                    theme={theme}
+                                />
                             </div>
 
                             {/* Inputs */}
                             <div className="grid grid-cols-3 gap-2 mb-3">
                                 <div>
                                     <label className="text-xs text-gray-500 mb-1 block">Length</label>
-                                    <input type="number" value={length} onChange={(e) => setLength(Number(e.target.value))} className={`w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center ${theme.focus} outline-none`} />
+                                    <input type="number" value={length} onChange={(e) => setLength(Number(e.target.value))} className={`w-full px-2 py-2 ${theme.border} rounded-lg text-sm text-center ${theme.focus} outline-none`} />
                                 </div>
                                 <div>
                                     <label className="text-xs text-gray-500 mb-1 block">Width</label>
-                                    <input type="number" value={width} onChange={(e) => setWidth(Number(e.target.value))} className={`w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center ${theme.focus} outline-none`} />
+                                    <input type="number" value={width} onChange={(e) => setWidth(Number(e.target.value))} className={`w-full px-2 py-2 ${theme.border} rounded-lg text-sm text-center ${theme.focus} outline-none`} />
                                 </div>
                                 <div>
                                     <label className="text-xs text-gray-500 mb-1 block">Depth</label>
-                                    <input type="number" value={depth} step="0.01" onChange={(e) => setDepth(Number(e.target.value))} className={`w-full px-2 py-2 border border-[#e5e7eb] rounded-lg text-sm text-center ${theme.focus} outline-none`} />
+                                    <input type="number" value={depth} step="0.01" onChange={(e) => setDepth(Number(e.target.value))} className={`w-full px-2 py-2 ${theme.border} rounded-lg text-sm text-center ${theme.focus} outline-none`} />
                                 </div>
                             </div>
 
@@ -375,17 +377,17 @@ export default function CementConcreteCalculator() {
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-3 gap-2 text-xs text-center">
-                                    <div className="bg-white p-2 rounded border">
+                                    <div className={`bg-white p-2 rounded ${theme.border}`}>
                                         <i className="fas fa-cubes text-blue-500"></i>
                                         <div className="text-gray-500">Cement</div>
                                         <div className="font-bold">{results?.cement} Bags</div>
                                     </div>
-                                    <div className="bg-white p-2 rounded border">
+                                    <div className={`bg-white p-2 rounded ${theme.border}`}>
                                         <i className="fas fa-truck-loading text-amber-500"></i>
                                         <div className="text-gray-500">Sand</div>
                                         <div className="font-bold">{results?.sand} Ton</div>
                                     </div>
-                                    <div className="bg-white p-2 rounded border">
+                                    <div className={`bg-white p-2 rounded ${theme.border}`}>
                                         <i className="fas fa-gem text-green-500"></i>
                                         <div className="text-gray-500">Aggregate</div>
                                         <div className="font-bold">{results?.aggregate} Ton</div>

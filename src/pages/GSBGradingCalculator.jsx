@@ -53,7 +53,7 @@ function InfoTooltip({ text, theme }) {
         <div className="relative inline-block">
             <button
                 type="button"
-                className={`w-4 h-4 ${theme.bg} text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1`}
+                className="w-4 h-4 bg-gray-600 text-white rounded-full text-xs flex items-center justify-center cursor-help ml-1"
                 onMouseEnter={() => setShow(true)}
                 onMouseLeave={() => setShow(false)}
                 onClick={() => setShow(!show)}
@@ -61,7 +61,7 @@ function InfoTooltip({ text, theme }) {
                 i
             </button>
             {show && (
-                <div className="absolute left-6 top-0 z-50 w-56 p-3 bg-white border border-[#e5e7eb] rounded-lg shadow-lg text-xs text-[#0A0A0A] leading-relaxed">
+                <div className="absolute left-6 top-0 z-50 w-56 p-3 bg-white border border-gray-200 rounded-lg shadow-lg text-xs text-[#0A0A0A] leading-relaxed text-justify">
                     {text}
                 </div>
             )}
@@ -200,6 +200,42 @@ export default function GSBGradingCalculator() {
                     <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-8 text-center text-gray-500 mb-8">
                         <i className="fas fa-ad text-3xl mb-2"></i>
                         <p className="text-sm">Advertisement</p>
+                    </div>
+
+                    <div className="space-y-6">
+                        <div className={`bg-white rounded-xl shadow-sm border ${theme.border} p-6`}>
+                            <h2 className="text-xl font-bold text-[#0A0A0A] mb-4">Theory</h2>
+                            <p className="text-sm text-gray-600 mb-4 leading-relaxed text-justify">
+                                Granular Sub-Base (GSB) is typically the first layer of aggregate placed on top of the subgrade in road construction. It serves as a load-bearing layer and also acts as a drainage layer to prevent capillary rise of water and to drain away water that may enter the pavement structure. The material used for GSB typically consists of natural sand, moorum, gravel, crushed stone, or combination thereof depending upon the grading required. Strict adherence to grading requirements ensures the GSB layer has adequate stability, permeability, and load-spreading capacity.
+                            </p>
+                            <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                                The Ministry of Road Transport and Highways (MORTH) specifies different grades (I to VI) for GSB materials, each with limits on the percentage of material passing through standard IS sieves. This gradation ensures a dense, stable mix when compacted.
+                            </p>
+                        </div>
+
+                        <div className={`bg-white rounded-xl shadow-sm border ${theme.border} p-6`}>
+                            <h2 className="text-xl font-bold text-[#0A0A0A] mb-4">Apparatus Required</h2>
+                            <ul className="list-disc pl-5 text-sm text-gray-600 space-y-2 text-justify">
+                                <li><strong>IS Sieves:</strong> A set of IS sieves of sizes 75mm, 53mm, 26.5mm, 9.5mm, 4.75mm, 2.36mm, 0.425mm, and 0.075mm, along with a bottom pan and lid.</li>
+                                <li><strong>Balance:</strong> A balance readable and accurate to 0.1% of the weight of the test sample.</li>
+                                <li><strong>Oven:</strong> Thermostatically controlled oven capable of maintaining a temperature of 110 ± 5°C.</li>
+                                <li><strong>Sieve Shaker:</strong> Mechanical sieve shaker (optional but recommended) or manual shaking arrangement.</li>
+                                <li><strong>Trays and Brushes:</strong> For handling and cleaning aggregates.</li>
+                            </ul>
+                        </div>
+
+                        <div className={`bg-white rounded-xl shadow-sm border ${theme.border} p-6`}>
+                            <h2 className="text-xl font-bold text-[#0A0A0A] mb-4">Test Procedure</h2>
+                            <ol className="list-decimal pl-5 text-sm text-gray-600 space-y-2 text-justify">
+                                <li><strong>Preparation of Sample:</strong> Take a representative sample of the GSB material. The weight of the sample depends on the maximum size of the aggregate but should be sufficient to be representative (e.g., 10-20 kg).</li>
+                                <li><strong>Drying:</strong> Dry the sample in an oven at 110 ± 5°C to a constant weight. Allow it to cool.</li>
+                                <li><strong>Weighing:</strong> Weigh the dried sample accurately ($W_{total}$).</li>
+                                <li><strong>Sieving:</strong> Arrange the sieves in descending order of size (largest aperture at the top). Place the sample on the top sieve and shake the nest of sieves manually or using a mechanical shaker for about 10-15 minutes.</li>
+                                <li><strong>Weighing Retained Material:</strong> Weigh the material retained on each sieve ($W_{retained}$).</li>
+                                <li><strong>Calculation:</strong> Calculate the cumulative weight retained and the cumulative percentage retained for each sieve. Finally, calculate the percentage passing by subtracting the cumulative percentage retained from 100.</li>
+                                <li><strong>Reporting:</strong> Compare the percentage passing values with the MORTH specified limits for the selected Grade (I, II, etc.) to determine if the material is suitable.</li>
+                            </ol>
+                        </div>
                     </div>
 
                 </div>

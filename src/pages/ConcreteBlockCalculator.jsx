@@ -2,86 +2,87 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
 
 export default function ConcreteBlockCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [unit, setUnit] = useState('Meter');
-    const [length, setLength] = useState(10);
-    const [lengthCm, setLengthCm] = useState(0);
-    const [height, setHeight] = useState(10);
-    const [heightCm, setHeightCm] = useState(0);
-    const [thick, setThick] = useState(20);
-    const [blockL, setBlockL] = useState(40);
-    const [blockH, setBlockH] = useState(20);
-    const [ratio, setRatio] = useState('1:4');
+    const [wallLength, setWallLength] = useState(10);
+    const [wallHeight, setWallHeight] = useState(10);
+    const [blockLength, setBlockLength] = useState(400); // mm
+    const [blockHeight, setBlockHeight] = useState(200); // mm
+    const [blockWidth, setBlockWidth] = useState(200); // mm
+    const [mortarThickness, setMortarThickness] = useState(10); // mm
     const [results, setResults] = useState(null);
     const sidebarRef = useRef(null);
 
     const calculate = () => {
-        let wallL, wallH, wallT_mm;
-        if (unit === 'Meter') {
-            wallL = length + lengthCm / 100;
-            wallH = height + heightCm / 100;
-        } else {
-            wallL = (length + lengthCm / 12) * 0.3048;
-            wallH = (height + heightCm / 12) * 0.3048;
+        // Convert Wall Dims to meters
+        let L = wallLength;
+        let H = wallHeight;
+
+        if (unit === 'Feet') {
+            L = wallLength * 0.3048;
+            H = wallHeight * 0.3048;
         }
-        wallT_mm = thick; // mm
 
-        // Wall Volume
-        const wallVol = wallL * wallH * (wallT_mm / 1000);
+        const wallArea = L * H; // sq m
+        const wallVolume = wallArea * (blockWidth / 1000); // cubic meters
 
-        // Block Volume (including mortar allowance approx or exact?)
-        // Standard approach: Size of block with mortar = (L+0.01)x(H+0.01)x(T)
-        // Let's assume mortar thickness 10mm = 0.01m
-        const mortar = 0.01;
-        const bL_m = blockL / 100; // cm to m
-        const bH_m = blockH / 100;
-        const bT_m = thick / 1000; // mm to m
+        // Block dimensions with mortar (in meters)
+        const bL = (blockLength + mortarThickness) / 1000;
+        const bH = (blockHeight + mortarThickness) / 1000;
+        const bW = blockWidth / 1000;
 
-        const blockVolWithMortar = (bL_m + mortar) * (bH_m + mortar) * bT_m;
-        const noOfBlocks = Math.ceil(wallVol / blockVolWithMortar);
+        const blockVolumeWithMortar = bL * bH * bW;
+        const totalBlocks = Math.ceil(wallVolume / blockVolumeWithMortar);
 
-        // Mortar Volume
-        const actualBlockVol = bL_m * bH_m * bT_m;
-        const totalBlockVol = noOfBlocks * actualBlockVol;
-        const dryMortarVol = (wallVol - totalBlockVol) * 1.33; // 1.33 for dry volume
+        // Dry Volume of Mortar
+        const actualBlockVolume = (blockLength / 1000) * (blockHeight / 1000) * (blockWidth / 1000);
+        const totalBlockVolume = totalBlocks * actualBlockVolume;
+        const wetMortarVolume = wallVolume - totalBlockVolume;
+        const dryMortarVolume = wetMortarVolume * 1.33; // 33% increase for dry volume
 
-        // Ratio calc
-        const [cementPart, sandPart] = ratio.split(':').map(Number);
-        const totalPart = cementPart + sandPart;
+        // Cement & Sand (1:5 ratio assumed)
+        const cementRatio = 1;
+        const sandRatio = 5;
+        const totalRatio = cementRatio + sandRatio;
 
-        const cementVol = (dryMortarVol * cementPart) / totalPart;
-        const cementBags = cementVol / 0.035; // 0.035 m3 per bag
-        const sandVol = (dryMortarVol * sandPart) / totalPart;
+        const cementVol = (dryMortarVolume * cementRatio) / totalRatio;
+        const cementBags = Math.ceil(cementVol / 0.035);
+        const sandVol = (dryMortarVolume * sandRatio) / totalRatio;
+        const sandTons = sandVol * 1.6; // approx density
 
         setResults({
-            noOfBlocks,
-            cementBags: cementBags.toFixed(2),
-            sandVol: sandVol.toFixed(3),
-            wallVol: wallVol.toFixed(2),
-            wallL: wallL.toFixed(2),
-            wallH: wallH.toFixed(2)
+            totalBlocks,
+            cementBags,
+            sandTons: sandTons.toFixed(2),
+            wallArea: wallArea.toFixed(2),
+            mortarVolume: wetMortarVolume.toFixed(3)
         });
     };
 
     const reset = () => {
         setUnit('Meter');
-        setLength(10); setLengthCm(0);
-        setHeight(10); setHeightCm(0);
-        setThick(20);
-        setBlockL(40);
-        setBlockH(20);
-        setRatio('1:4');
+        setWallLength(10);
+        setWallHeight(10);
         setResults(null);
     };
 
-    useEffect(() => { calculate(); }, [unit, length, lengthCm, height, heightCm, thick, blockL, blockH, ratio]);
+    useEffect(() => { calculate(); }, [unit, wallLength, wallHeight, blockLength, blockHeight, blockWidth, mortarThickness]);
+
     useEffect(() => {
         const update = () => { if (sidebarRef.current) { const vh = window.innerHeight, sh = sidebarRef.current.offsetHeight; sidebarRef.current.style.top = sh > vh - 80 ? `${vh - sh - 16}px` : '80px'; } };
         update(); window.addEventListener('resize', update); return () => window.removeEventListener('resize', update);
     }, []);
+
+    const relatedCalculators = [
+        { name: 'Brick Calculator', icon: 'fa-th-large', slug: '/brick-masonry' },
+        { name: 'Plaster Calculator', icon: 'fa-brush', slug: '/plastering' },
+        { name: 'Flooring Calculator', icon: 'fa-border-all', slug: '/flooring' },
+        { name: 'Construction Cost', icon: 'fa-rupee-sign', slug: '/construction-cost' },
+    ];
 
     return (
         <main className="min-h-screen bg-[#F7F9FF]">
@@ -91,42 +92,41 @@ export default function ConcreteBlockCalculator() {
                     <div className="flex items-center justify-between mb-4">
                         <div>
                             <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Concrete Block Calculator</h1>
-                            <p className="text-[#6b7280]">Calculate concrete blocks and mortar required for wall</p>
+                            <p className="text-[#6b7280]">Calculate blocks, cement, and sand required for masonry</p>
                         </div>
                         <CalculatorActions
                             calculatorSlug="concrete-block-calculator"
                             calculatorName="Concrete Block Calculator"
-                            calculatorIcon="fa-th-large"
+                            calculatorIcon="fa-th"
                             category="Quantity Estimator"
-                            inputs={{ unit, length, height, thick, blockL, blockH, ratio }}
+                            inputs={{ unit, wallLength, wallHeight }}
                             outputs={results || {}}
                         />
                     </div>
 
-                    {/* Result Display */}
+                    {/* Result Section */}
                     <section className="mb-8">
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
+                            <i className={`fas fa-calculator ${theme.text}`}></i>
+                            Calculation Result
+                        </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                                <div>
-                                    <div className="text-sm text-gray-500">Number of Blocks</div>
-                                    <div className={`text-4xl font-bold ${theme.text}`}>{results?.noOfBlocks}</div>
-                                    <div className="text-xs text-gray-400 mt-1">Nos.</div>
+                                <div className="bg-[#f8f9fa] p-4 rounded-lg">
+                                    <div className="text-sm text-gray-500 mb-2">No. of Blocks</div>
+                                    <div className={`text-3xl font-bold ${theme.text}`}>{results?.totalBlocks}</div>
+                                    <div className="text-xs text-gray-400 mt-1">Units</div>
                                 </div>
-                                <div>
-                                    <div className="text-sm text-gray-500">Cement Bags</div>
-                                    <div className={`text-4xl font-bold ${theme.text}`}>{results?.cementBags}</div>
+                                <div className="bg-[#f8f9fa] p-4 rounded-lg">
+                                    <div className="text-sm text-gray-500 mb-2">Cement Bags</div>
+                                    <div className={`text-3xl font-bold ${theme.text}`}>{results?.cementBags}</div>
                                     <div className="text-xs text-gray-400 mt-1">Bags (50kg)</div>
                                 </div>
-                                <div>
-                                    <div className="text-sm text-gray-500">Sand Volume</div>
-                                    <div className={`text-4xl font-bold ${theme.text}`}>{results?.sandVol}</div>
-                                    <div className="text-xs text-gray-400 mt-1">m³</div>
+                                <div className="bg-[#f8f9fa] p-4 rounded-lg">
+                                    <div className="text-sm text-gray-500 mb-2">Sand (Tons)</div>
+                                    <div className={`text-3xl font-bold ${theme.text}`}>{results?.sandTons}</div>
+                                    <div className="text-xs text-gray-400 mt-1">Tons</div>
                                 </div>
-                            </div>
-
-                            <div className={`${theme.bgLight} p-4 rounded-lg text-center mt-6`}>
-                                <div className="text-sm text-gray-600 mb-2">Wall Volume</div>
-                                <div className={`font-bold ${theme.text}`}>{results?.wallVol} m³</div>
                             </div>
                         </div>
                     </section>
@@ -135,18 +135,100 @@ export default function ConcreteBlockCalculator() {
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
                             <i className={`fas fa-calculator ${theme.text}`}></i>
-                            Calculation Process
+                            Concrete Block Calculation Formula
                         </h2>
-                        <div className={`bg-white rounded-xl p-6 border ${theme.border} text-sm space-y-3`}>
-                            <p><strong>1. Wall Volume:</strong> Length × Height × Thickness</p>
-                            <p><strong>2. Block Volume with Mortar:</strong> (Block Length + Mortar) × (Block Height + Mortar) × Thickness</p>
-                            <p><strong>3. Number of Blocks:</strong> Wall Volume / Block Volume with Mortar</p>
-                            <p><strong>4. Mortar Volume:</strong> (Wall Volume - (No. of Blocks × Actual Block Volume)) × 1.33 (Dry Coeff)</p>
-                            <p><strong>5. Material Breakdown:</strong> Using Ratio {ratio} to split Cement and Sand</p>
+                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                            <div className="space-y-4">
+                                <div className="bg-[#f8f9fa] p-4 rounded-lg">
+                                    <div className="font-semibold mb-2 text-gray-800">1. Number of Blocks</div>
+                                    <div className="font-mono text-sm text-gray-600">
+                                        <p>Wall Volume = Length × Height × Thickness</p>
+                                        <p>Block Volume (with mortar) = (L+m) × (H+m) × (W)</p>
+                                        <p>No. of Blocks = Wall Volume / Block Volume</p>
+                                    </div>
+                                </div>
+                                <div className="bg-[#f8f9fa] p-4 rounded-lg">
+                                    <div className="font-semibold mb-2 text-gray-800">2. Mortar Volume</div>
+                                    <div className="font-mono text-sm text-gray-600">
+                                        <p>Wet Mortar Vol = Wall Vol - (No. of Blocks × Actual Block Vol)</p>
+                                        <p>Dry Mortar Vol = Wet Vol × 1.33 (33% bulking)</p>
+                                    </div>
+                                </div>
+                                <div className="bg-[#f8f9fa] p-4 rounded-lg">
+                                    <div className="font-semibold mb-2 text-gray-800">3. Material Quantity</div>
+                                    <div className="font-mono text-sm text-gray-600">
+                                        <p>Cement = (Dry Vol × 1) / (1 + 5) / 0.035 (bags)</p>
+                                        <p>Sand = (Dry Vol × 5) / (1 + 5) × 1550 (kg approx)</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </section>
 
-                    {/* AdSense Placeholder */}
+                    {/* What is Concrete Block */}
+                    <section className="mb-8">
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
+                            <i className={`fas fa-info-circle ${theme.text}`}></i>
+                            What is Concrete Block?
+                        </h2>
+                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] flex flex-col md:flex-row gap-6">
+                            <div className="flex-1 text-justify">
+                                <p className="text-gray-600 mb-4">
+                                    Concrete blocks (or check cinder blocks) are a standard size rectangular block used in building construction. They are one of the most versatile building products available because of the wide variety of appearances that can be achieved using them.
+                                </p>
+                                <p className="text-gray-600">
+                                    Concrete blocks are made from cast concrete (e.g. Portland cement and aggregate, usually sand and fine gravel, for high-density blocks). Lower density blocks may use industrial wastes primarily fly ash or bottom ash as an aggregate.
+                                </p>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1590082725838-89c564344d95?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Concrete Blocks" className="w-full md:w-48 h-40 object-cover rounded-lg" />
+                        </div>
+                    </section>
+
+                    {/* Important Factors */}
+                    <section className="mb-8">
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
+                            <i className="fas fa-exclamation-triangle text-amber-500"></i>
+                            Important Factors
+                        </h2>
+                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {[
+                                    { title: 'Block Size', desc: 'Standard sizes: 400x200x200 mm', icon: 'fa-ruler-combined' },
+                                    { title: 'Mortar Ratio', desc: 'Typically 1:4 or 1:5 for masonry', icon: 'fa-balance-scale' },
+                                    { title: 'Wastage', desc: 'Consider 3-5% wastage for blocks', icon: 'fa-trash-alt' },
+                                    { title: 'Curing', desc: 'Requires 7-14 days of water curing', icon: 'fa-tint' },
+                                ].map((item, idx) => (
+                                    <div key={idx} className="flex items-start gap-3 p-3 bg-[#f8f9fa] rounded-lg">
+                                        <i className={`fas ${item.icon} ${theme.text} mt-1`}></i>
+                                        <div>
+                                            <div className="font-medium text-[#0A0A0A]">{item.title}</div>
+                                            <div className="text-sm text-[#6b7280]">{item.desc}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Related Calculators */}
+                    <section className="mb-8">
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4 flex items-center gap-2">
+                            <i className={`fas fa-th-large ${theme.text}`}></i>
+                            Related Calculators
+                        </h2>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {relatedCalculators.map((calc) => (
+                                <Link key={calc.name} to={calc.slug} className={`bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
+                                    <div className="flex items-center gap-3">
+                                        <i className={`fas ${calc.icon} ${theme.text} group-hover:scale-110 transition-transform`}></i>
+                                        <span className={`text-sm font-medium text-[#0A0A0A] group-hover:${theme.text}`}>{calc.name}</span>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* Ad Space */}
                     <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-8 text-center text-gray-500 mb-8">
                         <i className="fas fa-ad text-3xl mb-2"></i>
                         <p className="text-sm">Advertisement</p>
@@ -154,117 +236,80 @@ export default function ConcreteBlockCalculator() {
                 </div>
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
-                        <div className={`px-5 py-4 border-b ${theme.gradient} flex items-center gap-3`}>
-                            <i className="fas fa-th-large text-xl text-white"></i>
-                            <h2 className="font-semibold text-white">BLOCK WALL CALCULATION</h2>
+                    <div className="bg-white rounded-2xl shadow-lg border border-[#e5e7eb]">
+                        <div className={`px-5 py-4 border-b border-[#e5e7eb] ${theme.gradient} flex items-center gap-3 bg-gradient-to-r rounded-t-2xl`}>
+                            <i className="fas fa-th text-xl text-white"></i>
+                            <h2 className="font-semibold text-white">Concrete Block Calculator</h2>
                         </div>
                         <div className="p-5">
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Unit</label>
-                                <select
+                                <CustomDropdown
+                                    options={[{ value: 'Meter', label: 'Meter' }, { value: 'Feet', label: 'Feet' }]}
                                     value={unit}
-                                    onChange={(e) => setUnit(e.target.value)}
-                                    className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`}
-                                >
-                                    <option value="Meter">Meter/CM</option>
-                                    <option value="Feet">Feet/Inch</option>
-                                </select>
+                                    onChange={setUnit}
+                                    theme={theme}
+                                />
                             </div>
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Wall Length</label>
-                                <div className="grid grid-cols-2 gap-2">
-                                    <div className="relative">
-                                        <input
-                                            type="number"
-                                            value={length}
-                                            onChange={(e) => setLength(Number(e.target.value))}
-                                            className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`}
-                                        />
-                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'meter' : 'feet'}</span>
-                                    </div>
-                                    <div className="relative">
-                                        <input
-                                            type="number"
-                                            value={lengthCm}
-                                            onChange={(e) => setLengthCm(Number(e.target.value))}
-                                            className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`}
-                                        />
-                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span>
-                                    </div>
-                                </div>
+                                <input type="number" value={wallLength} onChange={(e) => setWallLength(Number(e.target.value))} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`} />
                             </div>
                             <div className="mb-3">
                                 <label className="text-xs text-gray-500 mb-1 block">Wall Height</label>
-                                <div className="grid grid-cols-2 gap-2">
-                                    <div className="relative">
-                                        <input
-                                            type="number"
-                                            value={height}
-                                            onChange={(e) => setHeight(Number(e.target.value))}
-                                            className={`w-full px-3 py-2 pr-14 border rounded-lg text-sm ${theme.focus} outline-none`}
-                                        />
-                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'meter' : 'feet'}</span>
-                                    </div>
-                                    <div className="relative">
-                                        <input
-                                            type="number"
-                                            value={heightCm}
-                                            onChange={(e) => setHeightCm(Number(e.target.value))}
-                                            className={`w-full px-3 py-2 pr-10 border rounded-lg text-sm ${theme.focus} outline-none`}
-                                        />
-                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{unit === 'Meter' ? 'cm' : 'inch'}</span>
-                                    </div>
-                                </div>
+                                <input type="number" value={wallHeight} onChange={(e) => setWallHeight(Number(e.target.value))} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`} />
                             </div>
+
+                            {/* Block Dimensions */}
                             <div className="mb-3">
-                                <label className="text-xs text-gray-500 mb-1 block">Wall Thickness (mm)</label>
-                                <select
-                                    value={thick}
-                                    onChange={(e) => setThick(Number(e.target.value))}
-                                    className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`}
-                                >
-                                    <option value="100">100 mm</option>
-                                    <option value="150">150 mm</option>
-                                    <option value="200">200 mm</option>
-                                    <option value="230">230 mm</option>
-                                </select>
-                            </div>
-                            <div className="mb-3">
-                                <label className="text-xs text-gray-500 mb-1 block">Block Size (cm)</label>
-                                <div className="grid grid-cols-2 gap-2">
+                                <label className="text-xs text-gray-500 mb-1 block">Block Size (mm)</label>
+                                <div className="grid grid-cols-3 gap-2">
                                     <div>
                                         <label className="text-[10px] text-gray-400">Length</label>
-                                        <input type="number" value={blockL} onChange={(e) => setBlockL(Number(e.target.value))} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <input type="number" value={blockLength} onChange={(e) => setBlockLength(Number(e.target.value))} className={`w-full px-2 py-2 border rounded-lg text-sm ${theme.focus} outline-none`} />
                                     </div>
                                     <div>
                                         <label className="text-[10px] text-gray-400">Height</label>
-                                        <input type="number" value={blockH} onChange={(e) => setBlockH(Number(e.target.value))} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <input type="number" value={blockHeight} onChange={(e) => setBlockHeight(Number(e.target.value))} className={`w-full px-2 py-2 border rounded-lg text-sm ${theme.focus} outline-none`} />
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] text-gray-400">Width</label>
+                                        <input type="number" value={blockWidth} onChange={(e) => setBlockWidth(Number(e.target.value))} className={`w-full px-2 py-2 border rounded-lg text-sm ${theme.focus} outline-none`} />
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Mortar Thickness */}
                             <div className="mb-4">
-                                <label className="text-xs text-gray-500 mb-1 block">Mix Ratio</label>
-                                <select
-                                    value={ratio}
-                                    onChange={(e) => setRatio(e.target.value)}
-                                    className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`}
-                                >
-                                    <option value="1:3">1:3 (Cement:Sand)</option>
-                                    <option value="1:4">1:4 (Cement:Sand)</option>
-                                    <option value="1:5">1:5 (Cement:Sand)</option>
-                                    <option value="1:6">1:6 (Cement:Sand)</option>
-                                </select>
+                                <label className="text-xs text-gray-500 mb-1 block">Mortar (mm)</label>
+                                <input type="number" value={mortarThickness} onChange={(e) => setMortarThickness(Number(e.target.value))} className={`w-full px-3 py-2 border rounded-lg text-sm ${theme.focus} outline-none`} />
                             </div>
                             <div className="flex gap-2 mb-5">
                                 <button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium`}>Calculate</button>
                                 <button onClick={reset} className="bg-red-500 text-white px-4 py-2.5 rounded-lg hover:bg-red-600">Reset</button>
                             </div>
-                            <div className={`${theme.bgLight} rounded-xl p-4 text-center`}>
-                                <div className="text-xs text-gray-500">Blocks Required</div>
-                                <div className={`text-2xl font-bold ${theme.text}`}>{results?.noOfBlocks} Nos</div>
-                            </div>
+
+                            {/* Simple Result in Sidebar */}
+                            {results && (
+                                <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                                    <div className="grid grid-cols-2 gap-3 text-center">
+                                        <div>
+                                            <div className="text-xs text-gray-500">Blocks</div>
+                                            <div className={`text-xl font-bold ${theme.text}`}>{results.totalBlocks}</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-xs text-gray-500">Cement</div>
+                                            <div className={`text-xl font-bold ${theme.text}`}>{results.cementBags}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
+                    </div>
+                    {/* Sidebar Ad */}
+                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">
+                        <i className="fas fa-ad text-2xl mb-1"></i>
+                        <p className="text-xs">Ad Space</p>
                     </div>
                 </aside>
             </div>

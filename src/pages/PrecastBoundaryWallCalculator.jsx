@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
+import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
 
 export default function PrecastBoundaryWallCalculator() {
-    const theme = getThemeClasses('quantity-estimator');
+    const theme = getThemeClasses('green');
     const [unit, setUnit] = useState('Feet');
     const [areaLength, setAreaLength] = useState(60);
     const [areaLengthInch, setAreaLengthInch] = useState(0);
@@ -108,7 +109,7 @@ export default function PrecastBoundaryWallCalculator() {
                             <i className={`fas fa-calculator ${theme.text}`}></i>
                             Precast Boundary wall calculation
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        <div className={`bg-white rounded-xl p-6 ${theme.border}`}>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 {/* Horizontal Bar With Given Area */}
@@ -116,14 +117,14 @@ export default function PrecastBoundaryWallCalculator() {
                                     <h3 className="font-bold text-gray-800 mb-4">Horizontal Bar Require With Given Area</h3>
 
                                     <div className="space-y-3 text-sm">
-                                        <div className="bg-white p-3 rounded border">
+                                        <div className={`bg-white p-3 rounded ${theme.border}`}>
                                             <div className="font-medium text-gray-700">Total Require Horizontal Bar</div>
                                             <div className="font-mono text-xs mt-1">
                                                 = (<span className={theme.text}>Length of Area</span> / <span className="text-green-600">Height of Area</span>) / (<span className="text-amber-600">Horizontal Bar Length</span> × <span className="text-purple-600">Horizontal Bar Height</span>)
                                             </div>
                                         </div>
 
-                                        <div className="bg-white p-3 rounded border">
+                                        <div className={`bg-white p-3 rounded ${theme.border}`}>
                                             <div className="font-mono text-xs">
                                                 Total Require Horizontal Bar = ({areaLength} × {areaHeight}) / ({barLength} × {barHeight / 12})
                                             </div>
@@ -141,10 +142,10 @@ export default function PrecastBoundaryWallCalculator() {
 
                                     <div className="mt-6">
                                         <div className="font-medium text-gray-700 mb-2">No of Vertical Post Require</div>
-                                        <div className="bg-white p-3 rounded border font-mono text-xs">
+                                        <div className={`bg-white p-3 rounded ${theme.border} font-mono text-xs`}>
                                             Total Require Vertical Post = (<span className={theme.text}>Length of Area</span> / <span className="text-green-600">Horizontal Bar Length</span>) + 1
                                         </div>
-                                        <div className="bg-white p-3 rounded border font-mono text-xs mt-2">
+                                        <div className={`bg-white p-3 rounded ${theme.border} font-mono text-xs mt-2`}>
                                             Total Require Vertical Post = ({areaLength} / {barLength}) + 1
                                         </div>
                                         <div className="bg-green-100 p-3 rounded text-center mt-2">
@@ -159,26 +160,26 @@ export default function PrecastBoundaryWallCalculator() {
                                     <h3 className="font-bold text-gray-800 mb-4">Horizontal Bar Require With Actual Area</h3>
 
                                     <div className="space-y-3 text-sm">
-                                        <div className="bg-white p-3 rounded border">
+                                        <div className={`bg-white p-3 rounded ${theme.border}`}>
                                             <div className="font-medium text-gray-700">Actual Area To be Covered By Horizontal Bar</div>
                                             <div className="font-mono text-xs mt-1">
                                                 = Length of Area × (<span className={theme.text}>Length of Area</span> × <span className="text-green-600">Height of Area</span> / <span className="text-amber-600">Bar Length</span> × <span className="text-purple-600">Bar Height</span>)
                                             </div>
                                         </div>
 
-                                        <div className="bg-white p-3 rounded border">
+                                        <div className={`bg-white p-3 rounded ${theme.border}`}>
                                             <div className="font-mono text-xs">
                                                 = {areaLength} × ({areaLength} × {areaHeight} / {barLength} × {(barHeight / 12).toFixed(2)})
                                             </div>
                                         </div>
 
-                                        <div className="bg-white p-3 rounded border">
+                                        <div className={`bg-white p-3 rounded ${theme.border}`}>
                                             <div className="font-mono text-xs">
                                                 Actual Area To be Covered By Horizontal Bar = <strong>{results?.actualAreaCovered}</strong>
                                             </div>
                                         </div>
 
-                                        <div className="bg-white p-3 rounded border">
+                                        <div className={`bg-white p-3 rounded ${theme.border}`}>
                                             <div className="font-mono text-xs">
                                                 Horizontal Bar = (Actual Area of Horizontal Bar × Height of Area) / (Horizontal Bar Length × Horizontal Bar Height)
                                             </div>
@@ -196,10 +197,10 @@ export default function PrecastBoundaryWallCalculator() {
 
                                     <div className="mt-6">
                                         <div className="font-medium text-gray-700 mb-2">No of Vertical Post Require</div>
-                                        <div className="bg-white p-3 rounded border font-mono text-xs">
+                                        <div className={`bg-white p-3 rounded ${theme.border} font-mono text-xs`}>
                                             = (<span className={theme.text}>Length of Area</span> / <span className="text-green-600">Horizontal Bar Length</span>) + 1
                                         </div>
-                                        <div className="bg-white p-3 rounded border font-mono text-xs mt-2">
+                                        <div className={`bg-white p-3 rounded ${theme.border} font-mono text-xs mt-2`}>
                                             Total Require Vertical Post = ({areaLength} / {barLength}) + 1
                                         </div>
                                         <div className="bg-green-100 p-3 rounded text-center mt-2">
@@ -218,7 +219,7 @@ export default function PrecastBoundaryWallCalculator() {
                             <i className={`fas fa-info-circle ${theme.text}`}></i>
                             What is Precast Boundary Wall calculation?
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] flex flex-col md:flex-row gap-6">
+                        <div className={`bg-white rounded-xl p-6 ${theme.border} flex flex-col md:flex-row gap-6`}>
                             <div className="flex-1">
                                 <p className="text-[#0A0A0A] leading-relaxed mb-4">
                                     Precast concrete is a construction product produced by casting concrete in a reusable mold or "form" which is then cured in a controlled environment, transported to the construction site and lifted into place.
@@ -248,7 +249,7 @@ export default function PrecastBoundaryWallCalculator() {
                             <i className="fas fa-exclamation-triangle text-yellow-500"></i>
                             What are the important precast boundary wall?
                         </h2>
-                        <div className="bg-white rounded-xl p-6 border border-[#e5e7eb]">
+                        <div className={`bg-white rounded-xl p-6 ${theme.border}`}>
                             <p className="text-gray-600 leading-relaxed mb-4">
                                 Precast is used within exterior and interior walls. By producing precast concrete in a controlled environment (typically referred to as a precast plant), the precast concrete is afforded the opportunity to properly cure and be closely monitored by plant employees. Using a precast concrete system offers many potential advantages over on-site casting.
                             </p>
@@ -282,7 +283,7 @@ export default function PrecastBoundaryWallCalculator() {
                         </h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {relatedCalculators.map((calc) => (
-                                <Link key={calc.name} to={calc.slug} className={`bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-lg ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
+                                <Link key={calc.name} to={calc.slug} className={`bg-white ${theme.border} rounded-lg p-4 hover:shadow-lg ${theme.hover.replace('bg-', 'border-')} transition-all group`}>
                                     <div className="flex items-center gap-3">
                                         <i className={`fas ${calc.icon} ${theme.text} group-hover:scale-110 transition-transform`}></i>
                                         <span className={`text-sm font-medium text-[#0A0A0A] group-hover:${theme.text}`}>{calc.name}</span>
@@ -301,8 +302,8 @@ export default function PrecastBoundaryWallCalculator() {
 
                 {/* Calculator Widget (Sidebar) */}
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-hidden border border-[#e5e7eb]">
-                        <div className={`px-5 py-4 border-b border-[#e5e7eb] flex items-center gap-3 bg-gradient-to-r ${theme.gradient}`}>
+                    <div className={`bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] ${theme.border}`}>
+                        <div className={`px-5 py-4 border-b ${theme.border} flex items-center gap-3 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
                             <i className="fas fa-border-style text-xl text-white"></i>
                             <h2 className="font-semibold text-white">PRECAST BOUNDARY WALL CALCULATION</h2>
                         </div>
@@ -311,9 +312,14 @@ export default function PrecastBoundaryWallCalculator() {
                             {/* Unit */}
                             <div className="mb-4">
                                 <label className="text-xs text-gray-500 mb-1 block">Unit</label>
-                                <select value={unit} onChange={(e) => setUnit(e.target.value)} className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm">
-                                    <option value="Feet">Feet/Inch</option>
-                                </select>
+                                <CustomDropdown
+                                    options={[
+                                        { value: 'Feet', label: 'Feet/Inch' }
+                                    ]}
+                                    value={unit}
+                                    onChange={setUnit}
+                                    theme={theme}
+                                />
                             </div>
 
                             <div className="text-xs font-medium text-gray-700 mb-2">Area to be Covered By Precast Wall</div>
@@ -323,11 +329,11 @@ export default function PrecastBoundaryWallCalculator() {
                                 <label className="text-xs text-gray-500 mb-1 block">Length of Area</label>
                                 <div className="grid grid-cols-2 gap-2">
                                     <div className="relative">
-                                        <input type="number" value={areaLength} onChange={(e) => setAreaLength(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <input type="number" value={areaLength} onChange={(e) => setAreaLength(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">feet</span>
                                     </div>
                                     <div className="relative">
-                                        <input type="number" value={areaLengthInch} onChange={(e) => setAreaLengthInch(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <input type="number" value={areaLengthInch} onChange={(e) => setAreaLengthInch(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">inch</span>
                                     </div>
                                 </div>
@@ -338,11 +344,11 @@ export default function PrecastBoundaryWallCalculator() {
                                 <label className="text-xs text-gray-500 mb-1 block">Height of Area</label>
                                 <div className="grid grid-cols-2 gap-2">
                                     <div className="relative">
-                                        <input type="number" value={areaHeight} onChange={(e) => setAreaHeight(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <input type="number" value={areaHeight} onChange={(e) => setAreaHeight(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">feet</span>
                                     </div>
                                     <div className="relative">
-                                        <input type="number" value={areaHeightInch} onChange={(e) => setAreaHeightInch(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <input type="number" value={areaHeightInch} onChange={(e) => setAreaHeightInch(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">inch</span>
                                     </div>
                                 </div>
@@ -355,11 +361,11 @@ export default function PrecastBoundaryWallCalculator() {
                                 <label className="text-xs text-gray-500 mb-1 block">Length of Bar</label>
                                 <div className="grid grid-cols-2 gap-2">
                                     <div className="relative">
-                                        <input type="number" value={barLength} onChange={(e) => setBarLength(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <input type="number" value={barLength} onChange={(e) => setBarLength(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">feet</span>
                                     </div>
                                     <div className="relative">
-                                        <input type="number" value={barLengthInch} onChange={(e) => setBarLengthInch(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <input type="number" value={barLengthInch} onChange={(e) => setBarLengthInch(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">inch</span>
                                     </div>
                                 </div>
@@ -370,11 +376,11 @@ export default function PrecastBoundaryWallCalculator() {
                                 <label className="text-xs text-gray-500 mb-1 block">Height of Bar</label>
                                 <div className="grid grid-cols-2 gap-2">
                                     <div className="relative">
-                                        <input type="number" value={barHeight} onChange={(e) => setBarHeight(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <input type="number" value={barHeight} onChange={(e) => setBarHeight(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">feet</span>
                                     </div>
                                     <div className="relative">
-                                        <input type="number" value={barHeightInch} onChange={(e) => setBarHeightInch(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 border border-[#e5e7eb] rounded-lg text-sm ${theme.focus} outline-none`} />
+                                        <input type="number" value={barHeightInch} onChange={(e) => setBarHeightInch(Number(e.target.value))} className={`w-full px-3 py-2 pr-10 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`} />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">inch</span>
                                     </div>
                                 </div>
@@ -397,21 +403,21 @@ export default function PrecastBoundaryWallCalculator() {
                                 <table className="w-full text-xs border-collapse">
                                     <thead>
                                         <tr className="bg-gray-100">
-                                            <th className="border px-2 py-1 text-left">Sr.</th>
-                                            <th className="border px-2 py-1 text-left">Material</th>
-                                            <th className="border px-2 py-1 text-left">Quantity</th>
+                                            <th className={`${theme.border} px-2 py-1 text-left`}>Sr.</th>
+                                            <th className={`${theme.border} px-2 py-1 text-left`}>Material</th>
+                                            <th className={`${theme.border} px-2 py-1 text-left`}>Quantity</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td className="border px-2 py-1">1</td>
-                                            <td className="border px-2 py-1">Horizontal Bar</td>
-                                            <td className={`border px-2 py-1 font-bold ${theme.text}`}>{results?.totalHorizontalBars} Nos</td>
+                                            <td className={`${theme.border} px-2 py-1`}>1</td>
+                                            <td className={`${theme.border} px-2 py-1`}>Horizontal Bar</td>
+                                            <td className={`${theme.border} px-2 py-1 font-bold ${theme.text}`}>{results?.totalHorizontalBars} Nos</td>
                                         </tr>
                                         <tr>
-                                            <td className="border px-2 py-1">2</td>
-                                            <td className="border px-2 py-1">Vertical Post</td>
-                                            <td className="border px-2 py-1 font-bold text-green-600">{results?.verticalPosts} Nos</td>
+                                            <td className={`${theme.border} px-2 py-1`}>2</td>
+                                            <td className={`${theme.border} px-2 py-1`}>Vertical Post</td>
+                                            <td className={`${theme.border} px-2 py-1 font-bold text-green-600`}>{results?.verticalPosts} Nos</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -423,21 +429,21 @@ export default function PrecastBoundaryWallCalculator() {
                                 <table className="w-full text-xs border-collapse">
                                     <thead>
                                         <tr className="bg-gray-100">
-                                            <th className="border px-2 py-1 text-left">Sr.</th>
-                                            <th className="border px-2 py-1 text-left">Material</th>
-                                            <th className="border px-2 py-1 text-left">Quantity</th>
+                                            <th className={`${theme.border} px-2 py-1 text-left`}>Sr.</th>
+                                            <th className={`${theme.border} px-2 py-1 text-left`}>Material</th>
+                                            <th className={`${theme.border} px-2 py-1 text-left`}>Quantity</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td className="border px-2 py-1">1</td>
-                                            <td className="border px-2 py-1">Horizontal Bar</td>
-                                            <td className={`border px-2 py-1 font-bold ${theme.text}`}>{results?.horizontalBarActual} Nos</td>
+                                            <td className={`${theme.border} px-2 py-1`}>1</td>
+                                            <td className={`${theme.border} px-2 py-1`}>Horizontal Bar</td>
+                                            <td className={`${theme.border} px-2 py-1 font-bold ${theme.text}`}>{results?.horizontalBarActual} Nos</td>
                                         </tr>
                                         <tr>
-                                            <td className="border px-2 py-1">2</td>
-                                            <td className="border px-2 py-1">Vertical Post</td>
-                                            <td className="border px-2 py-1 font-bold text-green-600">{results?.verticalPosts} Nos</td>
+                                            <td className={`${theme.border} px-2 py-1`}>2</td>
+                                            <td className={`${theme.border} px-2 py-1`}>Vertical Post</td>
+                                            <td className={`${theme.border} px-2 py-1 font-bold text-green-600`}>{results?.verticalPosts} Nos</td>
                                         </tr>
                                     </tbody>
                                 </table>
