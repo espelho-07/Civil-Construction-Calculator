@@ -175,8 +175,8 @@ export default function SolarRooftopCalculator() {
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} flex flex-col md:flex-row gap-6`}>
                             <div className="flex-1 text-justify">
-                                <p className="text-gray-600 mb-4">Solar rooftops are solar panels placed on top of roofs of commercial, institutional or residential buildings. They capture the light energy emitted by the sun and convert it into electrical energy.</p>
-                                <p className="text-gray-600">Solar rooftop photo-voltaic systems produce a clean, Eco-friendly form of energy that does not produce any type of pollution or harmful gases.</p>
+                                <p className="text-gray-600 mb-4 text-justify">Solar rooftops are solar panels placed on top of roofs of commercial, institutional or residential buildings. They capture the light energy emitted by the sun and convert it into electrical energy.</p>
+                                <p className="text-gray-600 text-justify">Solar rooftop photo-voltaic systems produce a clean, Eco-friendly form of energy that does not produce any type of pollution or harmful gases.</p>
                             </div>
                             <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Solar panels" className="w-full md:w-48 h-40 object-cover rounded-lg" />
                         </div>

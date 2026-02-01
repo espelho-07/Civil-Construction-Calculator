@@ -330,10 +330,10 @@ export default function ConstructionCostCalculator() {
                         </h2>
                         {/* THEME BORDER APPLIED HERE */}
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
-                            <p className="text-gray-600 mb-4">
+                            <p className="text-gray-600 mb-4 text-justify">
                                 Thumb rule is an approximate value according to which various engineers, architects based on their experience estimates the quantity of material per square ft. and other.
                             </p>
-                            <p className="text-gray-600 mb-4">
+                            <p className="text-gray-600 mb-4 text-justify">
                                 Thumb rule is derived according to Indian Standard Codes and is based on past practical and their experiences, that reduces time.
                             </p>
 

@@ -94,9 +94,9 @@ export default function SolarWaterHeaterCalculator() {
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} flex flex-col md:flex-row gap-6`}>
                             <div className="flex-1 text-justify">
-                                <p className="text-gray-600 mb-4">Solar water heater (SWH) is the conversion of sunlight into heat for water heating using a solar thermal collector. A variety of configurations is available at varying cost to provide solutions in different climates and latitudes.</p>
-                                <p className="text-gray-600 mb-4">Solar water heater are widely used for residential and some industrial applications. A sun-facing collector heats a working fluid that passes into a storage system for later use.</p>
-                                <p className="text-gray-600">Solar water heater are active (pumped) and passive (convection driven). They use water only, or both water and a working fluid. They are heated directly or via light concentrating mirrors.</p>
+                                <p className="text-gray-600 mb-4 text-justify">Solar water heater (SWH) is the conversion of sunlight into heat for water heating using a solar thermal collector. A variety of configurations is available at varying cost to provide solutions in different climates and latitudes.</p>
+                                <p className="text-gray-600 mb-4 text-justify">Solar water heater are widely used for residential and some industrial applications. A sun-facing collector heats a working fluid that passes into a storage system for later use.</p>
+                                <p className="text-gray-600 text-justify">Solar water heater are active (pumped) and passive (convection driven). They use water only, or both water and a working fluid. They are heated directly or via light concentrating mirrors.</p>
                             </div>
                             <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Solar water heater" className="w-full md:w-48 h-40 object-cover rounded-lg" />
                         </div>

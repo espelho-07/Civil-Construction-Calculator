@@ -115,26 +115,34 @@ export default function SpecificGravityCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
-                        <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
-                            <i className="fas fa-balance-scale-right text-xl text-white"></i>
-                            <h2 className="font-semibold text-white">DETERMINATION OF SPECIFIC GRAVITY OF SOIL</h2>
+                        {/* Standardized Gradient Header */}
+                        <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
+                            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                <i className="fas fa-balance-scale-right text-white"></i>
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-white text-sm">Specific Gravity</h3>
+                                <p className="text-white/80 text-xs">Determination (Pycnometer)</p>
+                            </div>
                         </div>
+
                         <div className="p-5">
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Mass of Density Bottle (M₁)</label><div className="flex gap-2"><input type="number" step="0.01" value={m1} onChange={(e) => setM1(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">g</span></div></div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Mass of Bottle & Dry Soil (M₂)</label><div className="flex gap-2"><input type="number" step="0.01" value={m2} onChange={(e) => setM2(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">g</span></div></div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Mass of Bottle, Soil & Liquid (M₃)</label><div className="flex gap-2"><input type="number" step="0.01" value={m3} onChange={(e) => setM3(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">g</span></div></div>
-                            <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">Mass of Bottle when full of Liquid only (M₄)</label><div className="flex gap-2"><input type="number" step="0.01" value={m4} onChange={(e) => setM4(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">g</span></div></div>
-                            <button onClick={calculate} className={`w-full ${theme.button} py-2.5 rounded-lg font-medium mb-5`}>Calculate</button>
-                            <div className={`${theme.bgLight} rounded-xl p-4`}>
-                                <div className="text-center mb-3">
-                                    <div className={`text-3xl font-bold ${theme.text}`}>{results?.specificGravity}</div>
-                                    <div className="text-sm text-gray-500">Specific Gravity</div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block font-medium">Mass of Density Bottle (M₁)</label><div className="flex gap-2"><input type="number" step="0.01" value={m1} onChange={(e) => setM1(Number(e.target.value))} className={`flex-1 px-3 py-2 border ${theme.border} rounded-lg text-sm outline-none focus:ring-2 focus:ring-amber-500/20`} /><span className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500">g</span></div></div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block font-medium">Mass of Bottle & Dry Soil (M₂)</label><div className="flex gap-2"><input type="number" step="0.01" value={m2} onChange={(e) => setM2(Number(e.target.value))} className={`flex-1 px-3 py-2 border ${theme.border} rounded-lg text-sm outline-none focus:ring-2 focus:ring-amber-500/20`} /><span className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500">g</span></div></div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block font-medium">Mass of Bottle, Soil & Liquid (M₃)</label><div className="flex gap-2"><input type="number" step="0.01" value={m3} onChange={(e) => setM3(Number(e.target.value))} className={`flex-1 px-3 py-2 border ${theme.border} rounded-lg text-sm outline-none focus:ring-2 focus:ring-amber-500/20`} /><span className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500">g</span></div></div>
+                            <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block font-medium">Mass of Bottle + Liquid (M₄)</label><div className="flex gap-2"><input type="number" step="0.01" value={m4} onChange={(e) => setM4(Number(e.target.value))} className={`flex-1 px-3 py-2 border ${theme.border} rounded-lg text-sm outline-none focus:ring-2 focus:ring-amber-500/20`} /><span className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500">g</span></div></div>
+
+                            <button onClick={calculate} className={`w-full ${theme.button} py-2.5 rounded-lg font-medium mb-5 shadow-lg shadow-amber-500/20 transition-all hover:shadow-amber-500/30`}>Calculate Specific Gravity</button>
+
+                            <div className={`${theme.bgLight} rounded-xl p-4 border ${theme.border}`}>
+                                <div className="text-center mb-4">
+                                    <div className={`text-4xl font-bold ${theme.text} mb-1`}>{results?.specificGravity}</div>
+                                    <div className="text-xs text-gray-500 uppercase tracking-wider font-medium">Specific Gravity (G)</div>
                                 </div>
-                                <div className="bg-white rounded-lg p-3 text-sm space-y-1">
-                                    <div className="text-center text-gray-600">Specific Gravity</div>
-                                    <div className="font-mono text-center text-xs">G = (M₂ - M₁) / ((M₄ - M₁) - (M₃ - M₂))</div>
-                                    <div className="font-mono text-center text-xs">G = ({m2} - {m1}) / (({m4} - {m1}) - ({m3} - {m2}))</div>
-                                    <div className={`font-bold ${theme.text} text-center`}>G = {results?.specificGravity}</div>
+                                <div className="bg-white rounded-lg p-3 text-xs space-y-2 border border-amber-100 shadow-sm">
+                                    <div className="flex justify-between text-gray-600"><span>Mass of Soil</span> <span>{results?.numerator} g</span></div>
+                                    <div className="flex justify-between text-gray-600"><span>Vol. of Water Displaced</span> <span>{results?.denominator} g</span></div>
+                                    <div className="border-t border-gray-100 pt-2 font-mono text-center text-gray-500 mt-1 text-[10px]">G = (M₂ - M₁) / ((M₄ - M₁) - (M₃ - M₂))</div>
                                 </div>
                             </div>
                         </div>

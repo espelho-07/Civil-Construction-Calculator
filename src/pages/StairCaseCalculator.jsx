@@ -224,7 +224,7 @@ export default function StairCaseCalculator() {
                         </h2>
                         {/* THEME BORDER APPLIED HERE */}
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
-                            <p className="text-gray-600 mb-4">A stair case or stairway, is a way of building a stair that splits the whole height into smaller heights with an equal amount of distance from one height to the other. The best height of a riser is in between 31/2 inches to 8 1/4 inches and the best width of a stair tread in a straight flight is 11 inches to 14 inches. These two are the main requirements of a stair that must be fulfilled first. Usually, we have to fix the rise and tread sizes to satisfy the range of the width and headroom.</p>
+                            <p className="text-gray-600 mb-4 text-justify">A stair case or stairway, is a way of building a stair that splits the whole height into smaller heights with an equal amount of distance from one height to the other. The best height of a riser is in between 31/2 inches to 8 1/4 inches and the best width of a stair tread in a straight flight is 11 inches to 14 inches. These two are the main requirements of a stair that must be fulfilled first. Usually, we have to fix the rise and tread sizes to satisfy the range of the width and headroom.</p>
                         </div>
                     </section>
 

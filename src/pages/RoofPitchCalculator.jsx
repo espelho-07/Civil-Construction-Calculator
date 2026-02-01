@@ -114,8 +114,8 @@ export default function RoofPitchCalculator() {
                             What is roof pitch calculation?
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} text-justify`}>
-                            <p className="text-gray-600 mb-4">Roof pitch is the measure of the slant of your roof. It is one of the many important elements of your roof. Roof pitch is one of the most visible aspects of a roof. It's the measure of the steepness of a roof, or its slope. Roof pitch is expressed as a ratio of the roof's vertical rise to its horizontal span, or "run".</p>
-                            <p className="text-gray-600">The most commonly used roof pitches fall in a range between 4/12 and 9/12. Pitches lower than 4/12 have a slight angle, and they are defined as low-slope roofs. Pitches of less than 2/12 are considered flat roofs, even though they may be very slightly angled.</p>
+                            <p className="text-gray-600 mb-4 text-justify">Roof pitch is the measure of the slant of your roof. It is one of the many important elements of your roof. Roof pitch is one of the most visible aspects of a roof. It's the measure of the steepness of a roof, or its slope. Roof pitch is expressed as a ratio of the roof's vertical rise to its horizontal span, or "run".</p>
+                            <p className="text-gray-600 text-justify">The most commonly used roof pitches fall in a range between 4/12 and 9/12. Pitches lower than 4/12 have a slight angle, and they are defined as low-slope roofs. Pitches of less than 2/12 are considered flat roofs, even though they may be very slightly angled.</p>
                         </div>
                     </section>
 
@@ -171,7 +171,7 @@ export default function RoofPitchCalculator() {
                             Importance of roof pitch
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} text-justify`}>
-                            <p className="text-gray-600">The roof covering that is intended to allow run-off of rain and snow, heat, wind, ultraviolet rays and all the other environmental effects that tend to cause materials to deteriorate. Most roof covers are installed over a water resistant underlayment frequently felt paper, the black material you may have noticed on roofs before application of the final roof covering that, as long as it stays in place, provides an extra surface where water that gets past the roof covering can drain off the roof. Most of the time, areas where higher levels of snow or rainfall are common prefer to build roofs with steeper pitch. Well-built roofs are designed to prevent pooling of water or accumulation of snow.</p>
+                            <p className="text-gray-600 text-justify">The roof covering that is intended to allow run-off of rain and snow, heat, wind, ultraviolet rays and all the other environmental effects that tend to cause materials to deteriorate. Most roof covers are installed over a water resistant underlayment frequently felt paper, the black material you may have noticed on roofs before application of the final roof covering that, as long as it stays in place, provides an extra surface where water that gets past the roof covering can drain off the roof. Most of the time, areas where higher levels of snow or rainfall are common prefer to build roofs with steeper pitch. Well-built roofs are designed to prevent pooling of water or accumulation of snow.</p>
                         </div>
                     </section>
 

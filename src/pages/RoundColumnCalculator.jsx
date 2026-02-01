@@ -173,8 +173,8 @@ export default function RoundColumnCalculator() {
                         </h2>
                         <div className={`bg-white rounded-xl p-6 ${theme.border} flex flex-col md:flex-row gap-6`}>
                             <div className="flex-1">
-                                <p className="text-gray-600 mb-4">Circular columns are cylindrical in shape, used in construction to carry compressive loads. A reinforced circular concrete column is a structural member designed to carry compressive loads.</p>
-                                <p className="text-gray-600">Spiral columns are cylindrical columns with a continuous helical bar wrapping around the column. The spiral acts to provide lateral confinement and prevent the column from buckling.</p>
+                                <p className="text-gray-600 mb-4 text-justify">Circular columns are cylindrical in shape, used in construction to carry compressive loads. A reinforced circular concrete column is a structural member designed to carry compressive loads.</p>
+                                <p className="text-gray-600 text-justify">Spiral columns are cylindrical columns with a continuous helical bar wrapping around the column. The spiral acts to provide lateral confinement and prevent the column from buckling.</p>
                             </div>
                             <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Round Columns" className="w-full md:w-48 h-40 object-cover rounded-lg" />
                         </div>

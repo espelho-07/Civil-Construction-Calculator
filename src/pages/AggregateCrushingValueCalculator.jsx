@@ -279,11 +279,11 @@ export default function AggregateCrushingValueCalculator() {
                             What is Aggregate Crushing Value?
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
-                            <p className="text-[#0A0A0A] leading-relaxed mb-4">
+                            <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                 The aggregate crushing value provides a relative measure of resistance to crushing under a gradually applied compressive load. To achieve a high quality of pavement, aggregates possessing low aggregate crushing value should be preferred.
                             </p>
                             <h4 className="font-semibold text-[#0A0A0A] mb-2">Why to test Aggregate Crushing Value?</h4>
-                            <p className="text-[#0A0A0A] leading-relaxed">
+                            <p className="text-[#0A0A0A] leading-relaxed text-justify">
                                 The principal mechanical properties required in road stones are:
                             </p>
                             <ul className="list-disc list-inside mt-2 text-sm text-[#6b7280]">

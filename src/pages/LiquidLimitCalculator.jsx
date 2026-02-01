@@ -119,7 +119,7 @@ export default function LiquidLimitCalculator() {
                                     </table>
                                 </div>
                             </div>
-                            <div className={`${theme.bgLight} border ${theme.border} p-3 rounded-lg text-sm`}>
+                            <div className={`${theme.bgLight} border ${theme.border} p-3 rounded-lg text-sm text-justify`}>
                                 The moisture content corresponding to 25 drops (as read from the flow curve-semi log graph) can be considered as the <strong>liquid limit of the soil</strong>.
                             </div>
                         </div>

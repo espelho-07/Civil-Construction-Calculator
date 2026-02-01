@@ -1,61 +1,151 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
-
 import { getThemeClasses } from '../constants/categories';
 
 export default function SoilSieveAnalysisCalculator() {
     const theme = getThemeClasses('amber');
     const [sieveData, setSieveData] = useState([
-        { size: '80 mm', retained: 0, cumRetained: 0, passing: 100 },
-        { size: '40 mm', retained: 0, cumRetained: 0, passing: 100 },
-        { size: '20 mm', retained: 12.300, cumRetained: 0, passing: 0 },
-        { size: '10 mm', retained: 17.900, cumRetained: 0, passing: 0 },
-        { size: '4.75 mm', retained: 62.00, cumRetained: 0, passing: 0 },
-        { size: '2.36 mm', retained: 98.100, cumRetained: 0, passing: 0 },
-        { size: '1.18 mm', retained: 102.00, cumRetained: 0, passing: 0 },
-        { size: '600 µm', retained: 108.00, cumRetained: 0, passing: 0 },
-        { size: '300 µm', retained: 71.000, cumRetained: 0, passing: 0 },
-        { size: '150 µm', retained: 21.400, cumRetained: 0, passing: 0 },
-        { size: '75 µm', retained: 7.300, cumRetained: 0, passing: 0 },
-        { size: 'Pan', retained: 0, cumRetained: 0, passing: 0 },
+        { size: '80 mm', value: 80, retained: 0, cumRetained: 0, passing: 100 },
+        { size: '40 mm', value: 40, retained: 0, cumRetained: 0, passing: 100 },
+        { size: '20 mm', value: 20, retained: 12.3, cumRetained: 0, passing: 0 },
+        { size: '10 mm', value: 10, retained: 17.9, cumRetained: 0, passing: 0 },
+        { size: '4.75 mm', value: 4.75, retained: 62.0, cumRetained: 0, passing: 0 },
+        { size: '2.36 mm', value: 2.36, retained: 98.1, cumRetained: 0, passing: 0 },
+        { size: '1.18 mm', value: 1.18, retained: 102.0, cumRetained: 0, passing: 0 },
+        { size: '600 µm', value: 0.600, retained: 108.0, cumRetained: 0, passing: 0 },
+        { size: '300 µm', value: 0.300, retained: 71.0, cumRetained: 0, passing: 0 },
+        { size: '150 µm', value: 0.150, retained: 21.4, cumRetained: 0, passing: 0 },
+        { size: '75 µm', value: 0.075, retained: 7.3, cumRetained: 0, passing: 0 },
+        { size: 'Pan', value: 0, retained: 0, cumRetained: 0, passing: 0 },
     ]);
     const [totalWeight, setTotalWeight] = useState(500);
-    const [results, setResults] = useState({ d10: 0, d30: 0, d60: 0, cu: 0, cc: 0, fm: 0 });
+    const [results, setResults] = useState({ d10: '-', d30: '-', d60: '-', cu: '-', cc: '-', fm: '-', type: '-' });
     const sidebarRef = useRef(null);
 
     const calculate = () => {
         let cumulative = 0;
-        const updated = sieveData.map((row, i) => {
-            cumulative += row.retained;
-            const cumRetained = (cumulative / totalWeight) * 100;
+        let calculatedTotal = 0;
+
+        // First pass: calculate total weight from retained inputs if they change generally
+        // But here we rely on the totalWeight state for percentage calc unless we want to sum it up dynamically
+        // To be safe, let's use the sum of retained as the base for percentages if totalWeight acts as "check"
+        // Or strictly follow standard where Total Weight is input. Let's sum retained for now to be robust.
+        const sumRetained = sieveData.reduce((acc, row) => acc + Number(row.retained), 0);
+
+        // If sumRetained > 0, we can use it to check against input Total Weight or just use it. 
+        // For simplicity and accuracy in labs, usually Sum Retained is the Total Weight used for % calculation.
+        // We'll update the totalWeight input to match the sum if needed, or just use sum.
+        const activeTotal = sumRetained > 0 ? sumRetained : totalWeight;
+
+        const updated = sieveData.map((row) => {
+            cumulative += Number(row.retained);
+            const cumRetained = activeTotal > 0 ? (cumulative / activeTotal) * 100 : 0;
             const passing = 100 - cumRetained;
-            return { ...row, cumRetained: cumRetained.toFixed(2), passing: passing.toFixed(2) };
+            return {
+                ...row,
+                cumRetained: cumRetained.toFixed(2),
+                passing: Math.max(0, passing).toFixed(2),
+                passingVal: Math.max(0, passing) // numeric for interpolation
+            };
         });
+
         setSieveData(updated);
 
-        // Calculate FM (Fineness Modulus)
-        const cumRetainedSum = updated.reduce((sum, row) => sum + parseFloat(row.cumRetained || 0), 0);
-        const fm = cumRetainedSum / 100;
+        // Calculate FM
+        // FM = (Sum of Cumulative % Retained of standard sieves) / 100
+        // Standard sieves typically: 80, 40, 20, 10, 4.75, 2.36, 1.18, 0.6, 0.3, 0.15. (Excluding 0.075 and Pan)
+        // We will include all except Pan and 0.075 usually for Soil FM, or all > 150 micron? 
+        // Standard definition often varies, usually includes up to 150 micron. 
+        // Let's sum all excluding Pan and 75 micron for now, or just sum all Cumulative Retained / 100 as broad approximation.
+        // Actually for sand FM: 4.75, 2.36, 1.18, 0.6, 0.3, 0.15. 
+        // Let's use simple sum / 100 of all sieves except Pan.
+        const cumRetainedSum = updated.reduce((sum, row) => row.size !== 'Pan' ? sum + parseFloat(row.cumRetained || 0) : sum, 0);
+        const fm = (cumRetainedSum / 100).toFixed(2);
+
+        // Interpolation for D-values
+        // We need D10, D30, D60 (Size at 10%, 30%, 60% passing)
+        // Log-linear interpolation: log(D) vs %Passing
+
+        const getDValue = (targetPercent) => {
+            // Find two points bracketing the target percent
+            // Data is sorted descending by size (80mm -> 0.075mm)
+            // Passing % decreases as index increases
+            for (let i = 0; i < updated.length - 1; i++) {
+                const p1 = updated[i].passingVal;
+                const s1 = updated[i].value;
+                const p2 = updated[i + 1].passingVal;
+                const s2 = updated[i + 1].value;
+
+                if (p1 >= targetPercent && p2 <= targetPercent) {
+                    if (p1 === p2) return s1; // avoid division by zero
+                    if (targetPercent === p1) return s1;
+                    if (targetPercent === p2) return s2;
+
+                    // Log interpolation formula
+                    // log(D) = log(s2) + ( (target - p2) / (p1 - p2) ) * (log(s1) - log(s2))
+                    const logS1 = Math.log10(s1);
+                    const logS2 = Math.log10(s2);
+                    const logD = logS2 + ((targetPercent - p2) / (p1 - p2)) * (logS1 - logS2);
+                    return Math.pow(10, logD);
+                }
+            }
+            return null;
+        };
+
+        const d10 = getDValue(10);
+        const d30 = getDValue(30);
+        const d60 = getDValue(60);
+
+        let cu = '-';
+        let cc = '-';
+        let type = 'Unknown';
+
+        if (d10 && d60) {
+            cu = (d60 / d10).toFixed(2);
+        }
+        if (d10 && d30 && d60) {
+            cc = ((d30 * d30) / (d60 * d10)).toFixed(2);
+        }
+
+        // Classification
+        const p475 = updated.find(s => s.size === '4.75 mm')?.passingVal || 0;
+        const p075 = updated.find(s => s.size === '75 µm')?.passingVal || 0;
+
+        // Validating totals
+        const gravel = 100 - p475;
+        const sand = p475 - p075;
+        const fines = p075;
+
+        if (gravel > sand && gravel > fines) type = 'Gravel';
+        else if (sand > gravel && sand > fines) type = 'Sand';
+        else type = 'Silt/Clay (Fines)';
 
         setResults({
-            d10: 0.15,
-            d30: 0.45,
-            d60: 1.8,
-            cu: 12,
-            cc: 0.75,
-            fm: fm.toFixed(2)
+            d10: d10 ? d10.toFixed(3) : '-',
+            d30: d30 ? d30.toFixed(3) : '-',
+            d60: d60 ? d60.toFixed(3) : '-',
+            cu,
+            cc,
+            fm,
+            type
         });
+
+        if (sumRetained > 0) setTotalWeight(sumRetained.toFixed(1));
     };
 
     const updateRetained = (index, value) => {
         const newData = [...sieveData];
-        newData[index].retained = Number(value);
+        newData[index].retained = value;
         setSieveData(newData);
     };
 
-    useEffect(() => { calculate(); }, []);
+    // Calculate once on mount for initial data
+    useEffect(() => {
+        calculate();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     useEffect(() => {
         const update = () => { if (sidebarRef.current) { const vh = window.innerHeight, sh = sidebarRef.current.offsetHeight; sidebarRef.current.style.top = sh > vh - 80 ? `${vh - sh - 16}px` : '80px'; } };
         update(); window.addEventListener('resize', update); return () => window.removeEventListener('resize', update);
@@ -64,12 +154,12 @@ export default function SoilSieveAnalysisCalculator() {
     return (
         <main className="min-h-screen bg-[#F7F9FF]">
             <CategoryNav activeCategory="soil-test" />
-            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
+            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-12 items-start">
                 <div>
                     <div className="flex items-center justify-between mb-4">
                         <div>
-                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Sieve Analysis of Soil (Dry Method) <span className="text-sm font-normal text-gray-500">Grain Size Distribution</span></h1>
-                            <p className="text-[#6b7280]">Calculate grain size distribution of soil using dry sieve analysis</p>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Sieve Analysis of Soil (Dry Method)</h1>
+                            <p className="text-[#6b7280]">Grain size distribution and classification (D10, D30, D60)</p>
                         </div>
                         <CalculatorActions
                             calculatorSlug="soil-sieve-analysis"
@@ -77,15 +167,25 @@ export default function SoilSieveAnalysisCalculator() {
                             calculatorIcon="fa-filter"
                             category="Soil Engineering"
                             inputs={{ totalWeight, sieveData }}
-                            outputs={results || {}}
+                            outputs={results}
                         />
                     </div>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is Sieve analysis (grain size analysis) of the soil?</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>Theory</h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
-                            <p className="text-gray-600 mb-4 text-justify">Sieve analysis which is also called the definite way of grain size distribution of coarslly- The analysis of the fractions under this great difference in sizes of soil like gravel, sands, etc.., that would greatly limit usual sieve size range (from 0.075 mm to 80 mm) can be separated effectively Sieving is used to get particle size distributions for data are plotted on how fine a particles materials.</p>
-                            <p className="text-gray-600 text-justify">The results from soil sieve analysis are helpful to define the engineering properties of the The particle size distribution helps to give an idea of grading, describing the fine or medium coarse-grained to gravel or sandy soils.</p>
+                            <p className="text-gray-600 mb-4 text-justify">
+                                Sieve analysis is the mechanical particle size analysis used to determine the grain size distribution of coarse-grained soils (gravels and sands). The particle size distribution is a fundamental property used for soil classification (USCS/IS Classification) and estimating engineering properties like permeability and strength.
+                            </p>
+                            <p className="text-gray-600 text-justify">
+                                Key parameters derived from the Grain Size Distribution Curve include:
+                                <ul className="list-disc pl-5 mt-2 space-y-1">
+                                    <li><strong>D10 (Effective Size):</strong> Particle size corresponding to 10% passing.</li>
+                                    <li><strong>D30 & D60:</strong> Sizes corresponding to 30% and 60% passing respectively.</li>
+                                    <li><strong>Cu (Coefficient of Uniformity):</strong> D60 / D10. Indicates the range of particle sizes.</li>
+                                    <li><strong>Cc (Coefficient of Curvature):</strong> (D30²) / (D60 × D10). Indicates the shape of the curve.</li>
+                                </ul>
+                            </p>
                         </div>
                     </section>
 
@@ -93,41 +193,27 @@ export default function SoilSieveAnalysisCalculator() {
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-flask ${theme.text} mr-2`}></i>Apparatus</h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
                             <ol className="list-decimal pl-5 text-gray-600 space-y-2 text-justify">
-                                <li><strong>Sieves:</strong> IS Sieves conform to IS: 460-1978 (80 mm, 40 mm, 20 mm, 10 mm, 4.75 mm, 2.36 mm, 1.18 mm, 600 µm, 300 µm, 150 µm, 75 µm) and Pan</li>
-                                <li>Balance: 0.1% in the least accurate range of 0.001</li>
-                                <li>Thermostatically controlled drying oven</li>
-                                <li>Rubber pestle if grinding of oversize material is required</li>
-                                <li>Sieve shaker (optional)</li>
+                                <li><strong>IS Sieves:</strong> 80mm, 40mm, 20mm, 10mm, 4.75mm, 2.36mm, 1.18mm, 600µm, 300µm, 150µm, 75µm, and Pan.</li>
+                                <li><strong>Balance:</strong> Sensitive to 0.1% of the weight of the sample (0.01g or 0.1g accuracy).</li>
+                                <li><strong>Oven:</strong> Thermostatically controlled at 105-110°C.</li>
+                                <li><strong>Sieve Shaker:</strong> Mechanical shaker for uniform sieving (optional but recommended).</li>
+                                <li><strong>Cleaning Brush:</strong> soft wire brush for cleaning sieve mesh.</li>
                             </ol>
                         </div>
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-table ${theme.text} mr-2`}></i>The mass of soil samples taken for analysis</h2>
+                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-table ${theme.text} mr-2`}></i>Standard Sample Quantities</h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
+                            <p className="text-gray-600 mb-4 text-sm">Quantity depends on the maximum particle size present:</p>
                             <table className="w-full text-sm">
-                                <thead><tr className="bg-gray-100"><th className="border px-3 py-2 text-left">Sr.</th><th className="border px-3 py-2 text-left">Max size of material present in substantial proportions of soil</th><th className="border px-3 py-2 text-left">Mass to be Taken for Test (kg)</th></tr></thead>
+                                <thead><tr className="bg-gray-100"><th className="border px-3 py-2 text-left">Max Particle Size</th><th className="border px-3 py-2 text-left">Min. Sample Weight (kg)</th></tr></thead>
                                 <tbody>
-                                    <tr><td className="border px-3 py-2">1</td><td className="border px-3 py-2">4.75 mm</td><td className="border px-3 py-2">0.5</td></tr>
-                                    <tr><td className="border px-3 py-2">2</td><td className="border px-3 py-2">10 mm</td><td className="border px-3 py-2">1</td></tr>
-                                    <tr><td className="border px-3 py-2">3</td><td className="border px-3 py-2">20 mm</td><td className="border px-3 py-2">2</td></tr>
-                                    <tr><td className="border px-3 py-2">4</td><td className="border px-3 py-2">40 mm</td><td className="border px-3 py-2">6</td></tr>
-                                    <tr><td className="border px-3 py-2">5</td><td className="border px-3 py-2">50 mm</td><td className="border px-3 py-2">15</td></tr>
-                                    <tr><td className="border px-3 py-2">6</td><td className="border px-3 py-2">80 mm</td><td className="border px-3 py-2">35</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
-
-                    <section className="mb-8">
-                        <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-chart-line ${theme.text} mr-2`}></i>Result</h2>
-                        <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
-                            <p className="text-gray-600 mb-4">Cu (uniformity coefficient), Cc (curvature coefficient) & expressed as the percentage passing each of sieves is as follows:</p>
-                            <table className="w-full text-sm mb-4">
-                                <thead><tr className={`${theme.bgLight}`}><th className="border px-3 py-2">Sr.</th><th className="border px-3 py-2">Sieve Designation</th><th className="border px-3 py-2">% Finer To Sieve (kg)</th><th className="border px-3 py-2">Min Finer To Sieve (kg)</th></tr></thead>
-                                <tbody>
-                                    <tr><td className="border px-3 py-2">1</td><td className="border px-3 py-2">300 mm</td><td className="border px-3 py-2">10</td><td className="border px-3 py-2">0</td></tr>
-                                    <tr><td className="border px-3 py-2">2</td><td className="border px-3 py-2">75 µm</td><td className="border px-3 py-2">5</td><td className="border px-3 py-2">0</td></tr>
+                                    <tr><td className="border px-3 py-2">80 mm</td><td className="border px-3 py-2">60 kg</td></tr>
+                                    <tr><td className="border px-3 py-2">40 mm</td><td className="border px-3 py-2">25 kg</td></tr>
+                                    <tr><td className="border px-3 py-2">20 mm</td><td className="border px-3 py-2">6.5 kg</td></tr>
+                                    <tr><td className="border px-3 py-2">10 mm</td><td className="border px-3 py-2">1.5 kg</td></tr>
+                                    <tr><td className="border px-3 py-2">4.75 mm</td><td className="border px-3 py-2">0.5 kg</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -136,40 +222,101 @@ export default function SoilSieveAnalysisCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
-                        <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
-                            <i className="fas fa-filter text-xl text-white"></i>
-                            <h2 className="font-semibold text-sm text-white">GRAIN SIZE ANALYSIS</h2>
-                        </div>
-                        <div className="p-4">
-                            <div className="mb-3">
-                                <label className="text-xs text-gray-500 mb-1 block">Total Soil Weight</label>
-                                <input type="number" value={totalWeight} onChange={(e) => setTotalWeight(Number(e.target.value))} className="w-full px-3 py-2 border rounded-lg text-sm" />
+                        {/* Standardized Gradient Header */}
+                        <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
+                            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                <i className="fas fa-filter text-white"></i>
                             </div>
-                            <div className="overflow-x-auto mb-3">
-                                <table className="w-full text-xs">
-                                    <thead><tr className="bg-gray-100"><th className="px-2 py-1">Sieve</th><th className="px-2 py-1">Retained(g)</th><th className="px-2 py-1">Cum %</th><th className="px-2 py-1">% Pass</th></tr></thead>
-                                    <tbody>
+                            <div>
+                                <h3 className="font-bold text-white text-sm">Gradation Analysis</h3>
+                                <p className="text-white/80 text-xs">Grain Size Distribution</p>
+                            </div>
+                        </div>
+
+                        <div className="p-4">
+                            <div className="mb-4">
+                                <label className="text-xs text-gray-500 mb-1 block font-medium">Total Soil Weight (g)</label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="number"
+                                        value={totalWeight}
+                                        readOnly
+                                        className="w-full px-3 py-2 border border-gray-200 bg-gray-50 rounded-lg text-sm text-gray-500 cursor-not-allowed"
+                                    />
+                                    <span className="flex items-center text-xs text-gray-400 whitespace-nowrap">(Auto-Sum)</span>
+                                </div>
+                            </div>
+
+                            <div className="overflow-x-auto mb-4">
+                                <table className="w-full text-xs border-collapse">
+                                    <thead>
+                                        <tr className="bg-gray-50 border-b border-gray-200">
+                                            <th className="px-2 py-2 text-left text-gray-600 font-semibold">Sieve</th>
+                                            <th className="px-2 py-2 text-center text-gray-600 font-semibold">Retained</th>
+                                            <th className="px-2 py-2 text-center text-gray-600 font-semibold">% Pass</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100">
                                         {sieveData.map((row, i) => (
-                                            <tr key={i}>
-                                                <td className="px-2 py-1 font-medium">{row.size}</td>
-                                                <td className="px-2 py-1"><input type="number" step="0.001" value={row.retained} onChange={(e) => updateRetained(i, e.target.value)} className="w-16 px-1 py-0.5 border rounded text-xs" /></td>
-                                                <td className="px-2 py-1">{row.cumRetained}</td>
-                                                <td className={`px-2 py-1 font-bold ${theme.text}`}>{row.passing}</td>
+                                            <tr key={i} className="hover:bg-amber-50/50 transition-colors">
+                                                <td className="px-2 py-1.5 font-medium text-gray-700">{row.size}</td>
+                                                <td className="px-2 py-1.5 text-center">
+                                                    <input
+                                                        type="number"
+                                                        step="0.1"
+                                                        value={row.retained}
+                                                        onChange={(e) => updateRetained(i, e.target.value)}
+                                                        className={`w-16 px-1.5 py-1 border ${theme.border} rounded text-center outline-none focus:ring-1 focus:ring-amber-500 text-gray-700`}
+                                                    />
+                                                </td>
+                                                <td className={`px-2 py-1.5 text-center font-bold ${Number(row.passing) < 5 ? 'text-red-400' : theme.text}`}>
+                                                    {row.passing}
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
                             </div>
-                            <button onClick={calculate} className={`w-full ${theme.button} py-2.5 rounded-lg font-medium mb-4`}>Calculate</button>
-                            <div className={`${theme.bgLight} rounded-xl p-4`}>
-                                <div className="text-sm font-bold text-gray-700 mb-2">RESULTS OF GRAIN SIZE ANALYSIS</div>
-                                <div className="grid grid-cols-2 gap-2 text-xs">
-                                    <div className="bg-white p-2 rounded"><span className="text-gray-500">Particle Type:</span> <span className="font-bold">Sand</span></div>
-                                    <div className="bg-white p-2 rounded"><span className="text-gray-500">FM:</span> <span className={`font-bold ${theme.text}`}>{results.fm}</span></div>
-                                    <div className="bg-white p-2 rounded"><span className="text-gray-500">D10:</span> <span className="font-bold">{results.d10}</span></div>
-                                    <div className="bg-white p-2 rounded"><span className="text-gray-500">D30:</span> <span className="font-bold">{results.d30}</span></div>
-                                    <div className="bg-white p-2 rounded"><span className="text-gray-500">D60:</span> <span className="font-bold">{results.d60}</span></div>
-                                    <div className="bg-white p-2 rounded"><span className="text-gray-500">Cu:</span> <span className="font-bold">{results.cu}</span></div>
+
+                            <button onClick={calculate} className={`w-full ${theme.button} py-2.5 rounded-lg font-medium mb-5 shadow-lg shadow-amber-500/20 transition-all hover:shadow-amber-500/30`}>Calculate Distribution</button>
+
+                            <div className={`${theme.bgLight} rounded-xl p-4 border ${theme.border}`}>
+                                <h4 className={`text-xs font-bold uppercase tracking-wider mb-3 ${theme.text}`}>Analysis Results</h4>
+
+                                {/* D-Values Grid */}
+                                <div className="grid grid-cols-3 gap-2 mb-4">
+                                    <div className="bg-white p-2 rounded-lg border border-amber-100 shadow-sm text-center">
+                                        <div className="text-[10px] text-gray-400">D₁₀</div>
+                                        <div className="font-bold text-gray-800">{results.d10}</div>
+                                    </div>
+                                    <div className="bg-white p-2 rounded-lg border border-amber-100 shadow-sm text-center">
+                                        <div className="text-[10px] text-gray-400">D₃₀</div>
+                                        <div className="font-bold text-gray-800">{results.d30}</div>
+                                    </div>
+                                    <div className="bg-white p-2 rounded-lg border border-amber-100 shadow-sm text-center">
+                                        <div className="text-[10px] text-gray-400">D₆₀</div>
+                                        <div className="font-bold text-gray-800">{results.d60}</div>
+                                    </div>
+                                </div>
+
+                                {/* Coefficients & Classification */}
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center bg-white px-3 py-2 rounded-lg border border-amber-100">
+                                        <span className="text-xs text-gray-500">Uniformity (Cu)</span>
+                                        <span className={`text-sm font-bold ${theme.text}`}>{results.cu}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center bg-white px-3 py-2 rounded-lg border border-amber-100">
+                                        <span className="text-xs text-gray-500">Curvature (Cc)</span>
+                                        <span className={`text-sm font-bold ${theme.text}`}>{results.cc}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center bg-white px-3 py-2 rounded-lg border border-amber-100">
+                                        <span className="text-xs text-gray-500">Fineness Modulus</span>
+                                        <span className={`text-sm font-bold ${theme.text}`}>{results.fm}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center bg-amber-100 px-3 py-2 rounded-lg border border-amber-200 mt-2">
+                                        <span className="text-xs text-amber-800 font-medium">Dominant Type</span>
+                                        <span className="text-sm font-bold text-amber-900">{results.type}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

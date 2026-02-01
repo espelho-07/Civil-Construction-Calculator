@@ -46,6 +46,7 @@ export default function SMACalculator() {
     const theme = getThemeClasses(isBlending ? 'purple' : 'blue');
     const [grade, setGrade] = useState('13mm SMA');
     const [inputs, setInputs] = useState({});
+    const [sampleWeight, setSampleWeight] = useState('');
     const [results, setResults] = useState({});
 
     const currentData = SMA_DATA[grade];
@@ -56,22 +57,42 @@ export default function SMACalculator() {
     };
 
     useEffect(() => {
+        const totalWeight = parseFloat(sampleWeight);
+        if (!totalWeight || totalWeight <= 0) {
+            setResults({});
+            return;
+        }
+
         const newResults = {};
+        let cumRetainedWeight = 0;
+
         currentData.sieves.forEach(sieve => {
-            const val = parseFloat(inputs[sieve.size]);
-            if (!isNaN(val)) {
-                if (val >= sieve.min && val <= sieve.max) {
-                    newResults[sieve.size] = 'Pass';
-                } else {
-                    newResults[sieve.size] = 'Fail';
-                }
+            const retained = parseFloat(inputs[sieve.size] || 0);
+            cumRetainedWeight += retained;
+
+            const percentRetained = (retained / totalWeight) * 100;
+            const cumPercentRetained = (cumRetainedWeight / totalWeight) * 100;
+            const percentPassing = 100 - cumPercentRetained;
+
+            let status = 'Fail';
+            if (percentPassing >= sieve.min && percentPassing <= sieve.max) {
+                status = 'Pass';
             }
+
+            newResults[sieve.size] = {
+                retained,
+                percentRetained: percentRetained.toFixed(2),
+                cumPercentRetained: cumPercentRetained.toFixed(2),
+                percentPassing: percentPassing.toFixed(2),
+                status
+            };
         });
         setResults(newResults);
-    }, [inputs, grade]);
+    }, [inputs, grade, sampleWeight]);
 
     const reset = () => {
         setInputs({});
+        setSampleWeight('');
         setResults({});
     };
 
@@ -127,54 +148,87 @@ export default function SMACalculator() {
                                 </div>
                             </div>
 
-                            <div className="p-5 overflow-x-auto">
-                                <table className="w-full text-sm border-collapse">
-                                    <thead>
-                                        <tr className="bg-[#f8f9fa]">
-                                            <th className="border border-[#e5e7eb] px-4 py-2 text-left">IS Sieve</th>
-                                            <th className="border border-[#e5e7eb] px-4 py-2 text-center">% Passing Range</th>
-                                            <th className="border border-[#e5e7eb] px-4 py-2 text-center">Input % Passing</th>
-                                            <th className="border border-[#e5e7eb] px-4 py-2 text-center">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {currentData.sieves.map((sieve, idx) => (
-                                            <tr key={idx}>
-                                                <td className="border border-[#e5e7eb] px-4 py-2 font-medium">{sieve.size}</td>
-                                                <td className="border border-[#e5e7eb] px-4 py-2 text-center text-[#6b7280]">
-                                                    {sieve.min} - {sieve.max}
-                                                </td>
-                                                <td className="border border-[#e5e7eb] px-2 py-1">
-                                                    <input
-                                                        type="number"
-                                                        value={inputs[sieve.size] || ''}
-                                                        onChange={(e) => handleInputChange(sieve.size, e.target.value)}
-                                                        className={`w-full px-2 py-1 border border-[#e5e7eb] rounded text-center outline-none ${theme.focus} focus:ring-2 focus:ring-blue-100/50`}
-                                                        placeholder="-"
-                                                    />
-                                                </td>
-                                                <td className="border border-[#e5e7eb] px-4 py-2 text-center">
-                                                    {results[sieve.size] === 'Pass' && <span className="text-green-600 font-bold"><i className="fas fa-check mr-1"></i>Pass</span>}
-                                                    {results[sieve.size] === 'Fail' && <span className="text-red-500 font-bold"><i className="fas fa-times mr-1"></i>Fail</span>}
-                                                </td>
+                            <div className="p-5">
+                                {/* Sample Weight Input */}
+                                <div className="flex items-center gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6">
+                                    <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <i className="fas fa-balance-scale text-gray-500"></i>
+                                        Total Sample Weight (g):
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={sampleWeight}
+                                        onChange={(e) => setSampleWeight(e.target.value)}
+                                        className={`w-32 px-3 py-1.5 border border-gray-300 rounded text-center outline-none ${theme.focus} focus:ring-2 bg-white`}
+                                        placeholder="e.g. 5000"
+                                    />
+                                </div>
+
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-sm border-collapse">
+                                        <thead>
+                                            <tr className="bg-[#f8f9fa]">
+                                                <th className="border border-[#e5e7eb] px-4 py-2 text-left">IS Sieve</th>
+                                                <th className="border border-[#e5e7eb] px-4 py-2 text-center w-32">Weight Retained (g)</th>
+                                                <th className="border border-[#e5e7eb] px-4 py-2 text-center bg-gray-50">% Retained</th>
+                                                <th className="border border-[#e5e7eb] px-4 py-2 text-center bg-gray-50">Cum. % Retained</th>
+                                                <th className="border border-[#e5e7eb] px-4 py-2 text-center font-bold bg-blue-50/30">% Passing</th>
+                                                <th className="border border-[#e5e7eb] px-4 py-2 text-center text-gray-500">Limits</th>
+                                                <th className="border border-[#e5e7eb] px-4 py-2 text-center">Status</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                                <div className="flex justify-center gap-3 mt-4">
-                                    <button onClick={reset} className="px-6 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors">
-                                        <i className="fas fa-redo mr-1"></i> Reset
-                                    </button>
+                                        </thead>
+                                        <tbody>
+                                            {currentData.sieves.map((sieve, idx) => {
+                                                const res = results[sieve.size];
+
+                                                return (
+                                                    <tr key={idx}>
+                                                        <td className="border border-[#e5e7eb] px-4 py-2 font-medium">{sieve.size}</td>
+                                                        <td className="border border-[#e5e7eb] px-2 py-1">
+                                                            <input
+                                                                type="number"
+                                                                value={inputs[sieve.size] || ''}
+                                                                onChange={(e) => handleInputChange(sieve.size, e.target.value)}
+                                                                className={`w-full px-2 py-1 border border-[#e5e7eb] rounded text-center outline-none ${theme.focus} focus:ring-2`}
+                                                                placeholder="0"
+                                                            />
+                                                        </td>
+                                                        <td className="border border-[#e5e7eb] px-4 py-2 text-center text-gray-600 bg-gray-50">
+                                                            {res ? res.percentRetained : '-'}
+                                                        </td>
+                                                        <td className="border border-[#e5e7eb] px-4 py-2 text-center text-gray-600 bg-gray-50">
+                                                            {res ? res.cumPercentRetained : '-'}
+                                                        </td>
+                                                        <td className="border border-[#e5e7eb] px-4 py-2 text-center font-bold text-blue-700 bg-blue-50/30">
+                                                            {res ? res.percentPassing : '-'}
+                                                        </td>
+                                                        <td className="border border-[#e5e7eb] px-4 py-2 text-center text-xs text-gray-500">
+                                                            {sieve.min} - {sieve.max}
+                                                        </td>
+                                                        <td className="border border-[#e5e7eb] px-4 py-2 text-center">
+                                                            {res && (
+                                                                <>
+                                                                    {res.status === 'Pass' && <span className="text-green-600 font-bold"><i className="fas fa-check mr-1"></i>Pass</span>}
+                                                                    {res.status === 'Fail' && <span className="text-red-500 font-bold"><i className="fas fa-times mr-1"></i>Fail</span>}
+                                                                </>
+                                                            )}
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                    <div className="flex justify-center gap-3 mt-4">
+                                        <button onClick={reset} className="px-6 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors">
+                                            <i className="fas fa-redo mr-1"></i> Reset
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </section>
 
-                    {/* Advertisement */}
-                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-8 text-center text-gray-500 mb-8">
-                        <i className="fas fa-ad text-3xl mb-2"></i>
-                        <p className="text-sm">Advertisement</p>
-                    </div>
+
 
                     {/* Technical Content */}
                     <div className="space-y-6">
@@ -208,6 +262,12 @@ export default function SMACalculator() {
                             </ol>
                         </div>
                     </div>
+
+                    {/* Bottom Ad */}
+                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-8 text-center text-gray-500 mt-8">
+                        <i className="fas fa-ad text-3xl mb-2"></i>
+                        <p className="text-sm">Advertisement</p>
+                    </div>
                 </div>
 
                 {/* Sidebar */}
@@ -235,6 +295,12 @@ export default function SMACalculator() {
                                 {currentData.desc}
                             </div>
                         </div>
+                    </div>
+
+                    {/* Sidebar Ad */}
+                    <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-6">
+                        <i className="fas fa-ad text-2xl mb-1"></i>
+                        <p className="text-xs">Ad Space</p>
                     </div>
                 </div>
             </div>

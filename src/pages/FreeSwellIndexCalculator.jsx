@@ -104,24 +104,31 @@ export default function FreeSwellIndexCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
-                        <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
-                            <i className="fas fa-expand-arrows-alt text-xl text-white"></i>
-                            <h2 className="font-semibold text-white">CALCULATE FREE SWELL INDEX OF SOIL</h2>
+                        {/* Standardized Gradient Header */}
+                        <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
+                            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                <i className="fas fa-expand-arrows-alt text-white"></i>
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-white text-sm">Free Swell Index</h3>
+                                <p className="text-white/80 text-xs">Determination (Soil)</p>
+                            </div>
                         </div>
+
                         <div className="p-5">
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Volume height of soil read from cylinder containing distilled water (V<sub>d</sub>)</label><div className="flex gap-2"><input type="number" value={vd} onChange={(e) => setVd(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">cc</span></div></div>
-                            <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">Volume height of soil read from cylinder containing kerosene (V<sub>k</sub>)</label><div className="flex gap-2"><input type="number" value={vk} onChange={(e) => setVk(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">cc</span></div></div>
-                            <button onClick={calculate} className={`w-full ${theme.button} py-2.5 rounded-lg font-medium mb-5`}>Calculate</button>
-                            <div className={`${theme.bgLight} rounded-xl p-4`}>
-                                <div className="text-center mb-3">
-                                    <div className={`text-3xl font-bold ${theme.text}`}>{results?.freeSwellIndex} %</div>
-                                    <div className="text-sm text-gray-500">Free swell Index %</div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block font-medium">Vol. in Distilled Water (Vd)</label><div className="flex gap-2"><input type="number" value={vd} onChange={(e) => setVd(Number(e.target.value))} className={`flex-1 px-3 py-2 border ${theme.border} rounded-lg text-sm outline-none focus:ring-2 focus:ring-amber-500/20`} /><span className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500">cc</span></div></div>
+                            <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block font-medium">Vol. in Kerosene (Vk)</label><div className="flex gap-2"><input type="number" value={vk} onChange={(e) => setVk(Number(e.target.value))} className={`flex-1 px-3 py-2 border ${theme.border} rounded-lg text-sm outline-none focus:ring-2 focus:ring-amber-500/20`} /><span className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500">cc</span></div></div>
+
+                            <button onClick={calculate} className={`w-full ${theme.button} py-2.5 rounded-lg font-medium mb-5 shadow-lg shadow-amber-500/20 transition-all hover:shadow-amber-500/30`}>Calculate Free Swell Index</button>
+
+                            <div className={`${theme.bgLight} rounded-xl p-4 border ${theme.border}`}>
+                                <div className="text-center mb-4">
+                                    <div className={`text-4xl font-bold ${theme.text} mb-1`}>{results?.freeSwellIndex} %</div>
+                                    <div className="text-xs text-gray-500 uppercase tracking-wider font-medium">Free Swell Index</div>
                                 </div>
-                                <div className="bg-white rounded-lg p-3 text-sm space-y-1">
-                                    <div className="text-center text-gray-600">Free Swell Index</div>
-                                    <div className="font-mono text-center text-xs">Free Swell Index = (V<sub>d</sub> - V<sub>k</sub>) / V<sub>k</sub> × 100</div>
-                                    <div className="font-mono text-center text-xs">Free Swell Index = ({vd} - {vk}) / {vk} × 100</div>
-                                    <div className={`font-bold ${theme.text} text-center`}>Free Swell Index = {results?.freeSwellIndex} %</div>
+                                <div className="bg-white rounded-lg p-3 text-xs space-y-2 border border-amber-100 shadow-sm">
+                                    <div className="flex justify-between text-gray-600"><span>Volume Diff.</span> <span>{results?.diff} cc</span></div>
+                                    <div className="border-t border-gray-100 pt-2 font-mono text-center text-gray-500 mt-1 text-[10px]">FSI = (Vd - Vk) / Vk × 100</div>
                                 </div>
                             </div>
                         </div>

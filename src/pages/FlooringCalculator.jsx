@@ -243,7 +243,7 @@ export default function FlooringCalculator() {
                         </h2>
                         {/* THEME BORDER APPLIED HERE */}
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
-                            <p className="text-gray-600 mb-4">
+                            <p className="text-gray-600 mb-4 text-justify">
                                 It can be said that flooring kind of adds value to the area. But there are factors to consider while choosing the right type of flooring that would meet your requirements.
                             </p>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

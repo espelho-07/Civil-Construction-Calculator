@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
+import GlobalSearch from '../components/GlobalSearch';
+import RightSideNavbar from '../components/RightSideNavbar';
 import { getThemeClasses } from '../constants/categories';
+import { QUANTITY_ESTIMATOR_NAV } from '../constants/calculatorRoutes';
 
 export default function BrickMasonryCalculator() {
     const theme = getThemeClasses('green');
@@ -109,15 +113,27 @@ export default function BrickMasonryCalculator() {
         update(); window.addEventListener('resize', update); return () => window.removeEventListener('resize', update);
     }, []);
 
+
+    const navigate = useNavigate();
+
     return (
         <main className="min-h-screen bg-[#F7F9FF]">
             <CategoryNav activeCategory="quantity-estimator" />
+
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
                 <div>
                     <div className="flex items-center justify-between mb-4">
-                        <div>
-                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Brick Masonry Calculator</h1>
-                            <p className="text-[#6b7280]">Calculate bricks, cement and sand required for masonry</p>
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => navigate('/category/quantity-estimator')}
+                                className="w-10 h-10 flex items-center justify-center bg-white border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 hover:border-blue-300 transition-all shadow-sm"
+                            >
+                                <i className="fas fa-arrow-left"></i>
+                            </button>
+                            <div>
+                                <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Brick Masonry Calculator</h1>
+                                <p className="text-[#6b7280]">Calculate bricks, cement and sand required for masonry</p>
+                            </div>
                         </div>
                         <CalculatorActions
                             calculatorSlug="brick-masonry"
@@ -174,7 +190,14 @@ export default function BrickMasonryCalculator() {
                     </div>
                 </div>
 
-                <aside ref={sidebarRef} className="sticky top-20 h-fit">
+                <aside ref={sidebarRef} className="sticky top-20 h-fit space-y-6">
+                    {/* Global Search */}
+                    <GlobalSearch />
+
+                    {/* Right Side Vertical Nav */}
+                    <RightSideNavbar items={QUANTITY_ESTIMATOR_NAV} title="Quantity Estimators" />
+
+
                     <div className={`bg-white rounded-2xl shadow-lg border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b ${theme.border} ${theme.gradient} flex items-center gap-3 bg-gradient-to-r rounded-t-2xl`}>
                             <i className="fas fa-th-large text-xl text-white"></i>
@@ -209,6 +232,8 @@ export default function BrickMasonryCalculator() {
                                     value={length}
                                     onChange={(e) => setLength(Number(e.target.value))}
                                     className={`w-full px-3 py-2 ${theme.border} rounded-lg text-sm ${theme.focus} outline-none`}
+                                    autoFocus
+                                    onKeyDown={(e) => e.key === 'Enter' && calculate()}
                                 />
                             </div>
                             <div className="mb-3">

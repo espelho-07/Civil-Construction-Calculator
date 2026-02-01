@@ -102,9 +102,9 @@ export default function ExcavationCalculator() {
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} flex flex-col md:flex-row gap-6`}>
                             <div className="flex-1 text-justify">
-                                <p className="text-gray-600 mb-4">Excavation generally means work digging in the earth.</p>
-                                <p className="text-gray-600 mb-4">You can calculate Excavation required in both cubic feet and cubic meter. With this calculator you can exactly know how much Excavation is required for your construction.</p>
-                                <p className="text-gray-600">We determine Excavation method to use of find the volume. In this case we are dealing with a length, breadth, and depth.</p>
+                                <p className="text-gray-600 mb-4 text-justify">Excavation generally means work digging in the earth.</p>
+                                <p className="text-gray-600 mb-4 text-justify">You can calculate Excavation required in both cubic feet and cubic meter. With this calculator you can exactly know how much Excavation is required for your construction.</p>
+                                <p className="text-gray-600 text-justify">We determine Excavation method to use of find the volume. In this case we are dealing with a length, breadth, and depth.</p>
                             </div>
                             <img src="https://images.unsplash.com/photo-1541888946425-d81bb1909332?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Excavation" className="w-full md:w-48 h-40 object-cover rounded-lg" />
                         </div>
@@ -154,8 +154,8 @@ export default function ExcavationCalculator() {
                             Importance of excavation
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} text-justify`}>
-                            <p className="text-gray-600 mb-4">Construction excavation is the process of removing earth, rock, and other materials to prepare a site for a construction project. It's a critical part of most projects because it creates a strong foundation for the structure.</p>
-                            <p className="text-gray-600">The process involves using heavy machinery and explosives to move earth, rock, and other materials. The excavated site can then be used for a variety of purposes, including: Foundations, Reservoirs, Roads.</p>
+                            <p className="text-gray-600 mb-4 text-justify">Construction excavation is the process of removing earth, rock, and other materials to prepare a site for a construction project. It's a critical part of most projects because it creates a strong foundation for the structure.</p>
+                            <p className="text-gray-600 text-justify">The process involves using heavy machinery and explosives to move earth, rock, and other materials. The excavated site can then be used for a variety of purposes, including: Foundations, Reservoirs, Roads.</p>
                         </div>
                     </section>
 

@@ -157,8 +157,8 @@ export default function TankVolumeCalculator() {
                             Importance of water-sump/tank
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} text-justify`}>
-                            <p className="text-gray-600 mb-4">A sump is an area of lower elevation used to collect water or other liquids. It is often created as a basin to manage fluid runoff or collection.</p>
-                            <p className="text-gray-600">The sump tank is mainly used to store water for use in emergencies (fire), especially in high-rise buildings. In India, water is often supplied only for a few hours in the morning and/or evening, so the sump is used to store water for the rest of the day.</p>
+                            <p className="text-gray-600 mb-4 text-justify">A sump is an area of lower elevation used to collect water or other liquids. It is often created as a basin to manage fluid runoff or collection.</p>
+                            <p className="text-gray-600 text-justify">The sump tank is mainly used to store water for use in emergencies (fire), especially in high-rise buildings. In India, water is often supplied only for a few hours in the morning and/or evening, so the sump is used to store water for the rest of the day.</p>
                         </div>
                     </section>
 

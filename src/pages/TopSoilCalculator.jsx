@@ -134,8 +134,8 @@ export default function TopSoilCalculator() {
                             What is Top Soil?
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} text-justify`}>
-                            <p className="text-gray-600 mb-4">Topsoil is the upper, outermost layer of soil, usually the top 5–10 inches (13–25 cm). It has the highest concentration of organic matter and microorganisms and is where most of the Earth's biological soil activity occurs.</p>
-                            <p className="text-gray-600">Topsoil acts as a filter, trapping water and other elements. It is the primary resource for plants to grow and crops to thrive.</p>
+                            <p className="text-gray-600 mb-4 text-justify">Topsoil is the upper, outermost layer of soil, usually the top 5–10 inches (13–25 cm). It has the highest concentration of organic matter and microorganisms and is where most of the Earth's biological soil activity occurs.</p>
+                            <p className="text-gray-600 text-justify">Topsoil acts as a filter, trapping water and other elements. It is the primary resource for plants to grow and crops to thrive.</p>
                         </div>
                     </section>
 

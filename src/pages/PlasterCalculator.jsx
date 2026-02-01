@@ -141,8 +141,8 @@ export default function PlasterCalculator() {
                             What is Plaster Calculation?
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} text-justify`}>
-                            <p className="text-gray-600 mb-4">Plastering is the process of covering rough walls and uneven surfaces in the construction of houses and other structures with a plastic material, called plaster, which is a mixture of lime or cement concrete and sand along with the required quantity of water.</p>
-                            <p className="text-gray-600">The quantity of mortar required for plastering depends on the thickness of the plaster and the mix ratio. Common thicknesses are 12mm (internal walls), 15mm, and 20mm (external walls). 20% extra quantity is calculated for filling joints and wastage.</p>
+                            <p className="text-gray-600 mb-4 text-justify">Plastering is the process of covering rough walls and uneven surfaces in the construction of houses and other structures with a plastic material, called plaster, which is a mixture of lime or cement concrete and sand along with the required quantity of water.</p>
+                            <p className="text-gray-600 text-justify">The quantity of mortar required for plastering depends on the thickness of the plaster and the mix ratio. Common thicknesses are 12mm (internal walls), 15mm, and 20mm (external walls). 20% extra quantity is calculated for filling joints and wastage.</p>
                         </div>
                     </section>
 

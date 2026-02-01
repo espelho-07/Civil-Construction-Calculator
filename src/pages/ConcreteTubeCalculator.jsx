@@ -187,7 +187,7 @@ export default function ConcreteTubeCalculator() {
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is concrete tube calculation?</h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} flex flex-col md:flex-row gap-6`}>
                             <div className="flex-1">
-                                <p className="text-gray-600 mb-4">Reinforced concrete (RC) tube, known generically Reinforced concrete pipe (RCP), is a type of concrete pipe used most widely in storm sewer and sanitary systems. Its shape and rigidity offers corrosion resistance to water and soil, low porosity so as not to allow scale and are not susceptible to underground fires. Concrete pipes has been established as of up to about 100 years and so last century has started in 1850 and started using CPM technology from 1910.</p>
+                                <p className="text-gray-600 mb-4 text-justify">Reinforced concrete (RC) tube, known generically Reinforced concrete pipe (RCP), is a type of concrete pipe used most widely in storm sewer and sanitary systems. Its shape and rigidity offers corrosion resistance to water and soil, low porosity so as not to allow scale and are not susceptible to underground fires. Concrete pipes has been established as of up to about 100 years and so last century has started in 1850 and started using CPM technology from 1910.</p>
                                 <ul className="text-sm text-gray-600 space-y-1">
                                     <li><strong>Class:</strong> Light-duty NP2, Medium-duty NP3, Heavy Duty NP4</li>
                                     <li><strong>Density:</strong> Complete cement cement mix with cement</li>
@@ -204,7 +204,7 @@ export default function ConcreteTubeCalculator() {
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-exclamation-circle ${theme.text} mr-2`}></i>What are the importance of concrete tube?</h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
-                            <p className="text-gray-600">Concrete Tube usually for 6 to press in applications such as gravity flow or irrigation. Pipe for sewage and stormwater predominantly made from concrete or vitrified clay. Reinforced concrete can be used for large-diameter concrete pipes. This type of material can be used in almost types of construction, and is often utilized in places that require heavy duty or direct-fill, and accept pipe with sizes 8 inches or more or in neutral soil or where extra strength is needed a cement lined, with various treating materials applied at manufacture.</p>
+                            <p className="text-gray-600 text-justify">Concrete Tube usually for 6 to press in applications such as gravity flow or irrigation. Pipe for sewage and stormwater predominantly made from concrete or vitrified clay. Reinforced concrete can be used for large-diameter concrete pipes. This type of material can be used in almost types of construction, and is often utilized in places that require heavy duty or direct-fill, and accept pipe with sizes 8 inches or more or in neutral soil or where extra strength is needed a cement lined, with various treating materials applied at manufacture.</p>
                         </div>
                     </section>
 

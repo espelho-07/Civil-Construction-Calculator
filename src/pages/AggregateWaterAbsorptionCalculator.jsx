@@ -228,7 +228,7 @@ export default function AggregateWaterAbsorptionCalculator() {
                             What is Aggregate Water Absorption Test?
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
-                            <p className="text-[#0A0A0A] leading-relaxed mb-4">
+                            <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                 Water absorption gives an idea of strength of aggregate. Aggregates having more water absorption are more porous in nature and are generally considered unsuitable unless they are found to be acceptable based on strength, impact and hardness tests.
                             </p>
                         </div>
@@ -260,13 +260,13 @@ export default function AggregateWaterAbsorptionCalculator() {
                             Procedure
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
-                            <p className="text-[#0A0A0A] leading-relaxed mb-4">
+                            <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                 The sample shall be thoroughly washed to remove finer particles and dust, drained and then placed in the wire basket and immersed in distilled water at a temperature between 22°C and 32°C with a cover of at least 5 cm of water above the top of the basket.
                             </p>
-                            <p className="text-[#0A0A0A] leading-relaxed mb-4">
+                            <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                 Immediately after immersion the entrapped air shall be removed from the sample by lifting the basket containing it 25 mm above the base of the tank and allowing it to drop 25 times at the rate of about one drop per second. The basket and aggregate shall remain completely immersed during the operation and for a period of 24 ± 1/2 hours afterwards.
                             </p>
-                            <p className="text-[#0A0A0A] leading-relaxed">
+                            <p className="text-[#0A0A0A] leading-relaxed text-justify">
                                 The basket and the sample shall then be jolted and weighed in water at a temperature of 22° to 32°C. If it is necessary for them to be transferred to a different tank for weighing, they shall be jolted 25 times as described above in the new tank before weighing.
                             </p>
                         </div>

@@ -104,8 +104,8 @@ export default function PlywoodCalculator() {
                             What is Plywood?
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} text-justify`}>
-                            <p className="text-gray-600 mb-4">Plywood is a material manufactured from thin layers or "plies" of wood veneer that are glued together with adjacent layers having their wood grain rotated up to 90 degrees to one another. It is an engineered wood from the family of manufactured boards which includes medium-density fibreboard (MDF) and particle board (chipboard).</p>
-                            <p className="text-gray-600">All plywoods bind resin and wood fibre sheets (cellulose cells are long, strong and thin) to form a composite material. This alternation of the grain is called cross-graining and has several important benefits: it reduces the tendency of wood to split when nailed at the edges; it reduces expansion and shrinkage, providing improved dimensional stability; and it makes the strength of the panel consistent across all directions.</p>
+                            <p className="text-gray-600 mb-4 text-justify">Plywood is a material manufactured from thin layers or "plies" of wood veneer that are glued together with adjacent layers having their wood grain rotated up to 90 degrees to one another. It is an engineered wood from the family of manufactured boards which includes medium-density fibreboard (MDF) and particle board (chipboard).</p>
+                            <p className="text-gray-600 text-justify">All plywoods bind resin and wood fibre sheets (cellulose cells are long, strong and thin) to form a composite material. This alternation of the grain is called cross-graining and has several important benefits: it reduces the tendency of wood to split when nailed at the edges; it reduces expansion and shrinkage, providing improved dimensional stability; and it makes the strength of the panel consistent across all directions.</p>
                         </div>
                     </section>
 

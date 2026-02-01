@@ -274,11 +274,11 @@ export default function AggregateAbrasionValueCalculator() {
                             What is the need of Aggregate Abrasion value Test?
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
-                            <p className="text-[#0A0A0A] leading-relaxed mb-4">
+                            <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                 Due to movements of traffic, the road stones used in the surfacing course are subjected to wearing action at the top. Abrasion resistance is another mechanical property of aggregates. Aggerates, especially those used in road works, should be hard enough to resist the abrasion caused due to movement of traffic.
                             </p>
                             <h4 className="font-semibold text-[#0A0A0A] mb-2">What is Los Angeles Rattler Test?</h4>
-                            <p className="text-[#0A0A0A] leading-relaxed">
+                            <p className="text-[#0A0A0A] leading-relaxed text-justify">
                                 The principle of Los Angeles Abrasion Test is to find the percentage wear due to relative rubbing action between the aggregate and steel balls used as abrasive charge. Los Angeles abrasion test is a measure of degradation of mineral aggregates of standard gradings resulting from a combination of actions including abrasion or attrition, impact, and grinding in a rotating steel drum containing a specified number of steel spheres.
                             </p>
                         </div>
@@ -319,7 +319,7 @@ export default function AggregateAbrasionValueCalculator() {
                                     <p className="text-xs text-[#6b7280] mt-2">LOS ANGELES ABRASION MACHINE: AASHTO</p>
                                 </div>
                             </div>
-                            <p className="text-sm text-[#0A0A0A] leading-relaxed">
+                            <p className="text-sm text-[#0A0A0A] leading-relaxed text-justify">
                                 The Los Angeles abrasion testing machine consists of a hollow steel cylinder, closed at both ends, having an inside diameter of 711 ± 5 mm and an inside length of 508 ± 5 mm. The cylinder is mounted on stub shafts attached to the ends of the cylinder but not entering it, and is mounted in such a manner that it may be rotated about an axis in a horizontal position. An opening in the cylinder is provided for introducing the test sample. A steel shelf projecting radially 89 mm into the cylinder is fixed along one element of the interior surface.
                             </p>
                         </div>

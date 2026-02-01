@@ -115,25 +115,33 @@ export default function WaterContentCalculator() {
 
                 <aside ref={sidebarRef} className="sticky top-20 h-fit">
                     <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
-                        <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
-                            <i className="fas fa-tint text-xl text-white"></i>
-                            <h2 className="font-semibold text-white">DETERMINATION OF WATER CONTENT</h2>
+                        {/* Standardized Gradient Header */}
+                        <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
+                            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                <i className="fas fa-tint text-white"></i>
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-white text-sm">Water Content</h3>
+                                <p className="text-white/80 text-xs">Determination</p>
+                            </div>
                         </div>
+
                         <div className="p-5">
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Mass (Weight) of Container (Bowl) (W₁)</label><div className="flex gap-2"><input type="number" value={w1} onChange={(e) => setW1(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">g</span></div></div>
-                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block">Mass (Weight) of container (Bowl) with Sample wet Soil (W₂)</label><div className="flex gap-2"><input type="number" value={w2} onChange={(e) => setW2(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">g</span></div></div>
-                            <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block">Mass (Weight) of container (Bowl) with Sample dry soil (W₃)</label><div className="flex gap-2"><input type="number" value={w3} onChange={(e) => setW3(Number(e.target.value))} className="flex-1 px-3 py-2 border rounded-lg text-sm" /><span className="px-3 py-2 bg-gray-100 rounded-lg text-sm">g</span></div></div>
-                            <button onClick={calculate} className={`w-full ${theme.button} py-2.5 rounded-lg font-medium mb-5`}>Calculate</button>
-                            <div className={`${theme.bgLight} rounded-xl p-4`}>
-                                <div className="text-center mb-3">
-                                    <div className={`text-3xl font-bold ${theme.text}`}>{results?.waterContent} %</div>
-                                    <div className="text-sm text-gray-500">Water Content %</div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block font-medium">Mass of Container (W₁)</label><div className="flex gap-2"><input type="number" value={w1} onChange={(e) => setW1(Number(e.target.value))} className={`flex-1 px-3 py-2 border ${theme.border} rounded-lg text-sm outline-none focus:ring-2 focus:ring-amber-500/20`} /><span className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500">g</span></div></div>
+                            <div className="mb-3"><label className="text-xs text-gray-500 mb-1 block font-medium">Mass of Container + Wet Soil (W₂)</label><div className="flex gap-2"><input type="number" value={w2} onChange={(e) => setW2(Number(e.target.value))} className={`flex-1 px-3 py-2 border ${theme.border} rounded-lg text-sm outline-none focus:ring-2 focus:ring-amber-500/20`} /><span className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500">g</span></div></div>
+                            <div className="mb-4"><label className="text-xs text-gray-500 mb-1 block font-medium">Mass of Container + Dry Soil (W₃)</label><div className="flex gap-2"><input type="number" value={w3} onChange={(e) => setW3(Number(e.target.value))} className={`flex-1 px-3 py-2 border ${theme.border} rounded-lg text-sm outline-none focus:ring-2 focus:ring-amber-500/20`} /><span className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500">g</span></div></div>
+
+                            <button onClick={calculate} className={`w-full ${theme.button} py-2.5 rounded-lg font-medium mb-5 shadow-lg shadow-amber-500/20 transition-all hover:shadow-amber-500/30`}>Calculate Water Content</button>
+
+                            <div className={`${theme.bgLight} rounded-xl p-4 border ${theme.border}`}>
+                                <div className="text-center mb-4">
+                                    <div className={`text-4xl font-bold ${theme.text} mb-1`}>{results?.waterContent} %</div>
+                                    <div className="text-xs text-gray-500 uppercase tracking-wider font-medium">Moisture Content</div>
                                 </div>
-                                <div className="bg-white rounded-lg p-3 text-sm space-y-1">
-                                    <div className="text-center text-gray-600">Water Content</div>
-                                    <div className="font-mono text-center">w = (W₂ - W₃) / (W₃ - W₁) × 100</div>
-                                    <div className="font-mono text-center">w = ({w2} - {w3}) / ({w3} - {w1}) × 100</div>
-                                    <div className={`font-bold ${theme.text} text-center`}>w = {results?.waterContent} %</div>
+                                <div className="bg-white rounded-lg p-3 text-xs space-y-2 border border-amber-100 shadow-sm">
+                                    <div className="flex justify-between text-gray-600"><span>Net Water</span> <span>{results?.w2MinusW3} g</span></div>
+                                    <div className="flex justify-between text-gray-600"><span>Dry Soil</span> <span>{results?.w3MinusW1} g</span></div>
+                                    <div className="border-t border-gray-100 pt-2 font-mono text-center text-gray-500 mt-1">w = ({results?.w2MinusW3} / {results?.w3MinusW1}) × 100</div>
                                 </div>
                             </div>
                         </div>

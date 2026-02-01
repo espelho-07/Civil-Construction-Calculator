@@ -129,8 +129,8 @@ export default function WoodFrameCalculator() {
                             What is Wood CFT?
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} text-justify`}>
-                            <p className="text-gray-600 mb-4">CFT stands for Cubic Feet. It is the standard unit used for measuring the volume of wood/timber in construction and carpentry. Pricing of wood is usually done per CFT.</p>
-                            <p className="text-gray-600">To calculate CFT, all dimensions (Length, Width, Thickness) must be converted to feet and multiplied together.</p>
+                            <p className="text-gray-600 mb-4 text-justify">CFT stands for Cubic Feet. It is the standard unit used for measuring the volume of wood/timber in construction and carpentry. Pricing of wood is usually done per CFT.</p>
+                            <p className="text-gray-600 text-justify">To calculate CFT, all dimensions (Length, Width, Thickness) must be converted to feet and multiplied together.</p>
                         </div>
                     </section>
 

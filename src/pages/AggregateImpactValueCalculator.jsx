@@ -236,11 +236,11 @@ export default function AggregateImpactValueCalculator() {
                             What is Aggregate Impact Value?
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border}`}>
-                            <p className="text-[#0A0A0A] leading-relaxed mb-4">
+                            <p className="text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                 The aggregate impact value gives a relative measure of the resistance of an aggregate to sudden shock or impact, which in some aggregates differs from its resistance to a slow compressive load. Aggregate with higher aggregate impact value is more suitable for road and pavement construction.
                             </p>
                             <h4 className="font-semibold text-[#0A0A0A] mb-2">Why to test Aggregate Impact Value?</h4>
-                            <p className="text-[#0A0A0A] leading-relaxed">
+                            <p className="text-[#0A0A0A] leading-relaxed text-justify">
                                 The toughness of stones is defined as the resistance offered by the stones to impact. Road stones should possess sufficient toughness to resist impact caused due to moving traffic. The aggregate impact test is conducted to determine the aggregate impact value which is a measure of resistance offered by the aggregates to impact loads.
                             </p>
                         </div>
@@ -284,7 +284,7 @@ export default function AggregateImpactValueCalculator() {
                                 <li><strong>Oven</strong> – Thermostatically controlled, capable of maintaining temperature at 100°C to 110°C.</li>
                             </ol>
                             <div className={`mt-4 p-4 ${theme.bgSoft} rounded-lg border ${theme.border}`}>
-                                <p className={`text-sm ${theme.text}`}>
+                                <p className={`text-sm ${theme.text} text-justify`}>
                                     <strong>Test Sample:</strong> The test sample consists of aggregates passing through 12.5 mm sieve and retained on 10 mm IS sieve. About 3 kg of aggregate sample that conforms to the grading is taken for conducting the test. The aggregate should be dried in an oven for 4 hours at 100-110°C and cooled.
                                 </p>
                             </div>

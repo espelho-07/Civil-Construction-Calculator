@@ -123,8 +123,8 @@ export default function AntiTermiteCalculator() {
                             What is Anti-Termite Treatment?
                         </h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} text-justify`}>
-                            <p className="text-gray-600 mb-4">Anti-termite treatment is a chemical procedure carried out for soil, masonry, wood, and electrical fixtures to provide a chemical barrier against subterranean termites before and after construction.</p>
-                            <p className="text-gray-600">Termites can cause significant damage to the structure of a building. Pre-construction treatment is the most effective way to prevent termite attacks.</p>
+                            <p className="text-gray-600 mb-4 text-justify">Anti-termite treatment is a chemical procedure carried out for soil, masonry, wood, and electrical fixtures to provide a chemical barrier against subterranean termites before and after construction.</p>
+                            <p className="text-gray-600 text-justify">Termites can cause significant damage to the structure of a building. Pre-construction treatment is the most effective way to prevent termite attacks.</p>
                         </div>
                     </section>
 

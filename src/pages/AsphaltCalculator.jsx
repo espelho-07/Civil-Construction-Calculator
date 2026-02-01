@@ -104,9 +104,9 @@ export default function AsphaltCalculator() {
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-info-circle ${theme.text} mr-2`}></i>What is Asphalt calculation?</h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} text-justify`}>
-                            <p className="text-gray-600 mb-4">Asphalt is a mixture of aggregates, binder and filler, used for constructing and maintaining roads, parking areas, railway tracks, ports, airport runways, bicycle lanes, sidewalks and also play- and sport areas.</p>
-                            <p className="text-gray-600 mb-4">Aggregates used for asphalt mixtures could be crushed rock, sand, gravel or slags. Nowadays, certain waste and by-products, such as construction and demolition debris, are being used as aggregates, which increases the sustainability of asphalt.</p>
-                            <p className="text-gray-600">Most commonly, bitumen is used as a binder, although nowadays, a series of bio-based binders are also under development with the aim of minimising the environmental impact of the roads.</p>
+                            <p className="text-gray-600 mb-4 text-justify">Asphalt is a mixture of aggregates, binder and filler, used for constructing and maintaining roads, parking areas, railway tracks, ports, airport runways, bicycle lanes, sidewalks and also play- and sport areas.</p>
+                            <p className="text-gray-600 mb-4 text-justify">Aggregates used for asphalt mixtures could be crushed rock, sand, gravel or slags. Nowadays, certain waste and by-products, such as construction and demolition debris, are being used as aggregates, which increases the sustainability of asphalt.</p>
+                            <p className="text-gray-600 text-justify">Most commonly, bitumen is used as a binder, although nowadays, a series of bio-based binders are also under development with the aim of minimising the environmental impact of the roads.</p>
                         </div>
                     </section>
 
@@ -131,7 +131,7 @@ export default function AsphaltCalculator() {
                     <section className="mb-8">
                         <h2 className="text-xl font-bold text-[#0A0A0A] mb-4"><i className={`fas fa-exclamation-circle ${theme.text} mr-2`}></i>Importance of asphalt calculation</h2>
                         <div className={`bg-white rounded-xl p-6 border ${theme.border} text-justify`}>
-                            <p className="text-gray-600">Asphalt is a flexible pavement built in multiple layers with a continuous flow of material moving through the asphalt paver. Asphalt has low initial costs, lasts longer, and due to its recyclability, has residual value greater than other pavements. The smooth surface of asphalt provides maximum tire contact with the roadway, increasing skid resistance. The dark color of asphalt reduces glare, helps melt snow and ice, and provides a high contrast for lane markings. Asphalt pavements are fast to construct. Because asphalt effectively needs no "cure" time, motorists can use roadways as soon as the last roller leaves the construction zone.</p>
+                            <p className="text-gray-600 text-justify">Asphalt is a flexible pavement built in multiple layers with a continuous flow of material moving through the asphalt paver. Asphalt has low initial costs, lasts longer, and due to its recyclability, has residual value greater than other pavements. The smooth surface of asphalt provides maximum tire contact with the roadway, increasing skid resistance. The dark color of asphalt reduces glare, helps melt snow and ice, and provides a high contrast for lane markings. Asphalt pavements are fast to construct. Because asphalt effectively needs no "cure" time, motorists can use roadways as soon as the last roller leaves the construction zone.</p>
                         </div>
                     </section>
 

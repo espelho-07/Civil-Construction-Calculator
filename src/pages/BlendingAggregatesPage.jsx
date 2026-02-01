@@ -90,7 +90,7 @@ export default function BlendingAggregatesPage() {
                                 <i className={`fas fa-info-circle ${theme.text}`}></i>
                                 What is Blending of Aggregates?
                             </h2>
-                            <p className="text-sm text-[#0A0A0A] leading-relaxed">
+                            <p className="text-sm text-[#0A0A0A] leading-relaxed text-justify">
                                 Aggregate blending is the process of intermixing two or more fine or coarse aggregates to produce a combination with improved grading or other properties.
                             </p>
                         </div>
