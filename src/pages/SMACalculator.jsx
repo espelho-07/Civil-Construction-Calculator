@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
@@ -42,9 +42,18 @@ const SMA_DATA = {
 
 export default function SMACalculator() {
     const location = useLocation();
+    const navigate = useNavigate();
     const isBlending = location.pathname.includes('blending-aggregates');
     const theme = getThemeClasses(isBlending ? 'purple' : 'blue');
-    const [grade, setGrade] = useState('13mm SMA');
+
+    // Extract grade from URL
+    const getGradeFromURL = () => {
+        if (location.pathname.includes('sma-13mm')) return '13mm SMA';
+        if (location.pathname.includes('sma-19mm')) return '19mm SMA';
+        return '13mm SMA';
+    };
+
+    const [grade, setGrade] = useState(getGradeFromURL());
     const [inputs, setInputs] = useState({});
     const [sampleWeight, setSampleWeight] = useState('');
     const [results, setResults] = useState({});
@@ -52,13 +61,24 @@ export default function SMACalculator() {
     const currentData = SMA_DATA[grade];
     const sidebarRef = useRef(null);
 
+    // Update grade when URL changes
+    useEffect(() => {
+        const newGrade = getGradeFromURL();
+        if (newGrade !== grade) {
+            setGrade(newGrade);
+            setInputs({});
+            setResults({});
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location.pathname]);
+
     const handleInputChange = (sieveSize, value) => {
         setInputs(prev => ({ ...prev, [sieveSize]: value }));
     };
 
     useEffect(() => {
         const totalWeight = parseFloat(sampleWeight);
-        if (!totalWeight || totalWeight <= 0) {
+        if (!totalWeight || totalWeight <= 0 || isNaN(totalWeight) || !isFinite(totalWeight)) {
             setResults({});
             return;
         }
@@ -67,12 +87,23 @@ export default function SMACalculator() {
         let cumRetainedWeight = 0;
 
         currentData.sieves.forEach(sieve => {
-            const retained = parseFloat(inputs[sieve.size] || 0);
+            const retained = Math.max(0, parseFloat(inputs[sieve.size] || 0) || 0);
+            if (isNaN(retained) || !isFinite(retained)) {
+                newResults[sieve.size] = {
+                    retained: 0,
+                    percentRetained: '0.00',
+                    cumPercentRetained: '0.00',
+                    percentPassing: '100.00',
+                    status: 'Fail'
+                };
+                return;
+            }
+
             cumRetainedWeight += retained;
 
-            const percentRetained = (retained / totalWeight) * 100;
-            const cumPercentRetained = (cumRetainedWeight / totalWeight) * 100;
-            const percentPassing = 100 - cumPercentRetained;
+            const percentRetained = totalWeight > 0 ? (retained / totalWeight) * 100 : 0;
+            const cumPercentRetained = totalWeight > 0 ? (cumRetainedWeight / totalWeight) * 100 : 0;
+            const percentPassing = Math.max(0, Math.min(100, 100 - cumPercentRetained));
 
             let status = 'Fail';
             if (percentPassing >= sieve.min && percentPassing <= sieve.max) {
@@ -88,7 +119,7 @@ export default function SMACalculator() {
             };
         });
         setResults(newResults);
-    }, [inputs, grade, sampleWeight]);
+    }, [inputs, grade, sampleWeight, currentData]);
 
     const reset = () => {
         setInputs({});
@@ -97,6 +128,18 @@ export default function SMACalculator() {
     };
 
     const gradeOptions = Object.keys(SMA_DATA).map(g => ({ value: g, label: g }));
+
+    // Handle grade change - navigate to correct URL
+    const handleGradeChange = (newGrade) => {
+        const size = newGrade === '13mm SMA' ? '13mm' : '19mm';
+        const basePath = isBlending ? '/blending-aggregates' : '/sieve-analysis';
+        navigate(`${basePath}/sma-${size}`);
+    };
+
+    // Back to category
+    const handleBack = () => {
+        navigate(isBlending ? '/category/blending-aggregates' : '/category/sieve-analysis-aggregates');
+    };
 
     useEffect(() => {
         const update = () => {
@@ -114,23 +157,41 @@ export default function SMACalculator() {
         <main className="min-h-screen bg-[#F7F9FF]">
             <CategoryNav activeCategory={isBlending ? 'blending-aggregates' : 'sieve-analysis-aggregates'} />
 
-            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 items-start">
-
+            <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
                 {/* Main Content */}
                 <div>
+                    {/* Header with Back Button */}
                     <div className="flex items-center justify-between mb-4">
-                        <div>
-                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">SMA Grading Calculator</h1>
-                            <p className="text-[#6b7280]">Stone Matrix Asphalt Analysis (MORTH)</p>
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={handleBack}
+                                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:border-blue-300 transition-all shadow-sm"
+                            >
+                                <i className="fas fa-arrow-left"></i>
+                                <span>Back</span>
+                            </button>
+                            <div>
+                                <h1 className="text-3xl font-bold text-[#0A0A0A] mb-1">SMA Grading Calculator</h1>
+                                <p className="text-[#6b7280]">Stone Matrix Asphalt Analysis (MORTH)</p>
+                            </div>
                         </div>
                         <CalculatorActions
                             calculatorSlug="sma-grading"
                             calculatorName="SMA Grading Calculator"
                             calculatorIcon="fa-cubes"
-                            category="Sieve Analysis"
+                            category={isBlending ? "Blending of Aggregates" : "Sieve Analysis"}
                             inputs={{ grade, inputs }}
                             outputs={results}
                         />
+                    </div>
+
+                    {/* Top Ad Banner */}
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 text-center text-blue-600 mb-6">
+                        <div className="flex items-center justify-center gap-2">
+                            <i className="fas fa-ad"></i>
+                            <span className="text-sm font-medium">Advertisement</span>
+                        </div>
+                        <p className="text-xs text-blue-400 mt-1">Your Ad Here - Support our free calculators</p>
                     </div>
 
                     {/* Calculator Table */}
@@ -150,16 +211,16 @@ export default function SMACalculator() {
 
                             <div className="p-5">
                                 {/* Sample Weight Input */}
-                                <div className="flex items-center gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6">
+                                <div className="flex items-center gap-4 bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6">
                                     <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                                        <i className="fas fa-balance-scale text-gray-500"></i>
+                                        <i className="fas fa-balance-scale text-blue-500"></i>
                                         Total Sample Weight (g):
                                     </label>
                                     <input
                                         type="number"
                                         value={sampleWeight}
                                         onChange={(e) => setSampleWeight(e.target.value)}
-                                        className={`w-32 px-3 py-1.5 border border-gray-300 rounded text-center outline-none ${theme.focus} focus:ring-2 bg-white`}
+                                        className={`w-32 px-3 py-1.5 border border-blue-300 rounded text-center outline-none ${theme.focus} focus:ring-2 bg-white`}
                                         placeholder="e.g. 5000"
                                     />
                                 </div>
@@ -167,14 +228,14 @@ export default function SMACalculator() {
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-sm border-collapse">
                                         <thead>
-                                            <tr className="bg-[#f8f9fa]">
-                                                <th className="border border-[#e5e7eb] px-4 py-2 text-left">IS Sieve</th>
-                                                <th className="border border-[#e5e7eb] px-4 py-2 text-center w-32">Weight Retained (g)</th>
-                                                <th className="border border-[#e5e7eb] px-4 py-2 text-center bg-gray-50">% Retained</th>
-                                                <th className="border border-[#e5e7eb] px-4 py-2 text-center bg-gray-50">Cum. % Retained</th>
-                                                <th className="border border-[#e5e7eb] px-4 py-2 text-center font-bold bg-blue-50/30">% Passing</th>
-                                                <th className="border border-[#e5e7eb] px-4 py-2 text-center text-gray-500">Limits</th>
-                                                <th className="border border-[#e5e7eb] px-4 py-2 text-center">Status</th>
+                                            <tr className="bg-gradient-to-r from-blue-50 to-indigo-50">
+                                                <th className="border border-blue-200 px-4 py-3 text-left font-semibold text-blue-800">IS Sieve</th>
+                                                <th className="border border-blue-200 px-4 py-3 text-center w-32 font-semibold text-blue-800">Weight Retained (g)</th>
+                                                <th className="border border-blue-200 px-4 py-3 text-center bg-gray-50 font-semibold">% Retained</th>
+                                                <th className="border border-blue-200 px-4 py-3 text-center bg-gray-50 font-semibold">Cum. % Retained</th>
+                                                <th className="border border-blue-200 px-4 py-3 text-center font-bold bg-blue-100 text-blue-800">% Passing</th>
+                                                <th className="border border-blue-200 px-4 py-3 text-center text-gray-600 font-semibold">Limits</th>
+                                                <th className="border border-blue-200 px-4 py-3 text-center font-semibold">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -183,7 +244,12 @@ export default function SMACalculator() {
 
                                                 return (
                                                     <tr key={idx}>
-                                                        <td className="border border-[#e5e7eb] px-4 py-2 font-medium">{sieve.size}</td>
+                                                        <td className="border border-[#e5e7eb] px-4 py-2 font-medium">
+                                                            <div className="flex items-center gap-2">
+                                                                <i className="fas fa-circle text-blue-400 text-xs"></i>
+                                                                {sieve.size}
+                                                            </div>
+                                                        </td>
                                                         <td className="border border-[#e5e7eb] px-2 py-1">
                                                             <input
                                                                 type="number"
@@ -199,7 +265,7 @@ export default function SMACalculator() {
                                                         <td className="border border-[#e5e7eb] px-4 py-2 text-center text-gray-600 bg-gray-50">
                                                             {res ? res.cumPercentRetained : '-'}
                                                         </td>
-                                                        <td className="border border-[#e5e7eb] px-4 py-2 text-center font-bold text-blue-700 bg-blue-50/30">
+                                                        <td className="border border-[#e5e7eb] px-4 py-2 text-center font-bold text-blue-700 bg-blue-50">
                                                             {res ? res.percentPassing : '-'}
                                                         </td>
                                                         <td className="border border-[#e5e7eb] px-4 py-2 text-center text-xs text-gray-500">
@@ -218,15 +284,28 @@ export default function SMACalculator() {
                                             })}
                                         </tbody>
                                     </table>
-                                    <div className="flex justify-center gap-3 mt-4">
-                                        <button onClick={reset} className="px-6 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors">
-                                            <i className="fas fa-redo mr-1"></i> Reset
-                                        </button>
-                                    </div>
+                                </div>
+
+                                <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-100">
+                                    <button
+                                        onClick={reset}
+                                        className="px-6 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors shadow-sm"
+                                    >
+                                        <i className="fas fa-redo mr-1"></i> Reset
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </section>
+
+                    {/* Mid-Content Ad */}
+                    <div className="bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200 rounded-xl p-6 text-center text-gray-500 mb-8">
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                            <i className="fas fa-ad text-2xl"></i>
+                        </div>
+                        <p className="text-sm font-medium">Advertisement</p>
+                        <p className="text-xs text-gray-400">Premium Ad Space Available</p>
+                    </div>
 
 
 
@@ -287,7 +366,7 @@ export default function SMACalculator() {
                                 <CustomDropdown
                                     options={gradeOptions}
                                     value={grade}
-                                    onChange={setGrade}
+                                    onChange={handleGradeChange}
                                     theme={theme}
                                 />
                             </div>

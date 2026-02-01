@@ -25,28 +25,43 @@ export default function SoilSieveAnalysisCalculator() {
 
     const calculate = () => {
         let cumulative = 0;
-        let calculatedTotal = 0;
 
-        // First pass: calculate total weight from retained inputs if they change generally
-        // But here we rely on the totalWeight state for percentage calc unless we want to sum it up dynamically
-        // To be safe, let's use the sum of retained as the base for percentages if totalWeight acts as "check"
-        // Or strictly follow standard where Total Weight is input. Let's sum retained for now to be robust.
-        const sumRetained = sieveData.reduce((acc, row) => acc + Number(row.retained), 0);
+        // Calculate total weight from sum of retained weights (standard practice in soil analysis)
+        const sumRetained = sieveData.reduce((acc, row) => {
+            const retained = Math.max(0, parseFloat(row.retained) || 0);
+            return acc + (isNaN(retained) || !isFinite(retained) ? 0 : retained);
+        }, 0);
 
-        // If sumRetained > 0, we can use it to check against input Total Weight or just use it. 
-        // For simplicity and accuracy in labs, usually Sum Retained is the Total Weight used for % calculation.
-        // We'll update the totalWeight input to match the sum if needed, or just use sum.
+        // Use sum of retained as total weight (standard in soil sieve analysis)
         const activeTotal = sumRetained > 0 ? sumRetained : totalWeight;
+        
+        if (activeTotal <= 0 || isNaN(activeTotal) || !isFinite(activeTotal)) {
+            setSieveData(prev => prev.map(row => ({
+                ...row,
+                cumRetained: '0.00',
+                passing: '100.00',
+                passingVal: 100
+            })));
+            setResults({ d10: '-', d30: '-', d60: '-', cu: '-', cc: '-', fm: '-', type: '-' });
+            return;
+        }
 
         const updated = sieveData.map((row) => {
-            cumulative += Number(row.retained);
+            const retained = Math.max(0, parseFloat(row.retained) || 0);
+            const validRetained = isNaN(retained) || !isFinite(retained) ? 0 : retained;
+            
+            cumulative += validRetained;
+            const percentRetained = activeTotal > 0 ? (validRetained / activeTotal) * 100 : 0;
             const cumRetained = activeTotal > 0 ? (cumulative / activeTotal) * 100 : 0;
-            const passing = 100 - cumRetained;
+            const passing = Math.max(0, Math.min(100, 100 - cumRetained));
+            
             return {
                 ...row,
+                retained: validRetained,
+                percentRetained: percentRetained.toFixed(2),
                 cumRetained: cumRetained.toFixed(2),
-                passing: Math.max(0, passing).toFixed(2),
-                passingVal: Math.max(0, passing) // numeric for interpolation
+                passing: passing.toFixed(2),
+                passingVal: passing // numeric for interpolation
             };
         });
 

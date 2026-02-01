@@ -99,6 +99,39 @@ export const ALL_CALCULATORS = [
     { name: 'Anti Termite Calculator', slug: '/anti-termite', icon: 'fa-bug', category: 'Others' },
     { name: 'Unit Converter', slug: '/unit-converter', icon: 'fa-exchange-alt', category: 'Others' },
     { name: 'Countertop Calculator', slug: '/countertop', icon: 'fa-square', category: 'Others' },
+
+    // Blending Aggregates
+    { name: 'GSB Grading - Grade I (Blending)', slug: '/blending-aggregates/gsb-grading-1', icon: 'fa-filter', category: 'Blending of Aggregates' },
+    { name: 'GSB Grading - Grade II (Blending)', slug: '/blending-aggregates/gsb-grading-2', icon: 'fa-filter', category: 'Blending of Aggregates' },
+    { name: 'GSB Grading - Grade III (Blending)', slug: '/blending-aggregates/gsb-grading-3', icon: 'fa-filter', category: 'Blending of Aggregates' },
+    { name: 'GSB Grading - Grade IV (Blending)', slug: '/blending-aggregates/gsb-grading-4', icon: 'fa-filter', category: 'Blending of Aggregates' },
+    { name: 'GSB Grading - Grade V (Blending)', slug: '/blending-aggregates/gsb-grading-5', icon: 'fa-filter', category: 'Blending of Aggregates' },
+    { name: 'GSB Grading - Grade VI (Blending)', slug: '/blending-aggregates/gsb-grading-6', icon: 'fa-filter', category: 'Blending of Aggregates' },
+    { name: 'WMM Grading (Blending)', slug: '/blending-aggregates/wmm', icon: 'fa-layer-group', category: 'Blending of Aggregates' },
+    { name: 'WBM Grading - Coarse 1 (Blending)', slug: '/blending-aggregates/wbm-coarse-1', icon: 'fa-road', category: 'Blending of Aggregates' },
+    { name: 'WBM Grading - Coarse 2 (Blending)', slug: '/blending-aggregates/wbm-coarse-2', icon: 'fa-road', category: 'Blending of Aggregates' },
+    { name: 'WBM Screening Type A (Blending)', slug: '/blending-aggregates/wbm-screening-a', icon: 'fa-road', category: 'Blending of Aggregates' },
+    { name: 'WBM Screening Type B (Blending)', slug: '/blending-aggregates/wbm-screening-b', icon: 'fa-road', category: 'Blending of Aggregates' },
+    { name: 'DBM Grading - I (Blending)', slug: '/blending-aggregates/dbm-grading-1', icon: 'fa-cubes', category: 'Blending of Aggregates' },
+    { name: 'DBM Grading - II (Blending)', slug: '/blending-aggregates/dbm-grading-2', icon: 'fa-cubes', category: 'Blending of Aggregates' },
+    { name: 'BC Grading - I (Blending)', slug: '/blending-aggregates/bc-grading-1', icon: 'fa-th', category: 'Blending of Aggregates' },
+    { name: 'BC Grading - II (Blending)', slug: '/blending-aggregates/bc-grading-2', icon: 'fa-th', category: 'Blending of Aggregates' },
+    { name: 'Bituminous Macadam - I (Blending)', slug: '/blending-aggregates/bm-grading-1', icon: 'fa-road', category: 'Blending of Aggregates' },
+    { name: 'Bituminous Macadam - II (Blending)', slug: '/blending-aggregates/bm-grading-2', icon: 'fa-road', category: 'Blending of Aggregates' },
+    { name: 'Sand Asphalt (Blending)', slug: '/blending-aggregates/sand-asphalt', icon: 'fa-grip-horizontal', category: 'Blending of Aggregates' },
+    { name: 'MSS Type A (Blending)', slug: '/blending-aggregates/mss-type-a', icon: 'fa-layer-group', category: 'Blending of Aggregates' },
+    { name: 'MSS Type B (Blending)', slug: '/blending-aggregates/mss-type-b', icon: 'fa-layer-group', category: 'Blending of Aggregates' },
+    { name: 'Surface Dressing 19mm (Blending)', slug: '/blending-aggregates/sd-19mm', icon: 'fa-road', category: 'Blending of Aggregates' },
+    { name: 'Surface Dressing 13mm (Blending)', slug: '/blending-aggregates/sd-13mm', icon: 'fa-road', category: 'Blending of Aggregates' },
+    { name: 'Surface Dressing 10mm (Blending)', slug: '/blending-aggregates/sd-10mm', icon: 'fa-road', category: 'Blending of Aggregates' },
+    { name: 'Surface Dressing 6mm (Blending)', slug: '/blending-aggregates/sd-6mm', icon: 'fa-road', category: 'Blending of Aggregates' },
+    { name: 'Slurry Seal Type 1 (Blending)', slug: '/blending-aggregates/slurry-type-1', icon: 'fa-fill-drip', category: 'Blending of Aggregates' },
+    { name: 'Slurry Seal Type 2 (Blending)', slug: '/blending-aggregates/slurry-type-2', icon: 'fa-fill-drip', category: 'Blending of Aggregates' },
+    { name: 'Slurry Seal Type 3 (Blending)', slug: '/blending-aggregates/slurry-type-3', icon: 'fa-fill-drip', category: 'Blending of Aggregates' },
+    { name: 'SMA 13mm (Blending)', slug: '/blending-aggregates/sma-13mm', icon: 'fa-grip-horizontal', category: 'Blending of Aggregates' },
+    { name: 'SMA 19mm (Blending)', slug: '/blending-aggregates/sma-19mm', icon: 'fa-grip-horizontal', category: 'Blending of Aggregates' },
+    { name: 'Mastic Asphalt Coarse (Blending)', slug: '/blending-aggregates/mastic-coarse', icon: 'fa-road', category: 'Blending of Aggregates' },
+    { name: 'Mastic Asphalt Fine (Blending)', slug: '/blending-aggregates/mastic-fine', icon: 'fa-road', category: 'Blending of Aggregates' },
 ];
 
 // Sieve Analysis Calculators for Quick Nav
@@ -129,8 +162,8 @@ export const BLENDING_NAV = [
     { name: 'MSS', slug: '/blending-aggregates/mss-type-a', icon: 'fa-layer-group' },
     { name: 'Surface Dressing', slug: '/blending-aggregates/sd-19mm', icon: 'fa-road' },
     { name: 'Slurry Seal', slug: '/blending-aggregates/slurry-type-1', icon: 'fa-fill-drip' },
-    { name: 'SMA', slug: '/blending-aggregates/sma-13mm', icon: 'fa-grip-horizontal' },
-
+    { name: 'Mastic Asphalt', slug: '/blending-aggregates/mastic-coarse', icon: 'fa-road' },
+];
 // Quantity Estimator Quick Nav
 export const QUANTITY_ESTIMATOR_NAV = [
     { name: 'Cement Concrete', slug: '/cement-concrete', icon: 'fa-cubes' },

@@ -94,7 +94,7 @@ export default function WBMGradingCalculator() {
 
     useEffect(() => {
         const totalWeight = parseFloat(sampleWeight);
-        if (!totalWeight || totalWeight <= 0) {
+        if (!totalWeight || totalWeight <= 0 || isNaN(totalWeight) || !isFinite(totalWeight)) {
             setResults({});
             return;
         }
@@ -103,12 +103,23 @@ export default function WBMGradingCalculator() {
         let cumRetainedWeight = 0;
 
         currentData.sieves.forEach(sieve => {
-            const retained = parseFloat(inputs[sieve.size] || 0);
+            const retained = Math.max(0, parseFloat(inputs[sieve.size] || 0) || 0);
+            if (isNaN(retained) || !isFinite(retained)) {
+                newResults[sieve.size] = {
+                    retained: 0,
+                    percentRetained: '0.00',
+                    cumPercentRetained: '0.00',
+                    percentPassing: '100.00',
+                    status: sieve.size === 'Pan' ? '-' : 'Fail'
+                };
+                return;
+            }
+
             cumRetainedWeight += retained;
 
-            const percentRetained = (retained / totalWeight) * 100;
-            const cumPercentRetained = (cumRetainedWeight / totalWeight) * 100;
-            const percentPassing = 100 - cumPercentRetained;
+            const percentRetained = totalWeight > 0 ? (retained / totalWeight) * 100 : 0;
+            const cumPercentRetained = totalWeight > 0 ? (cumRetainedWeight / totalWeight) * 100 : 0;
+            const percentPassing = Math.max(0, Math.min(100, 100 - cumPercentRetained));
 
             let status = 'Fail';
             if (sieve.size === 'Pan') {
@@ -126,7 +137,7 @@ export default function WBMGradingCalculator() {
             };
         });
         setResults(newResults);
-    }, [inputs, grade, sampleWeight]);
+    }, [inputs, grade, sampleWeight, currentData]);
 
     const reset = () => {
         setInputs({});
@@ -147,11 +158,6 @@ export default function WBMGradingCalculator() {
     }, []);
 
     const gradeOptions = Object.keys(GRADING_DATA).map(g => ({ value: g, label: g }));
-
-    // Search Filter for Quick Nav
-    const filteredCalcs = SIEVE_ANALYSIS_CALCS.filter(calc =>
-        calc.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
 
     return (
         <main className="min-h-screen bg-[#F7F9FF]">

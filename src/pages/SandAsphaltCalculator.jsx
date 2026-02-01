@@ -35,7 +35,7 @@ export default function SandAsphaltCalculator() {
 
     useEffect(() => {
         const totalWeight = parseFloat(sampleWeight);
-        if (!totalWeight || totalWeight <= 0) {
+        if (!totalWeight || totalWeight <= 0 || isNaN(totalWeight) || !isFinite(totalWeight)) {
             setResults({});
             return;
         }
@@ -44,12 +44,23 @@ export default function SandAsphaltCalculator() {
         let cumRetainedWeight = 0;
 
         SAND_ASPHALT_DATA.sieves.forEach(sieve => {
-            const retained = parseFloat(inputs[sieve.size] || 0);
+            const retained = Math.max(0, parseFloat(inputs[sieve.size] || 0) || 0);
+            if (isNaN(retained) || !isFinite(retained)) {
+                newResults[sieve.size] = {
+                    retained: 0,
+                    percentRetained: '0.00',
+                    cumPercentRetained: '0.00',
+                    percentPassing: '100.00',
+                    status: 'Fail'
+                };
+                return;
+            }
+
             cumRetainedWeight += retained;
 
-            const percentRetained = (retained / totalWeight) * 100;
-            const cumPercentRetained = (cumRetainedWeight / totalWeight) * 100;
-            const percentPassing = 100 - cumPercentRetained;
+            const percentRetained = totalWeight > 0 ? (retained / totalWeight) * 100 : 0;
+            const cumPercentRetained = totalWeight > 0 ? (cumRetainedWeight / totalWeight) * 100 : 0;
+            const percentPassing = Math.max(0, Math.min(100, 100 - cumPercentRetained));
 
             let status = 'Fail';
             if (percentPassing >= sieve.min && percentPassing <= sieve.max) {

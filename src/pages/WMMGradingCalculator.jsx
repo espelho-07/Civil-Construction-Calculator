@@ -28,27 +28,38 @@ export default function WMMGradingCalculator() {
     }, [numMaterials]);
 
     const calculate = () => {
+        const totalWeight = parseFloat(sampleWeight);
+        if (!totalWeight || totalWeight <= 0 || isNaN(totalWeight) || !isFinite(totalWeight)) {
+            setResults(null);
+            return;
+        }
+
         const blendedResult = {};
         const materialPercentages = Array(numMaterials).fill(100 / numMaterials);
 
         WMM_GRADING.sieves.forEach(sieve => {
             let blendedRetained = 0;
             for (let m = 0; m < numMaterials; m++) {
-                const retained = materialsData[`material_${m}`]?.[sieve] || 0;
-                blendedRetained += (retained * materialPercentages[m]) / 100;
+                const retained = Math.max(0, parseFloat(materialsData[`material_${m}`]?.[sieve] || 0) || 0);
+                if (!isNaN(retained) && isFinite(retained)) {
+                    blendedRetained += (retained * materialPercentages[m]) / 100;
+                }
             }
             blendedResult[sieve] = {
                 retained: blendedRetained.toFixed(2),
-                cumRetained: 0,
-                passing: 0,
+                cumRetained: '0.00',
+                passing: '100.00',
             };
         });
 
         let cumulative = 0;
         WMM_GRADING.sieves.forEach(sieve => {
-            cumulative += parseFloat(blendedResult[sieve].retained);
-            blendedResult[sieve].cumRetained = ((cumulative / sampleWeight) * 100).toFixed(2);
-            blendedResult[sieve].passing = (100 - parseFloat(blendedResult[sieve].cumRetained)).toFixed(2);
+            const retained = parseFloat(blendedResult[sieve].retained) || 0;
+            cumulative += retained;
+            const cumPercentRetained = totalWeight > 0 ? (cumulative / totalWeight) * 100 : 0;
+            const percentPassing = Math.max(0, Math.min(100, 100 - cumPercentRetained));
+            blendedResult[sieve].cumRetained = cumPercentRetained.toFixed(2);
+            blendedResult[sieve].passing = percentPassing.toFixed(2);
         });
 
         setResults(blendedResult);
