@@ -64,7 +64,8 @@ export default function FlooringCalculator() {
             totalAreaM: totalAreaM.toFixed(2),
             noOfTiles,
             tileArea: tileArea.toFixed(2),
-            mortarVolume: mortarVolume.toFixed(2),
+            mortarVolume: mortarVolume.toFixed(4),
+            dryVolume: mortarVolume.toFixed(4), // For flooring, wet = dry (no bulking needed for bedding mortar)
             cement: cementBags.toFixed(2),
             cementVol: cementVol.toFixed(4),
             cementKg: cementKg.toFixed(2),
