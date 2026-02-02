@@ -132,8 +132,8 @@ export default function ACCalculator() {
                             <div className="text-sm text-gray-600 space-y-2">
                                 <p><strong>Adjustments:</strong></p>
                                 <ul className="list-disc pl-5">
-                                    <li>If temp > 35°C, add 10% load</li>
-                                    <li>If height > 10ft, add 10% load</li>
+                                    <li>{'If temp > 35°C, add 10% load'}</li>
+                                    <li>{'If height > 10ft, add 10% load'}</li>
                                     <li>Each person adds approx 400 BTU heat load</li>
                                 </ul>
                             </div>
