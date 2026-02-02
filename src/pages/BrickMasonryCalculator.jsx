@@ -28,67 +28,59 @@ export default function BrickMasonryCalculator() {
     };
 
     const calculate = () => {
-        let volWall;
-        if (unit === 'Meter') {
-            volWall = length * height * thickness;
-        } else {
-            // Feet to Meter
-            volWall = (length * 0.3048) * (height * 0.3048) * (thickness * 0.3048); // Asking input thickness in feet/inch? Usually thickness is standard. 
-            // Let's assume input text explicitly says unit.
-            // Actually, for consistency, let's keep simple volume logic.
-        }
+        // Convert to meters based on unit
+        // Reference: For Feet mode, length/height in feet, thickness in cm
+        const vol = unit === 'Meter' 
+            ? length * height * thickness 
+            : (length * 0.3048) * (height * 0.3048) * thickness; // thickness already in meters
 
-        // Refine Unit conversion logic
-        // If Unit is Feet: Length(ft), Height(ft), Thickness(inch -> ft)
-        let l_m, h_m, t_m;
-        if (unit === 'Meter') {
-            l_m = length;
-            h_m = height;
-            t_m = thickness; // input in meter
-        } else {
-            l_m = length * 0.3048;
-            h_m = height * 0.3048;
-            t_m = thickness * 0.0254; // input in inch usually for thickness in feet mode? Or keep meter for thickness?
-            // Let's assume user enters thickness in Inch when Feet mode is selected, or use standard wall thickness dropdown.
-        }
+        const volFt3 = vol * 35.3147;
 
-        // Actually, wall thickness is usually 4" (100mm), 9" (230mm) etc.
-        // Let's simplify thickness to select commonly used wall thickness or custom.
-        // For now, I'll use text input and rely on user to enter correct unit value (e.g. 0.23m).
-        // Wait, better to handle units properly.
+        // Reference: Brick Size = 19cm × 9cm × 9cm, Size with Mortar = 20cm × 10cm × 10cm
+        const brickSizeWithMortar = 0.20 * 0.10 * 0.10; // 0.002 m³
+        const brickSizeActual = 0.19 * 0.09 * 0.09; // 0.001539 m³
 
-        const vol = unit === 'Meter' ? length * height * thickness : (length * 0.3048) * (height * 0.3048) * (thickness * 0.0254); // Assuming Thickness in inch for Feet mode.
+        // Reference: No of Bricks = Volume of Brick Masonry / Volume of one Brick (with mortar)
+        const totalBricks = Math.ceil(vol / brickSizeWithMortar);
 
-        const brickVolWithMortar = 0.002; // 20x10x10 cm = 0.002 m3
+        // Reference: Actual Volume of Bricks = No of Bricks × Volume of Brick Without Mortar
+        const actualVolBricks = totalBricks * brickSizeActual;
 
-        const totalBricks = Math.ceil(vol / brickVolWithMortar);
+        // Reference: Quantity of Mortar = Volume of Brick Masonry - Actual Volume of Bricks
+        const mortarVolWet = vol - actualVolBricks;
 
-        const quantityOfMortar = vol * 0.30; // Approx 30% volume is mortar? Or calculate precisely: VolWall - (NoBricks * BrickActualVol).
-        // Actual Brick Vol = 19x9x9 = 0.001539 m3
-        const actualBrickVol = 0.19 * 0.09 * 0.09;
-        const volOfBricksOnly = totalBricks * actualBrickVol;
-        const volOfMortarWet = vol - volOfBricksOnly;
-        const volOfMortarDry = volOfMortarWet * 1.33; // Dry volume factor 1.33
+        // Reference: Add 15% more for wastage, Non-uniform thickness of mortar joins
+        const mortarWithWastage = mortarVolWet + mortarVolWet * 0.15;
+
+        // Reference: Add 25% more for Dry Volume
+        const mortarVolDry = mortarWithWastage + mortarWithWastage * 0.25;
 
         const selectedRatio = ratios[ratio];
         const sumRatio = selectedRatio.cement + selectedRatio.sand;
 
-        const cementVol = (volOfMortarDry * selectedRatio.cement) / sumRatio;
-        const cementBags = Math.ceil(cementVol / 0.035);
+        // Reference: Cement = (Cement Ratio / Sum of Ratio) × Quantity of Mortar
+        const cementVol = (selectedRatio.cement / sumRatio) * mortarVolDry;
+        // Reference: 1 Bag of Cement = 0.035 m³
+        const cementBags = cementVol / 0.035;
+        const cementKg = cementBags * 50;
 
-        const sandVol = (volOfMortarDry * selectedRatio.sand) / sumRatio;
-        const sandTon = sandVol * 1.6; // density approx 1600kg/m3
-
-        // Brick Cost (approx 8 rs)
-        // Cement Cost (approx 350)
-        // Sand Cost (approx 50/cft -> 1750/ton) ? 
+        // Reference: Sand = (Sand Ratio / Sum of Ratio) × Quantity of Mortar
+        const sandVol = (selectedRatio.sand / sumRatio) * mortarVolDry;
+        // Reference: By Considering dry loose bulk density of sand 1500 kg/m³
+        const sandKg = sandVol * 1500;
+        const sandTon = sandKg / 1000;
 
         setResults({
             vol: vol.toFixed(2),
+            volFt3: volFt3.toFixed(2),
             bricks: totalBricks,
-            cementBags,
-            sandTon: sandTon.toFixed(2),
+            mortarVolWet: mortarVolWet.toFixed(4),
+            mortarVolDry: mortarVolDry.toFixed(4),
+            cementBags: Math.ceil(cementBags * 50) / 50, // Round to nearest 0.02 bag
+            cementKg: cementKg.toFixed(2),
             cementVol: cementVol.toFixed(4),
+            sandTon: sandTon.toFixed(2),
+            sandKg: sandKg.toFixed(2),
             sandVol: sandVol.toFixed(4)
         });
     };

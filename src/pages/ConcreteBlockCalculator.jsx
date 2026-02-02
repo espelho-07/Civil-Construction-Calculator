@@ -38,21 +38,34 @@ export default function ConcreteBlockCalculator() {
         const blockVolumeWithMortar = bL * bH * bW;
         const totalBlocks = Math.ceil(wallVolume / blockVolumeWithMortar);
 
-        // Dry Volume of Mortar
+        // Reference: Actual Volume of Blocks = No of Blocks × Volume of Block Without Mortar
         const actualBlockVolume = (blockLength / 1000) * (blockHeight / 1000) * (blockWidth / 1000);
         const totalBlockVolume = totalBlocks * actualBlockVolume;
+        
+        // Reference: Quantity of Mortar = Volume of Block Masonry - Actual Volume of Blocks
         const wetMortarVolume = wallVolume - totalBlockVolume;
-        const dryMortarVolume = wetMortarVolume * 1.33; // 33% increase for dry volume
+        
+        // Reference: Add 15% more for wastage, Non-uniform thickness of mortar joins
+        const mortarWithWastage = wetMortarVolume + wetMortarVolume * 0.15;
+        
+        // Reference: Add 25% more for Dry Volume
+        const dryMortarVolume = mortarWithWastage + mortarWithWastage * 0.25;
 
-        // Cement & Sand (1:5 ratio assumed)
+        // Reference uses 1:6 ratio by default
         const cementRatio = 1;
-        const sandRatio = 5;
+        const sandRatio = 6;
         const totalRatio = cementRatio + sandRatio;
 
-        const cementVol = (dryMortarVolume * cementRatio) / totalRatio;
-        const cementBags = Math.ceil(cementVol / 0.035);
-        const sandVol = (dryMortarVolume * sandRatio) / totalRatio;
-        const sandTons = sandVol * 1.6; // approx density
+        // Reference: Cement = (Cement Ratio / Sum of Ratio) × Quantity of Mortar
+        const cementVol = (cementRatio / totalRatio) * dryMortarVolume;
+        // Reference: 1 Bag of Cement = 0.035 m³
+        const cementBags = cementVol / 0.035;
+        
+        // Reference: Sand = (Sand Ratio / Sum of Ratio) × Quantity of Mortar
+        const sandVol = (sandRatio / totalRatio) * dryMortarVolume;
+        // Reference: By Considering dry loose bulk density of sand 1550 kg/m³
+        const sandKg = sandVol * 1550;
+        const sandTons = sandKg / 1000;
 
         setResults({
             totalBlocks,

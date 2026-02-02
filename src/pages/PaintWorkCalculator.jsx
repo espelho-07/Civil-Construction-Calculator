@@ -22,9 +22,12 @@ export default function PaintWorkCalculator() {
         const windowArea = windowWidth * windowHeight * noOfWindows;
         const actualPaintArea = paintArea - doorArea - windowArea;
         const actualPaintAreaM2 = actualPaintArea / 10.764;
-        const paintLiters = Math.ceil(actualPaintArea / 100);
-        const primerLiters = Math.ceil(actualPaintArea / 100);
-        const puttyKg = Math.ceil(actualPaintArea / 13);
+        // Reference: 1 liter of paint covers upto 100 sq.ft of Area
+        const paintLiters = actualPaintArea / 100;
+        // Reference: 1 liter of primer covers upto 100 sq.ft of Area
+        const primerLiters = actualPaintArea / 100;
+        // Reference: 2.5 kg of putty covers upto 100 sq.ft of Area (so divide by 40)
+        const puttyKg = actualPaintArea / 40;
 
         setResults({
             paintArea: paintArea.toFixed(2),
@@ -32,9 +35,9 @@ export default function PaintWorkCalculator() {
             windowArea: windowArea.toFixed(2),
             actualPaintArea: actualPaintArea.toFixed(2),
             actualPaintAreaM2: actualPaintAreaM2.toFixed(2),
-            paint: paintLiters,
-            primer: primerLiters,
-            putty: puttyKg,
+            paint: paintLiters.toFixed(2),
+            primer: primerLiters.toFixed(2),
+            putty: puttyKg.toFixed(2),
         });
     };
 

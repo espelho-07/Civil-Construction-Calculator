@@ -25,9 +25,10 @@ export default function PlasterCalculator() {
 
         const thicknessM = Number(thickness) / 1000;
         const wetVolume = area * thicknessM;
-        // Add 20% for filling joints, wastage etc.
-        const totalWetVolume = wetVolume * 1.20;
-        const dryVolume = totalWetVolume * 1.33; // Dry volume coefficient
+        // Reference: Add 30% to fill up joints & Cover surface
+        const totalWetVolume = wetVolume + wetVolume * 0.3;
+        // Reference: Increases by 25% of the total dry volume
+        const dryVolume = totalWetVolume + totalWetVolume * 0.25;
 
         const [c, s] = ratio.split(':').map(Number);
         const totalParts = c + s;
@@ -35,17 +36,22 @@ export default function PlasterCalculator() {
         const cementVol = (dryVolume * c) / totalParts;
         const sandVol = (dryVolume * s) / totalParts;
 
-        const cementBags = Math.ceil(cementVol * 28.8);
-        const sandTon = (sandVol * 1.55).toFixed(2); // density approx 1550 kg/m3 = 1.55 ton/m3
+        // Reference: 1 Bag of cement = 0.035 m³
+        const cementBags = cementVol / 0.035;
+        const cementKg = cementBags * 50;
+        // Reference: Sand density = 1550 kg/m³
+        const sandKg = sandVol * 1550;
+        const sandTon = sandKg / 1000;
 
         setResults({
             areaSqM: area.toFixed(2),
             areaSqFt: (area * 10.7639).toFixed(2),
-            wetVol: totalWetVolume.toFixed(4),
-            dryVol: dryVolume.toFixed(4),
-            cementBags,
-            cementKg: (cementBags * 50).toFixed(0),
-            sandTon,
+            wetVol: totalWetVolume.toFixed(2),
+            dryVol: dryVolume.toFixed(2),
+            cementBags: cementBags.toFixed(2),
+            cementKg: cementKg.toFixed(2),
+            sandTon: sandTon.toFixed(2),
+            sandKg: sandKg.toFixed(2),
             sandVolM3: sandVol.toFixed(4),
             sandVolCft: (sandVol * 35.3147).toFixed(2)
         });

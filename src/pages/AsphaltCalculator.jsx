@@ -24,11 +24,12 @@ export default function AsphaltCalculator() {
         if (unit === 'Meter') {
             l = length + lengthCm / 100;
             w = width + widthCm / 100;
-            d = (depth + depthCm / 100) / 100; // depth is in cm
+            // Reference: depth is in meters, not cm
+            d = depth + depthCm / 100;
         } else {
             l = (length + lengthCm / 12) * 0.3048;
             w = (width + widthCm / 12) * 0.3048;
-            d = (depth + depthCm / 12) * 0.0254;
+            d = (depth + depthCm / 12) * 0.3048;
         }
         const volumeM3 = l * w * d;
         const volumeFt3 = volumeM3 * 35.3147;

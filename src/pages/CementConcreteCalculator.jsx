@@ -35,7 +35,8 @@ export default function CementConcreteCalculator() {
         const d = unit === 'Meter' ? depth : depth * 0.3048;
 
         const wetVolume = l * w * d;
-        const dryVolume = wetVolume * 1.54;
+        // Reference: Wet volume of mix is 52.4% higher than dry volume
+        const dryVolume = wetVolume + wetVolume * (52.4 / 100);
 
         const ratioStr = grades[grade].ratio;
         const parts = ratioStr.split(':').map(Number);
@@ -45,25 +46,29 @@ export default function CementConcreteCalculator() {
         const sandVol = (dryVolume * parts[1]) / totalParts;
         const aggVol = (dryVolume * parts[2]) / totalParts;
 
-        const cementBags = Math.ceil(cementVol * 28.8);
+        // Reference: 1 Bag of cement = 0.035 m³
+        const cementBags = cementVol / 0.035;
         const cementKg = cementBags * 50;
-        const sandCft = (sandVol * 35.315).toFixed(2);
-        const sandTon = (sandVol * 1.55).toFixed(2);
-        const aggCft = (aggVol * 35.315).toFixed(2);
-        const aggTon = (aggVol * 1.55).toFixed(2);
+        // Reference: Sand density = 1550 kg/m³
+        const sandKg = sandVol * 1550;
+        const sandTon = sandKg / 1000;
+        // Reference: Aggregate density = 1350 kg/m³
+        const aggKg = aggVol * 1350;
+        const aggTon = aggKg / 1000;
 
         setResults({
             wetVol: wetVolume.toFixed(2),
+            wetVolFt: (wetVolume * 35.3147).toFixed(2),
             dryVol: dryVolume.toFixed(2),
-            cement: cementBags,
-            cementVol: cementVol.toFixed(4),
-            cementKg,
-            sand: sandTon,
-            sandVol: sandVol.toFixed(4),
-            sandCft,
-            aggregate: aggTon,
-            aggVol: aggVol.toFixed(4),
-            aggCft,
+            cement: cementBags.toFixed(2),
+            cementVol: cementVol.toFixed(2),
+            cementKg: cementKg.toFixed(2),
+            sand: sandTon.toFixed(2),
+            sandVol: sandVol.toFixed(2),
+            sandKg: sandKg.toFixed(2),
+            aggregate: aggTon.toFixed(2),
+            aggVol: aggVol.toFixed(2),
+            aggKg: aggKg.toFixed(2),
             ratio: ratioStr,
             parts,
             totalParts,

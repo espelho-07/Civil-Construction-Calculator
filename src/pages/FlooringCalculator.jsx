@@ -15,7 +15,7 @@ export default function FlooringCalculator() {
     const [length, setLength] = useState(10);
     const [width, setWidth] = useState(10);
     const [tileSize, setTileSize] = useState('2x2');
-    const [ratio, setRatio] = useState('1:4');
+    const [ratio, setRatio] = useState('1:6');
 
     const tileSizes = {
         '2x2': { l: 2, w: 2, label: '2 x 2 Feet' },
@@ -38,33 +38,39 @@ export default function FlooringCalculator() {
 
         const tile = tileSizes[tileSize];
         const tileArea = tile.l * tile.w;
-        const noOfTiles = Math.ceil((totalArea / tileArea) * 1.05); // 5% wastage
+        // Reference: No. of Tile Require = Area of Flooring / Area of Tile
+        const noOfTiles = Math.ceil(totalArea / tileArea);
 
-        // Flooring mortar calculation (12mm thick bed)
-        const mortarThickness = 0.012; // 12mm in meters
+        // Reference: Assuming Thickness of Bedding is 0.07m, Ratio of Mortar 1:6
+        const mortarThickness = 0.07; // 70mm in meters as per reference
         const mortarVolume = totalAreaM * mortarThickness;
-        const dryVolume = mortarVolume * 1.33;
 
+        // Reference uses 1:6 ratio for flooring
         const parts = ratio.split(':').map(Number);
         const totalParts = parts[0] + parts[1];
 
-        const cementVol = (dryVolume * parts[0]) / totalParts;
-        const sandVol = (dryVolume * parts[1]) / totalParts;
+        // Reference: Cement = Volume With Bedding × Cement Ratio / Total Ratio ÷ 0.035
+        const cementVol = (mortarVolume * parts[0]) / totalParts;
+        const cementBags = cementVol / 0.035;
+        const cementKg = cementBags * 50;
 
-        const cementBags = Math.ceil(cementVol * 28.8);
-        const sandTon = (sandVol * 1.55).toFixed(2);
+        // Reference: Sand = Volume With Bedding × Sand Ratio / Total Ratio × 1550
+        const sandVol = (mortarVolume * parts[1]) / totalParts;
+        const sandKg = sandVol * 1550;
+        const sandTon = sandKg / 1000;
 
         setResults({
             totalArea: totalArea.toFixed(2),
             totalAreaM: totalAreaM.toFixed(2),
             noOfTiles,
             tileArea: tileArea.toFixed(2),
-            mortarVolume: mortarVolume.toFixed(4),
-            dryVolume: dryVolume.toFixed(4),
-            cement: cementBags,
+            mortarVolume: mortarVolume.toFixed(2),
+            cement: cementBags.toFixed(2),
             cementVol: cementVol.toFixed(4),
-            sand: sandTon,
+            cementKg: cementKg.toFixed(2),
+            sand: sandTon.toFixed(2),
             sandVol: sandVol.toFixed(4),
+            sandKg: sandKg.toFixed(2),
         });
     };
 

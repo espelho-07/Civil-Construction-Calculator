@@ -45,9 +45,14 @@ export default function RoundColumnCalculator() {
         const sandVolume = (dryVolume * ratio.sand) / totalParts;
         const aggregateVolume = (dryVolume * ratio.aggregate) / totalParts;
 
+        // Reference: 1 Bag of cement = 0.035 m³
         const cementBags = cementVolume / 0.035;
-        const sandTons = sandVolume * 1.6;
-        const aggregateTons = aggregateVolume * 1.5;
+        // Reference: Sand density = 1550 kg/m³
+        const sandKg = sandVolume * 1550;
+        const sandTons = sandKg / 1000;
+        // Reference: Aggregate density = 1350 kg/m³
+        const aggregateKg = aggregateVolume * 1350;
+        const aggregateTons = aggregateKg / 1000;
 
         setResults({
             radius: r.toFixed(2),
