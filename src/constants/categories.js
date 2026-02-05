@@ -52,41 +52,9 @@ export const categories = [
         name: 'Environmental Eng.',
         slug: 'environmental-engineering',
         icon: 'fa-leaf',
-        theme: 'emerald', // Distinct from Quantity Green
+        theme: 'emerald',
         count: 3,
         description: 'Water and waste management.'
-    },
-    {
-        name: 'Steel Design',
-        slug: 'steel-design',
-        icon: 'fa-drafting-compass',
-        theme: 'indigo',
-        count: 2,
-        description: 'Structural steel calculations.'
-    },
-    {
-        name: 'Foundation',
-        slug: 'foundation',
-        icon: 'fa-layer-group',
-        theme: 'stone',
-        count: 2,
-        description: 'Footing and pile design.'
-    },
-    {
-        name: 'Health',
-        slug: 'health',
-        icon: 'fa-heartbeat',
-        theme: 'rose',
-        count: 5,
-        description: 'BMI and health metrics.'
-    },
-    {
-        name: 'Math',
-        slug: 'math',
-        icon: 'fa-square-root-alt',
-        theme: 'teal',
-        count: 5,
-        description: 'Mathematical calculations.'
     }
 ];
 

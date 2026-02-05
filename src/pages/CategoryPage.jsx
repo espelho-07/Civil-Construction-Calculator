@@ -74,20 +74,6 @@ const categoryData = {
             { name: 'Bitumen Tack Coat', slug: '/bitumen-tack-coat', icon: 'fa-brush', desc: 'Calculate tack coat quantity' },
         ]
     },
-    'steel-design': {
-        name: 'Steel Design', icon: 'fa-drafting-compass', color: 'text-indigo-600',
-        calculators: [
-            { name: 'Steel Beam Design', slug: '#', icon: 'fa-drafting-compass', desc: 'Design steel beams per IS code' },
-            { name: 'Connection Design', slug: '#', icon: 'fa-link', desc: 'Bolted and welded connections' },
-        ]
-    },
-    foundation: {
-        name: 'Foundation', icon: 'fa-layer-group', color: 'text-stone-600',
-        calculators: [
-            { name: 'Footing Design', slug: '#', icon: 'fa-layer-group', desc: 'Isolated and combined footings' },
-            { name: 'Pile Capacity', slug: '#', icon: 'fa-compress-alt', desc: 'Calculate pile load capacity' },
-        ]
-    },
     'soil-test': {
         name: 'Soil Test', icon: 'fa-vial', color: 'text-amber-600',
         calculators: [

@@ -9,8 +9,8 @@ const mostSearched = [
     { name: 'Tank Volume Calculator', slug: '/tank-volume', icon: 'fa-tint', searches: '28.5K', category: 'Quantity Estimator', theme: 'green' },
     { name: 'GSB Grading', slug: '/sieve-analysis/gsb-grading-1', icon: 'fa-filter', searches: '25.3K', category: 'Sieve Analysis', theme: 'blue' },
     { name: 'CBR Test', slug: '/cbr-test', icon: 'fa-road', searches: '22.8K', category: 'Soil Test', theme: 'amber' },
-    { name: 'BMI Calculator', slug: '/bmi-calculator', icon: 'fa-heartbeat', searches: '20.1K', category: 'Health', theme: 'rose' },
-    { name: 'Percentage Calculator', slug: '/percentage-calculator', icon: 'fa-percent', searches: '18.9K', category: 'Math', theme: 'teal' },
+    { name: 'Bitumen Prime Coat', slug: '/bitumen-prime-coat', icon: 'fa-fill-drip', searches: '20.1K', category: 'Road Construction', theme: 'zinc' },
+    { name: 'Aggregate Impact Value', slug: '/aggregate-impact-value', icon: 'fa-hammer', searches: '18.9K', category: 'Concrete Technology', theme: 'gray' },
 ];
 
 // All calculators for search
