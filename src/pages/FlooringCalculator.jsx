@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
+import MiniNavbar from '../components/MiniNavbar';
+import CategoryQuickNav from '../components/CategoryQuickNav';
 import { getThemeClasses } from '../constants/categories';
+import { QUANTITY_ESTIMATOR_NAV } from '../constants/calculatorRoutes';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 

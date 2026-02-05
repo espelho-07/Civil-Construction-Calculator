@@ -75,7 +75,7 @@ export default function SieveAnalysisPage() {
 
     return (
         <main className="min-h-screen bg-[#F7F9FF]">
-            <CategoryNav activeCategory="quantity-estimator" />
+            <CategoryNav activeCategory="concrete-technology" />
 
             <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 items-start">
                 {/* Main Content */}

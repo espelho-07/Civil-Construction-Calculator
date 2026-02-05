@@ -4,7 +4,7 @@ import CategoryNav from '../components/CategoryNav';
 import { getThemeClasses } from '../constants/categories';
 
 export default function BlendingAggregatesPage() {
-    const theme = getThemeClasses('purple'); // Theme matched to Category Page (Screenshot)
+    const theme = getThemeClasses('gray'); // Theme matched to Concrete Technology category
     const sidebarRef = useRef(null);
 
     const aggregateTypes = [

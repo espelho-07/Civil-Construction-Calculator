@@ -199,9 +199,7 @@ export const SOIL_TEST_NAV = [
     { name: 'Permeability (Falling Head)', slug: '/permeability-falling-head', icon: 'fa-arrow-down' },
     { name: 'Permeability (Constant Head)', slug: '/permeability-constant-head', icon: 'fa-grip-lines' },
     { name: 'In-Situ Density', slug: '/in-situ-density', icon: 'fa-cubes' },
-];
-
-// Concrete Technology Quick Nav
+];// Concrete Technology Quick Nav
 export const CONCRETE_TECHNOLOGY_NAV = [
     { name: 'Aggregate Impact Value', slug: '/aggregate-impact-value', icon: 'fa-hammer' },
     { name: 'Aggregate Crushing Value', slug: '/aggregate-crushing-value', icon: 'fa-compress-alt' },
@@ -212,4 +210,10 @@ export const ENVIRONMENTAL_NAV = [
     { name: 'BOD Calculator', slug: '/bod', icon: 'fa-flask' },
     { name: 'COD Calculator', slug: '/cod', icon: 'fa-vial' },
     { name: 'Ammonical Nitrogen', slug: '/ammonical-nitrogen', icon: 'fa-atom' },
+];
+
+// Road Construction Quick Nav
+export const ROAD_CONSTRUCTION_NAV = [
+    { name: 'Bitumen Prime Coat', slug: '/bitumen-prime-coat', icon: 'fa-fill-drip' },
+    { name: 'Bitumen Tack Coat', slug: '/bitumen-tack-coat', icon: 'fa-brush' },
 ];

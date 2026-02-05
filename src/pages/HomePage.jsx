@@ -3,14 +3,14 @@ import { useState, useRef, useEffect } from 'react';
 import { categories, getThemeClasses } from '../constants/categories';
 
 const mostSearched = [
-    { name: 'Countertop Calculator', slug: '/countertop', icon: 'fa-ruler-combined', searches: '45.2K', category: 'Quantity Estimator' },
-    { name: 'Flooring Calculator', slug: '/flooring', icon: 'fa-th', searches: '42.1K', category: 'Quantity Estimator' },
-    { name: 'Brick Calculator', slug: '/brick-masonry', icon: 'fa-th-large', searches: '32.1K', category: 'Quantity Estimator' },
-    { name: 'Tank Volume Calculator', slug: '/tank-volume', icon: 'fa-tint', searches: '28.5K', category: 'Quantity Estimator' },
-    { name: 'Concrete Block Calculator', slug: '/concrete-block', icon: 'fa-th', searches: '25.3K', category: 'Quantity Estimator' },
-    { name: 'Precast Wall Calculator', slug: '/precast-boundary-wall', icon: 'fa-border-all', searches: '22.8K', category: 'Quantity Estimator' },
-    { name: 'Plastering Calculator', slug: '/plastering', icon: 'fa-brush', searches: '20.1K', category: 'Quantity Estimator' },
-    { name: 'Cement Concrete', slug: '/cement-concrete', icon: 'fa-cubes', searches: '18.9K', category: 'Quantity Estimator' },
+    { name: 'Countertop Calculator', slug: '/countertop', icon: 'fa-ruler-combined', searches: '45.2K', category: 'Quantity Estimator', theme: 'green' },
+    { name: 'Flooring Calculator', slug: '/flooring', icon: 'fa-th', searches: '42.1K', category: 'Quantity Estimator', theme: 'green' },
+    { name: 'Brick Calculator', slug: '/brick-masonry', icon: 'fa-th-large', searches: '32.1K', category: 'Quantity Estimator', theme: 'green' },
+    { name: 'Tank Volume Calculator', slug: '/tank-volume', icon: 'fa-tint', searches: '28.5K', category: 'Quantity Estimator', theme: 'green' },
+    { name: 'GSB Grading', slug: '/sieve-analysis/gsb-grading-1', icon: 'fa-filter', searches: '25.3K', category: 'Sieve Analysis', theme: 'blue' },
+    { name: 'CBR Test', slug: '/cbr-test', icon: 'fa-road', searches: '22.8K', category: 'Soil Test', theme: 'amber' },
+    { name: 'BMI Calculator', slug: '/bmi-calculator', icon: 'fa-heartbeat', searches: '20.1K', category: 'Health', theme: 'rose' },
+    { name: 'Percentage Calculator', slug: '/percentage-calculator', icon: 'fa-percent', searches: '18.9K', category: 'Math', theme: 'teal' },
 ];
 
 // All calculators for search
@@ -228,30 +228,33 @@ export default function HomePage() {
                             <Link to="/category/quantity-estimator" className="text-[#3B68FC] text-sm hover:underline">View all →</Link>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {mostSearched.map((calc, index) => (
-                                <Link
-                                    key={calc.name}
-                                    to={calc.slug}
-                                    className="flex items-start gap-4 p-4 bg-[#f8f9fa] border border-[#e5e7eb] rounded-xl hover:shadow-lg hover:border-[#3B68FC] hover:-translate-y-1 transition-all group"
-                                >
-                                    <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-[#3B68FC] to-indigo-600 rounded-lg shrink-0 shadow-md">
-                                        <i className={`fas ${calc.icon} text-white`}></i>
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <h3 className="font-medium text-[#0A0A0A] text-sm group-hover:text-[#3B68FC] truncate">{calc.name}</h3>
-                                        <div className="flex items-center gap-2 mt-1">
-                                            <span className="text-xs text-[#6b7280]">{calc.category}</span>
-                                            <span className="text-xs text-[#9ca3af]">•</span>
-                                            <span className="text-xs text-[#3B68FC] font-medium">{calc.searches}</span>
+                            {mostSearched.map((calc, index) => {
+                                const theme = getThemeClasses(calc.theme);
+                                return (
+                                    <Link
+                                        key={calc.name}
+                                        to={calc.slug}
+                                        className={`flex items-start gap-4 p-4 bg-white border ${theme.border} rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all group`}
+                                    >
+                                        <div className={`flex items-center justify-center w-12 h-12 bg-gradient-to-br ${theme.gradient} rounded-xl shrink-0 shadow-md group-hover:scale-110 transition-transform`}>
+                                            <i className={`fas ${calc.icon} text-white text-lg`}></i>
                                         </div>
-                                    </div>
-                                    {index < 3 && (
-                                        <span className={`text-xs font-bold px-2 py-1 rounded ${index === 0 ? 'bg-yellow-100 text-yellow-700' : index === 1 ? 'bg-gray-100 text-gray-600' : 'bg-orange-100 text-orange-600'}`}>
-                                            #{index + 1}
-                                        </span>
-                                    )}
-                                </Link>
-                            ))}
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className={`font-semibold text-[#0A0A0A] text-sm group-hover:${theme.text.replace('text-', '')}`}>{calc.name}</h3>
+                                            <div className="flex items-center gap-2 mt-1">
+                                                <span className={`text-xs ${theme.text} font-medium`}>{calc.category}</span>
+                                                <span className="text-xs text-[#9ca3af]">•</span>
+                                                <span className="text-xs text-[#6b7280]">{calc.searches}</span>
+                                            </div>
+                                        </div>
+                                        {index < 3 && (
+                                            <span className={`text-xs font-bold px-2 py-1 rounded ${index === 0 ? 'bg-yellow-100 text-yellow-700' : index === 1 ? 'bg-gray-100 text-gray-600' : 'bg-orange-100 text-orange-600'}`}>
+                                                #{index + 1}
+                                            </span>
+                                        )}
+                                    </Link>
+                                );
+                            })}
                         </div>
                     </div>
 

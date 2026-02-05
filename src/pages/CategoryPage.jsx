@@ -41,7 +41,7 @@ const categoryData = {
             { name: 'Brick Calculator', slug: '/brick-masonry', icon: 'fa-th-large', desc: 'Calculate clay bricks needed' },
             { name: 'Concrete Block Calculator', slug: '/concrete-block', icon: 'fa-th', desc: 'Calculate concrete blocks needed' },
             { name: 'Precast Compound Wall Calculator', slug: '/precast-boundary-wall', icon: 'fa-border-all', desc: 'Boundary wall calculations' },
-            { name: 'Flooring Calculator', slug: '/flooring', icon: 'fa-border-bottom', desc: 'Calculate flooring materials' },
+            { name: 'Flooring Calculator', slug: '/flooring', icon: 'fa-border-all', desc: 'Calculate flooring materials' },
             { name: 'Countertop (Platform) Calculator', slug: '/countertop', icon: 'fa-ruler-combined', desc: 'Kitchen countertop calculations' },
             { name: 'Tank Volume Calculator', slug: '/tank-volume', icon: 'fa-tint', desc: 'Calculate tank capacity' },
             { name: 'Air Conditioner Size Calculator', slug: '/ac-calculator', icon: 'fa-snowflake', desc: 'Calculate AC tonnage' },

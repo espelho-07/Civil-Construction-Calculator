@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
+import MiniNavbar from '../components/MiniNavbar';
+import CategoryQuickNav from '../components/CategoryQuickNav';
 import { getThemeClasses } from '../constants/categories';
+import { ROAD_CONSTRUCTION_NAV } from '../constants/calculatorRoutes';
 
 // Standards Data for Prime Coat
 const STANDARDS_DATA = {
@@ -398,7 +401,10 @@ export default function BitumenPrimeCoatCalculator() {
                 </div>
 
                 {/* Sidebar - Calculator */}
-                <div ref={sidebarRef} className="sticky top-20">
+                <div ref={sidebarRef} className="sticky top-20 space-y-6">
+                    {/* Mini Navbar */}
+                    <MiniNavbar themeName="zinc" />
+
                     <div className={`bg-white rounded-2xl shadow-lg border ${theme.border}`}>
                         {/* Calculator Header */}
                         <div className={`px-5 py-4 ${theme.bg} rounded-t-2xl`}>
@@ -559,6 +565,13 @@ export default function BitumenPrimeCoatCalculator() {
                             ))}
                         </div>
                     </div>
+
+                    {/* Category Quick Nav */}
+                    <CategoryQuickNav
+                        items={ROAD_CONSTRUCTION_NAV}
+                        title="Road Construction Calculators"
+                        themeName="zinc"
+                    />
 
                     {/* Sidebar Ad */}
                     <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">
