@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from './auth/AuthContext';
 import { useSettings } from '../contexts/SettingsContext';
+import { getThemeClasses } from '../constants/categories';
 
 // All calculators for search
 const allCalculators = [
@@ -74,6 +75,20 @@ const allCalculators = [
     { name: 'MSS Calculator', slug: '/sieve-analysis/mss-type-a', icon: 'fa-brush', category: 'Sieve Analysis' },
     { name: 'Sand Asphalt Calculator', slug: '/sieve-analysis/sand-asphalt', icon: 'fa-road', category: 'Sieve Analysis' },
 ];
+
+// Map category name to theme
+const getCategoryTheme = (category) => {
+    const categoryThemeMap = {
+        'Quantity Estimator': 'green',
+        'Concrete Technology': 'gray',
+        'Road Construction': 'zinc',
+        'Soil Test': 'amber',
+        'Sieve Analysis': 'blue',
+        'Blending of Aggregates': 'purple',
+        'Environmental Eng.': 'emerald',
+    };
+    return categoryThemeMap[category] || 'blue';
+};
 
 export default function Header() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -220,22 +235,25 @@ export default function Header() {
                     {/* Search Results Dropdown */}
                     {showResults && filteredCalculators.length > 0 && (
                         <div className={`absolute top-full left-0 right-0 mt-2 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.15)] border overflow-hidden z-[200] ${dropdownBg}`}>
-                            {filteredCalculators.map((calc, index) => (
-                                <Link
-                                    key={calc.slug}
-                                    to={calc.slug}
-                                    onClick={() => { setShowResults(false); setSearchQuery(''); }}
-                                    className={`flex items-center gap-3 px-4 py-2.5 transition-colors ${hoverBg} ${index === selectedIndex ? (isDarkMode ? 'bg-[#0f172a]' : 'bg-blue-50') : ''}`}
-                                >
-                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f0f4ff]'}`}>
-                                        <i className={`fas ${calc.icon} text-[#3B68FC] text-sm`}></i>
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className={`font-medium text-sm truncate ${textColor}`}>{calc.name}</p>
-                                        <p className={`text-xs ${subTextColor}`}>{calc.category}</p>
-                                    </div>
-                                </Link>
-                            ))}
+                            {filteredCalculators.map((calc, index) => {
+                                const theme = getThemeClasses(getCategoryTheme(calc.category));
+                                return (
+                                    <Link
+                                        key={calc.slug}
+                                        to={calc.slug}
+                                        onClick={() => { setShowResults(false); setSearchQuery(''); }}
+                                        className={`flex items-center gap-3 px-4 py-2.5 transition-colors ${hoverBg} ${index === selectedIndex ? (isDarkMode ? 'bg-[#0f172a]' : theme.bgSoft) : ''}`}
+                                    >
+                                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-gradient-to-br ${theme.gradient}`}>
+                                            <i className={`fas ${calc.icon} text-white text-sm`}></i>
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className={`font-medium text-sm truncate ${textColor}`}>{calc.name}</p>
+                                            <span className={`text-xs ${theme.text} inline-block px-2 py-0.5 ${theme.bgSoft} rounded-full`}>{calc.category}</span>
+                                        </div>
+                                    </Link>
+                                );
+                            })}
                         </div>
                     )}
 

@@ -86,6 +86,20 @@ export const allCalculators = [
     { name: 'Sand Asphalt Calculator', slug: '/sieve-analysis/sand-asphalt', icon: 'fa-road', category: 'Sieve Analysis' },
 ];
 
+// Map category name to theme
+const getCategoryTheme = (category) => {
+    const categoryThemeMap = {
+        'Quantity Estimator': 'green',
+        'Concrete Technology': 'gray',
+        'Road Construction': 'zinc',
+        'Soil Test': 'amber',
+        'Sieve Analysis': 'blue',
+        'Blending of Aggregates': 'purple',
+        'Environmental Eng.': 'emerald',
+    };
+    return categoryThemeMap[category] || 'blue';
+};
+
 
 export default function HomePage() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -195,21 +209,24 @@ export default function HomePage() {
 
                             {filteredCalculators.length > 0 ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                    {filteredCalculators.map((calc, index) => (
-                                        <Link
-                                            key={calc.slug}
-                                            to={calc.slug}
-                                            className={`flex items-start gap-4 p-4 bg-[#f8f9fa] border-2 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all group ${index === selectedIndex ? 'border-[#3B68FC] bg-blue-50' : 'border-[#e5e7eb] hover:border-[#3B68FC]'}`}
-                                        >
-                                            <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-[#3B68FC] to-indigo-600 rounded-xl shrink-0 shadow-md">
-                                                <i className={`fas ${calc.icon} text-white text-lg`}></i>
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <h3 className="font-semibold text-[#0A0A0A] text-sm group-hover:text-[#3B68FC]">{calc.name}</h3>
-                                                <span className="text-xs text-[#6b7280] mt-1 inline-block">{calc.category}</span>
-                                            </div>
-                                        </Link>
-                                    ))}
+                                    {filteredCalculators.map((calc, index) => {
+                                        const theme = getThemeClasses(getCategoryTheme(calc.category));
+                                        return (
+                                            <Link
+                                                key={calc.slug}
+                                                to={calc.slug}
+                                                className={`flex items-start gap-4 p-4 bg-white border-2 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all group ${index === selectedIndex ? `${theme.border} ${theme.bgSoft}` : `border-[#e5e7eb] hover:${theme.border}`}`}
+                                            >
+                                                <div className={`flex items-center justify-center w-12 h-12 bg-gradient-to-br ${theme.gradient} rounded-xl shrink-0 shadow-md`}>
+                                                    <i className={`fas ${calc.icon} text-white text-lg`}></i>
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <h3 className={`font-semibold text-[#0A0A0A] text-sm group-hover:${theme.text}`}>{calc.name}</h3>
+                                                    <span className={`text-xs ${theme.text} mt-1 inline-block px-2 py-0.5 ${theme.bgSoft} rounded-full`}>{calc.category}</span>
+                                                </div>
+                                            </Link>
+                                        );
+                                    })}
                                 </div>
                             ) : (
                                 <div className="text-center py-12 bg-[#f8f9fa] rounded-2xl">
@@ -339,7 +356,7 @@ export default function HomePage() {
                     </div>
                 </div>
             </section>
-        </main>
+        </main >
     );
 }
 
