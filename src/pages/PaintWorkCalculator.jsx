@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
+import MiniNavbar from '../components/MiniNavbar';
+import CategoryQuickNav from '../components/CategoryQuickNav';
+import { QUANTITY_ESTIMATOR_NAV } from '../constants/calculatorRoutes';
 
 export default function PaintWorkCalculator() {
     const theme = getThemeClasses('green');
@@ -54,7 +57,7 @@ export default function PaintWorkCalculator() {
     return (
         <main className="min-h-screen bg-[#F7F9FF]">
             <CategoryNav activeCategory="quantity-estimator" />
-            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
+            <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
                 <div>
                     <div className="flex items-center justify-between mb-4">
                         <div>
@@ -126,8 +129,10 @@ export default function PaintWorkCalculator() {
                     </div>
                 </div>
 
-                <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    {/* THEME BORDER APPLIED HERE */}
+                <aside ref={sidebarRef} className="sticky top-20 space-y-6">
+                    {/* Mini Navbar */}
+                    <MiniNavbar themeName="green" />
+
                     <div className={`bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b ${theme.border} flex items-center gap-3 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
                             <i className="fas fa-paint-roller text-xl text-white"></i>
@@ -143,6 +148,13 @@ export default function PaintWorkCalculator() {
                             <div className="bg-[#f8f9fa] rounded-xl p-4 text-center"><div className="text-xs text-gray-500">Paint Area</div><div className={`text-xl font-bold ${theme.text}`}>{results?.actualPaintArea} ft²</div><div className="grid grid-cols-3 gap-2 mt-3 text-xs"><div className="bg-white p-2 rounded border"><div className="font-bold text-red-500">{results?.paint} L</div><div>Paint</div></div><div className="bg-white p-2 rounded border"><div className="font-bold text-blue-500">{results?.primer} L</div><div>Primer</div></div><div className="bg-white p-2 rounded border"><div className="font-bold text-amber-500">{results?.putty} kg</div><div>Putty</div></div></div></div>
                         </div>
                     </div>
+
+                    {/* Category Quick Nav */}
+                    <CategoryQuickNav
+                        items={QUANTITY_ESTIMATOR_NAV}
+                        title="Quantity Estimator Calculators"
+                        themeName="green"
+                    />
 
                     <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">
                         <i className="fas fa-ad text-2xl mb-1"></i>

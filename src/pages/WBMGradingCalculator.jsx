@@ -5,7 +5,8 @@ import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
 import { SIEVE_ANALYSIS_NAV, BLENDING_NAV } from '../constants/calculatorRoutes';
-import GlobalSearch from '../components/GlobalSearch';
+import MiniNavbar from '../components/MiniNavbar';
+import CategoryQuickNav from '../components/CategoryQuickNav';
 
 // WBM Grading Data (MORTH Table 400-8 & 400-9) with Pan
 const GRADING_DATA = {
@@ -83,10 +84,6 @@ export default function WBMGradingCalculator() {
     const currentData = GRADING_DATA[grade];
     const sidebarRef = useRef(null);
     const navItems = isBlending ? BLENDING_NAV : SIEVE_ANALYSIS_NAV;
-
-    const handleBack = () => {
-        navigate(isBlending ? '/category/blending-aggregates' : '/category/sieve-analysis-aggregates');
-    };
 
     const handleInputChange = (sieveSize, value) => {
         setInputs(prev => ({ ...prev, [sieveSize]: value }));
@@ -423,8 +420,8 @@ export default function WBMGradingCalculator() {
 
                 {/* Sidebar */}
                 <div ref={sidebarRef} className="sticky top-20 space-y-6">
-                    {/* Global Search */}
-                    <GlobalSearch />
+                    {/* Mini Navbar */}
+                    <MiniNavbar themeName={isBlending ? 'purple' : 'blue'} />
 
                     {/* Grade Selector */}
                     <div className={`bg-white rounded-2xl shadow-lg border ${theme.border}`}>
@@ -454,29 +451,11 @@ export default function WBMGradingCalculator() {
                     </div>
 
                     {/* Quick Nav */}
-                    <div className={`bg-white rounded-2xl shadow-lg border ${theme.border}`}>
-                        <div className={`px-5 py-3 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
-                            <h3 className="font-bold text-white text-sm flex items-center gap-2">
-                                <i className="fas fa-compass"></i>
-                                Sieve Analysis Calculators
-                            </h3>
-                        </div>
-                        <div className="p-3 max-h-64 overflow-y-auto">
-                            {navItems.map((calc, idx) => (
-                                <Link
-                                    key={idx}
-                                    to={calc.slug}
-                                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${location.pathname.includes(calc.slug.split('/').pop())
-                                        ? 'bg-blue-100 text-blue-700 font-medium'
-                                        : 'hover:bg-gray-50 text-gray-600'
-                                        }`}
-                                >
-                                    <i className={`fas ${calc.icon} w-4 text-center ${location.pathname.includes(calc.slug.split('/').pop()) ? 'text-blue-600' : 'text-gray-400'}`}></i>
-                                    {calc.name}
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
+                    <CategoryQuickNav
+                        items={navItems}
+                        title={isBlending ? 'Blending Calculators' : 'Sieve Analysis Calculators'}
+                        themeName={isBlending ? 'purple' : 'blue'}
+                    />
 
                     {/* Sidebar Ad */}
                     <div className="bg-gradient-to-br from-gray-50 to-slate-100 border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500">

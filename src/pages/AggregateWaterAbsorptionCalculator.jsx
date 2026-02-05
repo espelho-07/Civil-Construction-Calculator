@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
+import MiniNavbar from '../components/MiniNavbar';
+import CategoryQuickNav from '../components/CategoryQuickNav';
+import { CONCRETE_TECHNOLOGY_NAV } from '../constants/calculatorRoutes';
 
 // Info Tooltip Component
 function InfoTooltip({ text, theme }) {
@@ -100,7 +103,7 @@ export default function AggregateWaterAbsorptionCalculator() {
         <main className="min-h-screen bg-[#F7F9FF]">
             <CategoryNav activeCategory="concrete-technology" />
 
-            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 items-start">
+            <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
                 {/* Main Content */}
                 <div>
                     <div className="flex items-center justify-between mb-2">
@@ -336,7 +339,10 @@ export default function AggregateWaterAbsorptionCalculator() {
                 </div>
 
                 {/* Sidebar */}
-                <div ref={sidebarRef} className="sticky top-20">
+                <div ref={sidebarRef} className="sticky top-20 space-y-6">
+                    {/* Mini Navbar */}
+                    <MiniNavbar themeName="gray" />
+
                     {/* Result Card */}
                     {result && (
                         <div className={`bg-white rounded-2xl shadow-lg border ${theme.border} overflow-hidden mb-4`}>
@@ -376,6 +382,13 @@ export default function AggregateWaterAbsorptionCalculator() {
                     </div>
 
                     {/* Sidebar Ad */}
+                    {/* Category Quick Nav */}
+                    <CategoryQuickNav
+                        items={CONCRETE_TECHNOLOGY_NAV}
+                        title="Concrete Technology Calculators"
+                        themeName="gray"
+                    />
+
                     <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">
                         <i className="fas fa-ad text-2xl mb-1"></i>
                         <p className="text-xs">Ad Space</p>

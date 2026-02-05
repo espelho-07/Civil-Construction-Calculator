@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
+import MiniNavbar from '../components/MiniNavbar';
+import CategoryQuickNav from '../components/CategoryQuickNav';
+import { SOIL_TEST_NAV } from '../constants/calculatorRoutes';
 
 export default function LiquidLimitCalculator() {
     const theme = getThemeClasses('amber');
@@ -132,7 +135,10 @@ export default function LiquidLimitCalculator() {
                     </div>
                 </div>
 
-                <aside ref={sidebarRef} className="sticky top-20 h-fit">
+                <aside ref={sidebarRef} className="sticky top-20 space-y-6">
+                    {/* Mini Navbar */}
+                    <MiniNavbar themeName="amber" />
+
                     <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
                             <i className="fas fa-water text-xl text-white"></i>
@@ -174,6 +180,13 @@ export default function LiquidLimitCalculator() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Category Quick Nav */}
+                    <CategoryQuickNav
+                        items={SOIL_TEST_NAV}
+                        title="Soil Test Calculators"
+                        themeName="amber"
+                    />
 
                     <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">
                         <i className="fas fa-ad text-2xl mb-1"></i>

@@ -4,6 +4,9 @@ import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
+import MiniNavbar from '../components/MiniNavbar';
+import CategoryQuickNav from '../components/CategoryQuickNav';
+import { QUANTITY_ESTIMATOR_NAV } from '../constants/calculatorRoutes';
 
 export default function PlasterCalculator() {
     const theme = getThemeClasses('green');
@@ -25,9 +28,13 @@ export default function PlasterCalculator() {
 
         const thicknessM = Number(thickness) / 1000;
         const wetVolume = area * thicknessM;
-        // Add 20% for filling joints, wastage etc.
-        const totalWetVolume = wetVolume * 1.20;
-        const dryVolume = totalWetVolume * 1.33; // Dry volume coefficient
+
+        // Match original site logic:
+        // Volume of mortar = Area × thickness
+        // Add 30% for joints & surface = × 1.30
+        // Add 25% for dry volume = × 1.25
+        const volWithJoints = wetVolume * 1.30;
+        const dryVolume = volWithJoints * 1.25;
 
         const [c, s] = ratio.split(':').map(Number);
         const totalParts = c + s;
@@ -35,13 +42,14 @@ export default function PlasterCalculator() {
         const cementVol = (dryVolume * c) / totalParts;
         const sandVol = (dryVolume * s) / totalParts;
 
-        const cementBags = Math.ceil(cementVol * 28.8);
+        // No. of cement bags = Cement Volume / 0.035
+        const cementBags = (cementVol / 0.035).toFixed(2);
         const sandTon = (sandVol * 1.55).toFixed(2); // density approx 1550 kg/m3 = 1.55 ton/m3
 
         setResults({
             areaSqM: area.toFixed(2),
             areaSqFt: (area * 10.7639).toFixed(2),
-            wetVol: totalWetVolume.toFixed(4),
+            wetVol: volWithJoints.toFixed(4),
             dryVol: dryVolume.toFixed(4),
             cementBags,
             cementKg: (cementBags * 50).toFixed(0),
@@ -78,7 +86,7 @@ export default function PlasterCalculator() {
     return (
         <main className="min-h-screen bg-[#F7F9FF]">
             <CategoryNav activeCategory="quantity-estimator" />
-            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
+            <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
                 <div>
                     <div className="flex items-center justify-between mb-4">
                         <div>
@@ -170,8 +178,10 @@ export default function PlasterCalculator() {
                     </div>
                 </div>
 
-                <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    {/* THEME BORDER APPLIED HERE */}
+                <aside ref={sidebarRef} className="sticky top-20 space-y-6">
+                    {/* Mini Navbar */}
+                    <MiniNavbar themeName="green" />
+
                     <div className={`bg-white rounded-2xl shadow-lg border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b ${theme.border} flex items-center gap-3 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
                             <i className="fas fa-brush text-xl text-white"></i>
@@ -238,6 +248,13 @@ export default function PlasterCalculator() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Category Quick Nav */}
+                    <CategoryQuickNav
+                        items={QUANTITY_ESTIMATOR_NAV}
+                        title="Quantity Estimator Calculators"
+                        themeName="green"
+                    />
 
                     <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">
                         <i className="fas fa-ad text-2xl mb-1"></i>

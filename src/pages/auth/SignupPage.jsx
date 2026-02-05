@@ -33,16 +33,26 @@ export default function SignupPage() {
 
     const validate = () => {
         const errors = {};
-        if (!formData.name.trim()) errors.name = 'Name is required';
-        else if (formData.name.length < 2) errors.name = 'Name must be at least 2 characters';
+        const name = formData.name.trim();
+        if (!name) errors.name = 'Name is required';
+        else if (name.length < 2) errors.name = 'Name must be at least 2 characters';
+        else if (!/^[a-zA-Z\s]+$/.test(name)) errors.name = 'Name can only contain letters and spaces';
 
         if (!formData.email) errors.email = 'Email is required';
         else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'Invalid email format';
 
         if (!formData.password) errors.password = 'Password is required';
         else if (formData.password.length < 8) errors.password = 'Password must be at least 8 characters';
+        else {
+            const p = formData.password;
+            if (!/[a-z]/.test(p)) errors.password = 'Password needs at least one lowercase letter';
+            else if (!/[A-Z]/.test(p)) errors.password = 'Password needs at least one uppercase letter';
+            else if (!/[0-9]/.test(p)) errors.password = 'Password needs at least one number';
+            else if (!/[!@#$%^&*(),.?":{}|<>]/.test(p)) errors.password = 'Password needs at least one special character (!@#$%^&* etc.)';
+        }
 
-        if (formData.password !== formData.confirmPassword) {
+        if (!formData.confirmPassword) errors.confirmPassword = 'Please confirm your password';
+        else if (formData.password !== formData.confirmPassword) {
             errors.confirmPassword = 'Passwords do not match';
         }
 
@@ -58,10 +68,11 @@ export default function SignupPage() {
 
         setLoading(true);
         const result = await signup({
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
+            fullName: formData.name.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone?.trim() || undefined,
             password: formData.password,
+            confirmPassword: formData.confirmPassword,
         });
         setLoading(false);
 

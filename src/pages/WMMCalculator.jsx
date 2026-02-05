@@ -4,7 +4,7 @@ import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
 import { SIEVE_ANALYSIS_NAV, BLENDING_NAV } from '../constants/calculatorRoutes';
-import GlobalSearch from '../components/GlobalSearch';
+import MiniNavbar from '../components/MiniNavbar';
 
 // WMM Grading Data (MORTH Table 400-11) with Pan
 const WMM_DATA = {
@@ -32,9 +32,6 @@ export default function WMMCalculator() {
     const [sampleWeight, setSampleWeight] = useState('');
     const [results, setResults] = useState({});
     const sidebarRef = useRef(null);
-    const handleBack = () => {
-        navigate(isBlending ? '/category/blending-aggregates' : '/category/sieve-analysis-aggregates');
-    };
 
     const handleInputChange = (sieveSize, value) => {
         setInputs(prev => ({ ...prev, [sieveSize]: value }));
@@ -117,18 +114,9 @@ export default function WMMCalculator() {
                 {/* Main Content */}
                 <div>
                     <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-4">
-                            <button
-                                onClick={handleBack}
-                                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:border-blue-300 transition-all shadow-sm"
-                            >
-                                <i className="fas fa-arrow-left"></i>
-                                <span>Back</span>
-                            </button>
-                            <div>
-                                <h1 className="text-3xl font-bold text-[#0A0A0A] mb-1">Wet Mix Macadam (WMM) Calculator</h1>
-                                <p className="text-[#6b7280]">Grading Analysis for Wet Mix Macadam (MORTH Table 400-11)</p>
-                            </div>
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-1">Wet Mix Macadam (WMM) Calculator</h1>
+                            <p className="text-[#6b7280]">Grading Analysis for Wet Mix Macadam (MORTH Table 400-11)</p>
                         </div>
                         <CalculatorActions
                             calculatorSlug="wmm-grading"
@@ -383,8 +371,8 @@ export default function WMMCalculator() {
 
                 {/* Sidebar */}
                 <div ref={sidebarRef} className="sticky top-20 space-y-6">
-                    {/* Global Search */}
-                    <GlobalSearch />
+                    {/* Mini Navbar */}
+                    <MiniNavbar />
 
                     {/* Calculator Info */}
                     <div className={`bg-white rounded-2xl shadow-lg border ${theme.border}`}>

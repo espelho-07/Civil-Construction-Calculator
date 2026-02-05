@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
-import GlobalSearch from '../components/GlobalSearch';
-import RightSideNavbar from '../components/RightSideNavbar';
+import MiniNavbar from '../components/MiniNavbar';
+import CategoryQuickNav from '../components/CategoryQuickNav';
 import { getThemeClasses } from '../constants/categories';
 import { QUANTITY_ESTIMATOR_NAV } from '../constants/calculatorRoutes';
 
@@ -120,7 +120,7 @@ export default function BrickMasonryCalculator() {
         <main className="min-h-screen bg-[#F7F9FF]">
             <CategoryNav activeCategory="quantity-estimator" />
 
-            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
+            <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
                 <div>
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-4">
@@ -190,13 +190,9 @@ export default function BrickMasonryCalculator() {
                     </div>
                 </div>
 
-                <aside ref={sidebarRef} className="sticky top-20 h-fit space-y-6">
-                    {/* Global Search */}
-                    <GlobalSearch />
-
-                    {/* Right Side Vertical Nav */}
-                    <RightSideNavbar items={QUANTITY_ESTIMATOR_NAV} title="Quantity Estimators" />
-
+                <aside ref={sidebarRef} className="sticky top-20 space-y-6">
+                    {/* Mini Navbar */}
+                    <MiniNavbar themeName="green" />
 
                     <div className={`bg-white rounded-2xl shadow-lg border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b ${theme.border} ${theme.gradient} flex items-center gap-3 bg-gradient-to-r rounded-t-2xl`}>
@@ -265,6 +261,13 @@ export default function BrickMasonryCalculator() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Category Quick Nav */}
+                    <CategoryQuickNav
+                        items={QUANTITY_ESTIMATOR_NAV}
+                        title="Quantity Estimator Calculators"
+                        themeName="green"
+                    />
                 </aside>
             </div>
         </main>

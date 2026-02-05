@@ -10,8 +10,7 @@ import {
     generateEmailVerificationToken,
     verifyEmailToken,
     generatePasswordResetToken,
-    verifyPasswordResetToken,
-    markResetTokenUsed,
+    verifyAndConsumePasswordResetToken,
 } from '../services/tokenService.js';
 import { sendEmail } from '../services/emailService.js';
 import {
@@ -28,6 +27,14 @@ const cookieOptions = {
     secure: config.nodeEnv === 'production',
     sameSite: 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+};
+
+// Cookie clear options (must match path/domain used when setting cookies so browser clears them)
+const clearCookieOptions = {
+    path: '/',
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: config.nodeEnv === 'production',
 };
 
 /**
@@ -276,9 +283,9 @@ export async function logout(req, res) {
             });
         }
 
-        // Clear cookies
-        res.clearCookie('accessToken');
-        res.clearCookie('refreshToken');
+        // Clear cookies (same path/options as set so browser removes them)
+        res.clearCookie('accessToken', clearCookieOptions);
+        res.clearCookie('refreshToken', clearCookieOptions);
 
         return res.json({
             success: true,
@@ -314,9 +321,9 @@ export async function logoutAll(req, res) {
             details: 'Logged out from all devices'
         });
 
-        // Clear cookies
-        res.clearCookie('accessToken');
-        res.clearCookie('refreshToken');
+        // Clear cookies (same path/options as set so browser removes them)
+        res.clearCookie('accessToken', clearCookieOptions);
+        res.clearCookie('refreshToken', clearCookieOptions);
 
         return res.json({
             success: true,
@@ -349,19 +356,21 @@ export async function refreshAccessToken(req, res) {
         const user = await verifyRefreshToken(refreshToken);
 
         if (!user) {
-            res.clearCookie('accessToken');
-            res.clearCookie('refreshToken');
+            res.clearCookie('accessToken', clearCookieOptions);
+            res.clearCookie('refreshToken', clearCookieOptions);
             return res.status(401).json({
                 success: false,
                 message: 'Invalid or expired refresh token',
             });
         }
 
-        // Generate new access token
+        // Generate new tokens (token rotation)
         const accessToken = generateAccessToken(user);
+        const newRefreshToken = await generateRefreshToken(user.id);
 
-        // Set new access token cookie
+        // Set new tokens
         res.cookie('accessToken', accessToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 });
+        res.cookie('refreshToken', newRefreshToken, cookieOptions);
 
         return res.json({
             success: true,
@@ -478,6 +487,24 @@ export async function resendVerification(req, res) {
             });
         }
 
+        // Check last verification email sent time (prevent spam)
+        const lastToken = await prisma.emailVerificationToken.findFirst({
+            where: { userId: user.id },
+            orderBy: { createdAt: 'desc' },
+        });
+
+        if (lastToken) {
+            const timeSinceLastEmail = Date.now() - lastToken.createdAt.getTime();
+            const minInterval = 60 * 1000; // 1 minute minimum between emails
+            
+            if (timeSinceLastEmail < minInterval) {
+                return res.status(429).json({
+                    success: false,
+                    message: 'Please wait before requesting another verification email',
+                });
+            }
+        }
+
         const verificationToken = await generateEmailVerificationToken(user.id);
         const verificationUrl = `${config.clientUrl}/verify-email?token=${verificationToken}`;
 
@@ -548,7 +575,8 @@ export async function resetPassword(req, res) {
     try {
         const { token, password } = req.body;
 
-        const resetToken = await verifyPasswordResetToken(token);
+        // Verify and consume token atomically
+        const resetToken = await verifyAndConsumePasswordResetToken(token);
 
         if (!resetToken) {
             return res.status(400).json({
@@ -569,9 +597,6 @@ export async function resetPassword(req, res) {
                 lockedUntil: null,
             },
         });
-
-        // Mark token as used
-        await markResetTokenUsed(resetToken.id);
 
         // Invalidate all refresh tokens (logout all devices)
         await invalidateAllUserTokens(resetToken.userId);

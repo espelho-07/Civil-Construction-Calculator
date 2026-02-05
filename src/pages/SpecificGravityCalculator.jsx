@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
+import MiniNavbar from '../components/MiniNavbar';
+import CategoryQuickNav from '../components/CategoryQuickNav';
+import { SOIL_TEST_NAV } from '../constants/calculatorRoutes';
 
 export default function SpecificGravityCalculator() {
     const theme = getThemeClasses('amber');
@@ -33,7 +36,7 @@ export default function SpecificGravityCalculator() {
     return (
         <main className="min-h-screen bg-[#F7F9FF]">
             <CategoryNav activeCategory="soil-test" />
-            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
+            <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
                 <div>
                     <div className="flex items-center justify-between mb-4">
                         <div>
@@ -113,7 +116,10 @@ export default function SpecificGravityCalculator() {
                     </section>
                 </div>
 
-                <aside ref={sidebarRef} className="sticky top-20 h-fit">
+                <aside ref={sidebarRef} className="sticky top-20 space-y-6">
+                    {/* Mini Navbar */}
+                    <MiniNavbar themeName="amber" />
+
                     <div className={`bg-white rounded-2xl shadow-lg overflow-hidden border ${theme.border}`}>
                         {/* Standardized Gradient Header */}
                         <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient} flex items-center gap-3`}>
@@ -147,6 +153,13 @@ export default function SpecificGravityCalculator() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Category Quick Nav */}
+                    <CategoryQuickNav
+                        items={SOIL_TEST_NAV}
+                        title="Soil Test Calculators"
+                        themeName="amber"
+                    />
                 </aside>
             </div>
         </main>

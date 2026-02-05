@@ -4,6 +4,9 @@ import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
+import MiniNavbar from '../components/MiniNavbar';
+import CategoryQuickNav from '../components/CategoryQuickNav';
+import { QUANTITY_ESTIMATOR_NAV } from '../constants/calculatorRoutes';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
@@ -35,7 +38,10 @@ export default function CementConcreteCalculator() {
         const d = unit === 'Meter' ? depth : depth * 0.3048;
 
         const wetVolume = l * w * d;
-        const dryVolume = wetVolume * 1.54;
+
+        // As per original calculator: Wet Volume = Dry Volume + 52.4% of Dry Volume
+        // i.e. wetVolumeOfMix = wetVolume * 1.524
+        const dryVolume = wetVolume * 1.524;
 
         const ratioStr = grades[grade].ratio;
         const parts = ratioStr.split(':').map(Number);
@@ -45,12 +51,14 @@ export default function CementConcreteCalculator() {
         const sandVol = (dryVolume * parts[1]) / totalParts;
         const aggVol = (dryVolume * parts[2]) / totalParts;
 
-        const cementBags = Math.ceil(cementVol * 28.8);
-        const cementKg = cementBags * 50;
+        // As per original calculator:
+        // No. of cement bags = Cement Volume / 0.035 (m³ per bag)
+        const cementBags = (cementVol / 0.035).toFixed(2);
+        const cementKg = (cementBags * 50).toFixed(2);
         const sandCft = (sandVol * 35.315).toFixed(2);
-        const sandTon = (sandVol * 1.55).toFixed(2);
+        const sandTon = (sandVol * 1.55).toFixed(2); // 1550 kg/m³ → 1.55 ton/m³
         const aggCft = (aggVol * 35.315).toFixed(2);
-        const aggTon = (aggVol * 1.55).toFixed(2);
+        const aggTon = (aggVol * 1.35).toFixed(2); // 1350 kg/m³ → 1.35 ton/m³
 
         setResults({
             wetVol: wetVolume.toFixed(2),
@@ -107,7 +115,7 @@ export default function CementConcreteCalculator() {
         <main className="min-h-screen bg-[#F7F9FF]">
             <CategoryNav activeCategory="quantity-estimator" />
 
-            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
+            <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
                 {/* Main Content */}
                 <div>
                     <div className="flex items-center justify-between mb-4">
@@ -312,7 +320,10 @@ export default function CementConcreteCalculator() {
                 </div>
 
                 {/* Calculator Widget (Sidebar) */}
-                <aside ref={sidebarRef} className="sticky top-20 h-fit">
+                <aside ref={sidebarRef} className="sticky top-20 space-y-6">
+                    {/* Mini Navbar */}
+                    <MiniNavbar themeName="green" />
+
                     <div className={`bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b ${theme.border} flex items-center gap-3 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
                             <i className="fas fa-cubes text-xl text-white"></i>
@@ -396,6 +407,13 @@ export default function CementConcreteCalculator() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Category Quick Nav */}
+                    <CategoryQuickNav
+                        items={QUANTITY_ESTIMATOR_NAV}
+                        title="Quantity Estimator Calculators"
+                        themeName="green"
+                    />
 
                     {/* Sidebar Ad */}
                     <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">

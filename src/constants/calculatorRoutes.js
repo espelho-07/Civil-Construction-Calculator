@@ -185,3 +185,31 @@ export const QUANTITY_ESTIMATOR_NAV = [
     { name: 'Asphalt', slug: '/asphalt', icon: 'fa-road' },
 ];
 
+// Soil Test Quick Nav
+export const SOIL_TEST_NAV = [
+    { name: 'CBR Test', slug: '/cbr-test', icon: 'fa-vial' },
+    { name: 'Liquid Limit', slug: '/liquid-limit', icon: 'fa-tint' },
+    { name: 'Specific Gravity', slug: '/specific-gravity', icon: 'fa-balance-scale' },
+    { name: 'Free Swell Index', slug: '/free-swell-index', icon: 'fa-expand-arrows-alt' },
+    { name: 'Water Content', slug: '/water-content', icon: 'fa-droplet' },
+    { name: 'Soil Sieve Analysis', slug: '/soil-sieve-analysis', icon: 'fa-filter' },
+    { name: 'UCS Test', slug: '/ucs-test', icon: 'fa-compress' },
+    { name: 'Vane Shear', slug: '/vane-shear', icon: 'fa-fan' },
+    { name: 'Direct Shear', slug: '/direct-shear', icon: 'fa-arrows-alt-h' },
+    { name: 'Permeability (Falling Head)', slug: '/permeability-falling-head', icon: 'fa-arrow-down' },
+    { name: 'Permeability (Constant Head)', slug: '/permeability-constant-head', icon: 'fa-grip-lines' },
+    { name: 'In-Situ Density', slug: '/in-situ-density', icon: 'fa-cubes' },
+];
+
+// Concrete Technology Quick Nav
+export const CONCRETE_TECHNOLOGY_NAV = [
+    { name: 'Aggregate Impact Value', slug: '/aggregate-impact-value', icon: 'fa-hammer' },
+    { name: 'Aggregate Crushing Value', slug: '/aggregate-crushing-value', icon: 'fa-compress-alt' },
+    { name: 'Aggregate Abrasion Value', slug: '/aggregate-abrasion-value', icon: 'fa-circle-notch' },
+    { name: 'Aggregate Water Absorption', slug: '/aggregate-water-absorption', icon: 'fa-tint' },
+];// Environmental Engineering Quick Nav
+export const ENVIRONMENTAL_NAV = [
+    { name: 'BOD Calculator', slug: '/bod', icon: 'fa-flask' },
+    { name: 'COD Calculator', slug: '/cod', icon: 'fa-vial' },
+    { name: 'Ammonical Nitrogen', slug: '/ammonical-nitrogen', icon: 'fa-atom' },
+];

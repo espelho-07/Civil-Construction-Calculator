@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
+import MiniNavbar from '../components/MiniNavbar';
+import CategoryQuickNav from '../components/CategoryQuickNav';
+import { QUANTITY_ESTIMATOR_NAV } from '../constants/calculatorRoutes';
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from 'chart.js';
 import { Pie, Bar } from 'react-chartjs-2';
 
@@ -18,32 +21,85 @@ export default function ConstructionCostCalculator() {
 
     const calculate = () => {
         const totalCost = builtUpArea * costPerSqFt;
+
+        // Thumb-rule months approximation kept same as before
         const months = Math.ceil(builtUpArea / 150);
 
-        // Cost distribution (approximate for residential construction)
-        const materials = {
-            cement: { percent: 16.5, price: 350, unit: 'bag' },
-            steel: { percent: 23, price: 55, unit: 'kg' },
-            aggregate: { percent: 7, price: 50, unit: 'cft' },
-            sand: { percent: 12, price: 50, unit: 'cft' },
-            paint: { percent: 5, price: 250, unit: 'ltr' },
-            bricks: { percent: 8, price: 8, unit: 'nos' },
-            flooring: { percent: 8, price: 80, unit: 'sqft' },
-            plumbing: { percent: 7, price: null, unit: 'lumpsum' },
-            electrical: { percent: 6, price: null, unit: 'lumpsum' },
-            miscellaneous: { percent: 7.5, price: null, unit: 'lumpsum' },
+        // Thumb rule constants taken from
+        // https://www.civil-engineering-calculators.com/Quantity-Estimator/Construction-Cost-Estimator-Calculator
+        // Quantities per 1 ft² of built-up area
+        const cementBagsPerSqft = 0.4;     // 400 bags / 1000 ft²
+        const sandTonPerSqft = 0.816;      // 816 ton / 1000 ft²
+        const aggregateTonPerSqft = 0.608; // 608 ton / 1000 ft²
+        const steelKgPerSqft = 4;          // 4000 kg / 1000 ft²
+        const paintLtPerSqft = 0.18;       // 180 lt / 1000 ft²
+        const bricksPerSqft = 8;           // 8000 bricks / 1000 ft²
+        const flooringSqftPerSqft = 1.3;   // 1300 ft² flooring / 1000 ft² built‑up
+
+        // Cost percentage distribution (thumb rule)
+        const PERCENT = {
+            cement: 16.4,
+            sand: 12.3,
+            aggregate: 7.4,
+            steel: 24.6,
+            paint: 4.1,
+            bricks: 4.4,
+            flooring: 8.0,
+            finishers: 16.5,
+            fittings: 22.8,
         };
 
-        const breakdown = {};
-        Object.entries(materials).forEach(([key, val]) => {
-            const cost = (totalCost * val.percent) / 100;
-            breakdown[key] = {
-                cost: Math.round(cost),
-                quantity: val.price ? Math.ceil(cost / val.price) : null,
-                unit: val.unit,
-                percent: val.percent,
-            };
-        });
+        const breakdown = {
+            cement: {
+                cost: Math.round((totalCost * PERCENT.cement) / 100),
+                quantity: (builtUpArea * cementBagsPerSqft).toFixed(2),
+                unit: 'Bags',
+                percent: PERCENT.cement,
+            },
+            sand: {
+                cost: Math.round((totalCost * PERCENT.sand) / 100),
+                quantity: (builtUpArea * sandTonPerSqft).toFixed(2),
+                unit: 'Ton',
+                percent: PERCENT.sand,
+            },
+            aggregate: {
+                cost: Math.round((totalCost * PERCENT.aggregate) / 100),
+                quantity: (builtUpArea * aggregateTonPerSqft).toFixed(2),
+                unit: 'Ton',
+                percent: PERCENT.aggregate,
+            },
+            steel: {
+                cost: Math.round((totalCost * PERCENT.steel) / 100),
+                quantity: (builtUpArea * steelKgPerSqft).toFixed(2),
+                unit: 'Kg',
+                percent: PERCENT.steel,
+            },
+            paint: {
+                cost: Math.round((totalCost * PERCENT.paint) / 100),
+                quantity: (builtUpArea * paintLtPerSqft).toFixed(2),
+                unit: 'Lt',
+                percent: PERCENT.paint,
+            },
+            bricks: {
+                cost: Math.round((totalCost * PERCENT.bricks) / 100),
+                quantity: (builtUpArea * bricksPerSqft).toFixed(2),
+                unit: 'Nos',
+                percent: PERCENT.bricks,
+            },
+            flooring: {
+                cost: Math.round((totalCost * PERCENT.flooring) / 100),
+                quantity: (builtUpArea * flooringSqftPerSqft).toFixed(2),
+                unit: 'ft²',
+                percent: PERCENT.flooring,
+            },
+            // For fittings we only expose cost (thumb rule) – quantity is project‑specific
+            fittings: {
+                cost: Math.round((totalCost * PERCENT.fittings) / 100),
+                quantity: null,
+                unit: 'Lumpsum',
+                percent: PERCENT.fittings,
+            },
+        };
 
         setResults({
             totalCost,
@@ -110,7 +166,7 @@ export default function ConstructionCostCalculator() {
         <main className="min-h-screen bg-[#F7F9FF]">
             <CategoryNav activeCategory="quantity-estimator" />
 
-            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
+            <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
                 {/* Main Content */}
                 <div>
                     <div className="flex items-center justify-between mb-4">
@@ -376,8 +432,10 @@ export default function ConstructionCostCalculator() {
                 </div>
 
                 {/* Calculator Widget (Sidebar) */}
-                <aside ref={sidebarRef} className="sticky top-20 h-fit">
-                    {/* THEME BORDER APPLIED HERE */}
+                <aside ref={sidebarRef} className="sticky top-20 space-y-6">
+                    {/* Mini Navbar */}
+                    <MiniNavbar themeName="green" />
+
                     <div className={`bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border ${theme.border}`}>
                         <div className={`px-5 py-4 border-b ${theme.border} flex items-center gap-3 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
                             <i className="fas fa-rupee-sign text-xl text-white"></i>
@@ -425,6 +483,13 @@ export default function ConstructionCostCalculator() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Category Quick Nav */}
+                    <CategoryQuickNav
+                        items={QUANTITY_ESTIMATOR_NAV}
+                        title="Quantity Estimator Calculators"
+                        themeName="green"
+                    />
 
                     {/* Sidebar Ad */}
                     <div className="bg-[#f0f0f0] border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500 mt-4">

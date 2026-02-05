@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import { getThemeClasses } from '../constants/categories';
+import MiniNavbar from '../components/MiniNavbar';
 
 // Mastic Asphalt Grading Data (MORTH Table 500-30)
 const MASTIC_DATA = {
@@ -123,10 +124,6 @@ export default function MasticAsphaltCalculator() {
     };
 
     // Back to category
-    const handleBack = () => {
-        navigate(isBlending ? '/category/blending-aggregates' : '/category/sieve-analysis-aggregates');
-    };
-
     useEffect(() => {
         const update = () => {
             if (sidebarRef.current) {
@@ -146,20 +143,11 @@ export default function MasticAsphaltCalculator() {
             <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
                 {/* Main Content */}
                 <div>
-                    {/* Header with Back Button */}
+                    {/* Header */}
                     <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-4">
-                            <button
-                                onClick={handleBack}
-                                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:border-blue-300 transition-all shadow-sm"
-                            >
-                                <i className="fas fa-arrow-left"></i>
-                                <span>Back</span>
-                            </button>
-                            <div>
-                                <h1 className="text-3xl font-bold text-[#0A0A0A] mb-1">Mastic Asphalt Calculator</h1>
-                                <p className="text-[#6b7280]">Mastic Asphalt Grading Analysis (MORTH)</p>
-                            </div>
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-1">Mastic Asphalt Calculator</h1>
+                            <p className="text-[#6b7280]">Mastic Asphalt Grading Analysis (MORTH)</p>
                         </div>
                         <CalculatorActions
                             calculatorSlug="mastic-asphalt"
@@ -338,8 +326,11 @@ export default function MasticAsphaltCalculator() {
                 </div>
 
                 {/* Sidebar */}
-                <div ref={sidebarRef} className="sticky top-20">
-                    <div className={`bg-white rounded-2xl shadow-lg border ${theme.border} mb-6`}>
+                <div ref={sidebarRef} className="sticky top-20 space-y-6">
+                    {/* Mini Navbar */}
+                    <MiniNavbar />
+
+                    <div className={`bg-white rounded-2xl shadow-lg border ${theme.border}`}>
                         <div className={`px-5 py-4 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">

@@ -1,6 +1,4 @@
-import pkg from '@prisma/client';
-const { PrismaClient } = pkg;
-const prisma = new PrismaClient();
+import prisma from '../config/database.js';
 import { logSecurityEvent, SecurityActions, SecurityStatus } from '../services/securityService.js';
 
 /**
@@ -202,6 +200,7 @@ export const updateProfile = async (req, res) => {
         });
 
         res.json({
+            success: true,
             message: 'Profile updated successfully',
             user: {
                 id: updatedUser.id,
@@ -212,7 +211,7 @@ export const updateProfile = async (req, res) => {
         });
     } catch (error) {
         console.error('Update profile error:', error);
-        res.status(500).json({ message: 'Failed to update profile' });
+        res.status(500).json({ success: false, message: 'Failed to update profile' });
     }
 };
 

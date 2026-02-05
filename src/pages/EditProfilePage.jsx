@@ -65,15 +65,18 @@ export default function EditProfilePage() {
             const response = await api.put('/dashboard/profile', formData);
             setMessage({ type: 'success', text: 'Profile updated successfully!' });
 
-            // Update local auth state
-            if (updateProfile) {
-                updateProfile({ ...user, fullName: formData.fullName, phone: formData.phone });
-            }
+            // Update local auth state so header/profile show new name/phone
+            const updatedUser = response.data?.user || {};
+            updateProfile({
+                fullName: formData.fullName ?? updatedUser.fullName ?? user?.fullName,
+                phone: formData.phone ?? updatedUser.phone ?? user?.phone,
+            });
 
             // Redirect after 2 seconds
             setTimeout(() => navigate('/dashboard'), 2000);
         } catch (err) {
-            setMessage({ type: 'error', text: err.response?.data?.error || 'Failed to update profile' });
+            const msg = err.response?.data?.message || err.response?.data?.error || 'Failed to update profile';
+            setMessage({ type: 'error', text: msg });
         } finally {
             setSaving(false);
         }

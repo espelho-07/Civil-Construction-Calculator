@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../components/auth/AuthContext';
 import { useSettings } from '../contexts/SettingsContext';
 
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api');
+
 export default function ProfilePage() {
     const { user, updateProfile } = useAuth();
     const { isDarkMode } = useSettings();
@@ -14,10 +16,12 @@ export default function ProfilePage() {
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
 
+    const displayName = user?.fullName || user?.name || '';
+
     useEffect(() => {
         if (user) {
             setFormData({
-                name: user.name || '',
+                name: user.fullName || user.name || '',
                 phone: user.phone || '',
             });
         }
@@ -25,8 +29,8 @@ export default function ProfilePage() {
 
     // Get user initials for avatar
     const getUserInitials = () => {
-        if (!user?.name) return 'U';
-        const names = user.name.split(' ');
+        if (!displayName) return 'U';
+        const names = displayName.split(' ');
         if (names.length >= 2) {
             return (names[0][0] + names[1][0]).toUpperCase();
         }
@@ -35,9 +39,9 @@ export default function ProfilePage() {
 
     // Get avatar color based on name
     const getAvatarColor = () => {
-        if (!user?.name) return '#3B68FC';
+        if (!displayName) return '#3B68FC';
         const colors = ['#3B68FC', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4'];
-        const index = user.name.charCodeAt(0) % colors.length;
+        const index = displayName.charCodeAt(0) % colors.length;
         return colors[index];
     };
 
@@ -46,22 +50,21 @@ export default function ProfilePage() {
         setMessage({ type: '', text: '' });
 
         try {
-            const response = await fetch('http://localhost:5000/api/auth/profile', {
+            const response = await fetch(`${API_URL}/auth/profile`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify(formData),
+                body: JSON.stringify({ name: formData.name, phone: formData.phone }),
             });
 
             const data = await response.json();
 
-            if (response.ok) {
+            if (response.ok && data.success) {
                 setMessage({ type: 'success', text: 'Profile updated successfully!' });
                 setIsEditing(false);
-                // Update local auth state
-                if (updateProfile) updateProfile(data.user);
+                if (data.user) updateProfile(data.user);
             } else {
-                setMessage({ type: 'error', text: data.error || 'Failed to update profile' });
+                setMessage({ type: 'error', text: data.message || data.error || 'Failed to update profile' });
             }
         } catch (error) {
             setMessage({ type: 'error', text: 'Network error. Please try again.' });
@@ -120,9 +123,9 @@ export default function ProfilePage() {
                                 {getUserInitials()}
                             </div>
                             <div className="flex-1">
-                                <h2 className={`text-2xl font-bold ${textClass}`}>{user?.name}</h2>
+                                <h2 className={`text-2xl font-bold ${textClass}`}>{displayName}</h2>
                                 <p className={subTextClass}>{user?.email}</p>
-                                {user?.emailVerified && (
+                                {user?.isEmailVerified && (
                                     <span className="inline-flex items-center gap-1 mt-2 px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
                                         <i className="fas fa-check-circle"></i>
                                         Email Verified
@@ -158,7 +161,7 @@ export default function ProfilePage() {
                                     className={`w-full px-4 py-3 border rounded-xl outline-none focus:border-[#3B68FC] focus:ring-2 focus:ring-[#3B68FC]/10 ${inputClass}`}
                                 />
                             ) : (
-                                <p className={`px-4 py-3 rounded-xl ${inputClass}`}>{user?.name}</p>
+                                <p className={`px-4 py-3 rounded-xl ${inputClass}`}>{displayName}</p>
                             )}
                         </div>
 

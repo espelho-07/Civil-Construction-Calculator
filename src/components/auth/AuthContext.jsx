@@ -12,11 +12,25 @@ export function AuthProvider({ children }) {
     // API request helper
     const apiRequest = useCallback(async (endpoint, options = {}) => {
         try {
+            // Get CSRF token from response header or generate new one
+            let csrfToken = null;
+            if (options.method && options.method !== 'GET' && options.method !== 'HEAD') {
+                // For state-changing requests, get CSRF token
+                const tokenResponse = await fetch(`${API_URL}/auth/csrf-token`, {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+                if (tokenResponse.ok) {
+                    csrfToken = tokenResponse.headers.get('X-CSRF-Token');
+                }
+            }
+
             const response = await fetch(`${API_URL}${endpoint}`, {
                 ...options,
                 credentials: 'include', // Include cookies
                 headers: {
                     'Content-Type': 'application/json',
+                    ...(csrfToken && { 'X-CSRF-Token': csrfToken }),
                     ...options.headers,
                 },
             });
@@ -77,7 +91,13 @@ export function AuthProvider({ children }) {
         if (data.success) {
             setUser(data.user);
         } else {
-            setError(data.message);
+            // Show validation field errors so user knows what to fix
+            if (data.errors && Array.isArray(data.errors) && data.errors.length > 0) {
+                const firstMsg = data.errors[0].message;
+                setError(firstMsg);
+            } else {
+                setError(data.message || 'Something went wrong');
+            }
         }
 
         return data;
@@ -94,7 +114,11 @@ export function AuthProvider({ children }) {
         if (data.success) {
             setUser(data.user);
         } else {
-            setError(data.message);
+            if (data.errors?.[0]?.message) {
+                setError(data.errors[0].message);
+            } else {
+                setError(data.message || 'Login failed');
+            }
         }
 
         return data;
@@ -141,6 +165,13 @@ export function AuthProvider({ children }) {
         return apiRequest('/auth/resend-verification', { method: 'POST' });
     };
 
+    // Update local user state (e.g. after profile save) - so UI reflects changes without re-fetch
+    const updateProfile = useCallback((updatedUser) => {
+        if (updatedUser && typeof setUser === 'function') {
+            setUser(prev => (prev ? { ...prev, ...updatedUser } : updatedUser));
+        }
+    }, []);
+
     const value = {
         user,
         loading,
@@ -155,6 +186,7 @@ export function AuthProvider({ children }) {
         resetPassword,
         verifyEmail,
         resendVerification,
+        updateProfile,
         clearError: () => setError(null),
     };
 

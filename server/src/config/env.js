@@ -30,6 +30,35 @@ export const config = {
     bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS) || 12,
     maxLoginAttempts: parseInt(process.env.MAX_LOGIN_ATTEMPTS) || 5,
     lockoutDuration: parseInt(process.env.LOCKOUT_DURATION) || 24 * 60 * 60 * 1000, // 24 hours
+    
+    // Validate required secrets
+    validateSecrets() {
+        const required = ['JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET'];
+        const missing = required.filter(key => !process.env[key]);
+        
+        if (missing.length > 0) {
+            throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
+        }
+        
+        // Validate secret strength
+        if (process.env.JWT_ACCESS_SECRET && process.env.JWT_ACCESS_SECRET.length < 32) {
+            throw new Error('JWT_ACCESS_SECRET must be at least 32 characters long');
+        }
+        
+        if (process.env.JWT_REFRESH_SECRET && process.env.JWT_REFRESH_SECRET.length < 32) {
+            throw new Error('JWT_REFRESH_SECRET must be at least 32 characters long');
+        }
+    },
 };
+
+// Validate secrets on startup
+if (config.nodeEnv === 'production') {
+    try {
+        config.validateSecrets();
+    } catch (error) {
+        console.error('❌ Security Configuration Error:', error.message);
+        process.exit(1);
+    }
+}
 
 export default config;

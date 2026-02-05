@@ -5,7 +5,8 @@ import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
 import { getThemeClasses } from '../constants/categories';
 import { SIEVE_ANALYSIS_NAV, BLENDING_NAV } from '../constants/calculatorRoutes';
-import GlobalSearch from '../components/GlobalSearch';
+import MiniNavbar from '../components/MiniNavbar';
+import CategoryQuickNav from '../components/CategoryQuickNav';
 
 // BC Grading Data (MORTH Table 500-17)
 const BC_DATA = {
@@ -89,10 +90,6 @@ export default function BituminousConcreteCalculator() {
         const gradeNum = newGrade === 'Grading I' ? '1' : '2';
         const basePath = isBlending ? '/blending-aggregates' : '/sieve-analysis';
         navigate(`${basePath}/bc-grading-${gradeNum}`);
-    };
-
-    const handleBack = () => {
-        navigate(isBlending ? '/category/blending-aggregates' : '/category/sieve-analysis-aggregates');
     };
 
     const handleInputChange = (sieveSize, value) => {
@@ -184,20 +181,11 @@ export default function BituminousConcreteCalculator() {
             <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
                 {/* Main Content */}
                 <div>
-                    {/* Header with Back Button */}
+                    {/* Header */}
                     <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-4">
-                            <button
-                                onClick={handleBack}
-                                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:border-blue-300 transition-all shadow-sm"
-                            >
-                                <i className="fas fa-arrow-left"></i>
-                                <span>Back</span>
-                            </button>
-                            <div>
-                                <h1 className="text-3xl font-bold text-[#0A0A0A] mb-1">Bituminous Concrete (BC) Calculator</h1>
-                                <p className="text-[#6b7280]">BC Grading Analysis (MORT&H Table 500-17)</p>
-                            </div>
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-1">Bituminous Concrete (BC) Calculator</h1>
+                            <p className="text-[#6b7280]">BC Grading Analysis (MORT&H Table 500-17)</p>
                         </div>
                         <CalculatorActions
                             calculatorSlug="bc-grading"
@@ -435,8 +423,8 @@ export default function BituminousConcreteCalculator() {
 
                 {/* Sidebar */}
                 <div ref={sidebarRef} className="sticky top-20 space-y-6">
-                    {/* Global Search */}
-                    <GlobalSearch />
+                    {/* Mini Navbar */}
+                    <MiniNavbar themeName={isBlending ? 'purple' : 'blue'} />
 
                     {/* Grade Selector */}
                     <div className={`bg-white rounded-2xl shadow-lg border ${theme.border}`}>
@@ -466,29 +454,11 @@ export default function BituminousConcreteCalculator() {
                     </div>
 
                     {/* Quick Nav */}
-                    <div className={`bg-white rounded-2xl shadow-lg border ${theme.border}`}>
-                        <div className={`px-5 py-3 bg-gradient-to-r ${theme.gradient} rounded-t-2xl`}>
-                            <h3 className="font-bold text-white text-sm flex items-center gap-2">
-                                <i className="fas fa-compass"></i>
-                                Sieve Analysis Calculators
-                            </h3>
-                        </div>
-                        <div className="p-3 max-h-64 overflow-y-auto">
-                            {navItems.map((calc, idx) => (
-                                <Link
-                                    key={idx}
-                                    to={calc.slug}
-                                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${location.pathname.includes(calc.slug.split('/').pop())
-                                        ? 'bg-blue-100 text-blue-700 font-medium'
-                                        : 'hover:bg-gray-50 text-gray-600'
-                                        }`}
-                                >
-                                    <i className={`fas ${calc.icon} w-4 text-center ${location.pathname.includes(calc.slug.split('/').pop()) ? 'text-blue-600' : 'text-gray-400'}`}></i>
-                                    {calc.name}
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
+                    <CategoryQuickNav
+                        items={navItems}
+                        title={isBlending ? 'Blending Calculators' : 'Sieve Analysis Calculators'}
+                        themeName={isBlending ? 'purple' : 'blue'}
+                    />
 
                     {/* Sidebar Ad */}
                     <div className="bg-gradient-to-br from-gray-50 to-slate-100 border-2 border-dashed border-gray-300 rounded-xl p-6 text-center text-gray-500">

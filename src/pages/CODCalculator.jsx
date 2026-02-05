@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
+import MiniNavbar from '../components/MiniNavbar';
 import { getThemeClasses } from '../constants/categories';
 
 // Standards Data for COD
@@ -163,7 +164,7 @@ export default function CODCalculator() {
         <main className="min-h-screen bg-[#F7F9FF]">
             <CategoryNav activeCategory="environmental-engineering" />
 
-            <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 items-start">
+            <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
                 {/* Main Content */}
                 <div>
                     <div className="flex items-center justify-between mb-4">
@@ -372,8 +373,11 @@ export default function CODCalculator() {
                 </div>
 
                 {/* Sidebar */}
-                <div ref={sidebarRef} className="sticky top-20">
-                    <div className={`bg-white rounded-2xl shadow-lg border ${theme.border} mb-6`}>
+                <div ref={sidebarRef} className="sticky top-20 space-y-6">
+                    {/* Mini Navbar */}
+                    <MiniNavbar themeName="emerald" />
+
+                    <div className={`bg-white rounded-2xl shadow-lg border ${theme.border}`}>
                         <div className={`px-5 py-4 ${theme.bg} rounded-t-2xl`}>
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
