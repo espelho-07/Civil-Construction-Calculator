@@ -70,10 +70,20 @@ main input[type="text"] {
 }
 
 main input[type="number"]:focus,
-main input[type="text"]:focus {
+main input[type="text"]:focus,
+main input[type="number"]:focus-visible,
+main input[type="text"]:focus-visible {
   border-color: #3B68FC !important;
   outline: none;
   box-shadow: 0 0 0 2px rgba(59, 104, 252, 0.2);
+}
+
+/* Keyboard-only focus: visible ring (no focus ring on mouse click) */
+main button:focus-visible,
+main select:focus-visible,
+main a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3B68FC;
 }
 
 .dark main input[type="number"],

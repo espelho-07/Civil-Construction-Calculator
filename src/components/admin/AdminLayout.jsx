@@ -7,6 +7,7 @@ const navItems = [
     { to: '/admin/calculations', label: 'All Calculations', icon: 'fa-calculator' },
     { to: '/admin/calculators', label: 'Calculator Usage', icon: 'fa-chart-pie' },
     { to: '/admin/users', label: 'Users', icon: 'fa-users' },
+    { to: '/admin/site-settings', label: 'Site Settings', icon: 'fa-cog' },
 ];
 
 export default function AdminLayout() {

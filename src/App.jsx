@@ -1,14 +1,17 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { AuthProvider } from './components/auth/AuthContext';
 import { RecordCalculatorVisit } from './hooks/useActivityMemory';
 import { SettingsProvider, useSettings } from './contexts/SettingsContext';
+import { useAuth } from './components/auth/AuthContext';
 import { GuestRoute, ProtectedRoute } from './components/auth/ProtectedRoute';
 import AdminLayout from './components/admin/AdminLayout';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminCalculationsPage from './pages/admin/AdminCalculationsPage';
 import AdminCalculatorsPage from './pages/admin/AdminCalculatorsPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
+import AdminSiteSettingsPage from './pages/admin/AdminSiteSettingsPage';
+import { SiteSettingsProvider } from './contexts/SiteSettingsContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
@@ -113,17 +116,24 @@ function ScrollToTop() {
 }
 
 // Main app content with settings-aware background
+// When admin (darpantrader1727@gmail.com) is logged in: only admin panel — no normal site, no Header/Footer on /admin
 function AppContent() {
-    const { isDarkMode } = useSettings();
+    const location = useLocation();
+    const { isAuthenticated, isAdmin, loading } = useAuth();
+    const isDarkMode = useSettings().isDarkMode;
     const bgColor = isDarkMode ? 'bg-[#0f172a]' : 'bg-[#F7F9FF]';
+    const isAdminRoute = location.pathname.startsWith('/admin');
 
     return (
-        <Router>
+        <>
             <ScrollToTop />
             <RecordCalculatorVisit />
+            {!loading && isAuthenticated && isAdmin && !isAdminRoute ? (
+                <Navigate to="/admin" replace />
+            ) : (
             <div className={`min-h-screen flex flex-col ${bgColor} transition-colors duration-300`}>
-                <Header />
-                <ScrollToTopButton />
+                {!isAdminRoute && <Header />}
+                {!isAdminRoute && <ScrollToTopButton />}
                 <div className="flex-1">
                     <Routes>
                         <Route path="/" element={<HomePage />} />
@@ -284,14 +294,17 @@ function AppContent() {
                             <Route path="calculations" element={<AdminCalculationsPage />} />
                             <Route path="calculators" element={<AdminCalculatorsPage />} />
                             <Route path="users" element={<AdminUsersPage />} />
+                            <Route path="site-settings" element={<AdminSiteSettingsPage />} />
+                            <Route path="*" element={<Navigate to="/admin" replace />} />
                         </Route>
                         {/* 404 Route */}
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                 </div>
-                <Footer />
+                {!isAdminRoute && <Footer />}
             </div>
-        </Router>
+            )}
+        </>
     );
 }
 
@@ -299,7 +312,11 @@ function App() {
     return (
         <SettingsProvider>
             <AuthProvider>
-                <AppContent />
+                <SiteSettingsProvider>
+                    <Router>
+                        <AppContent />
+                    </Router>
+                </SiteSettingsProvider>
             </AuthProvider>
         </SettingsProvider>
     );

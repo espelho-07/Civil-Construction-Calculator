@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { allCalculators } from '../pages/HomePage';
+import { useSiteSettings } from '../contexts/SiteSettingsContext';
 
 const calculatorCategories = [
     { name: 'Concrete Technology', slug: 'concrete-technology' },
@@ -20,6 +21,9 @@ const popularCalculators = [
 ];
 
 export default function Footer() {
+    const { settings } = useSiteSettings();
+    const footerTagline = (settings.footer_tagline || '').trim() || 'Free online tools for civil engineers, architects, and construction professionals. Calculate concrete, bricks, steel, soil tests and more.';
+
     return (
         <footer className="relative overflow-hidden bg-gradient-to-r from-blue-50 via-yellow-50/50 to-orange-50 border-t border-[#e5e7eb]">
             {/* Background decorations */}
@@ -36,7 +40,7 @@ export default function Footer() {
                             <img src="/logo-new.png" alt="Civil Engineering Calculators" className="h-12 w-auto" />
                         </Link>
                         <p className="text-[#6b7280] text-sm mb-6 max-w-sm">
-                            Free online tools for civil engineers, architects, and construction professionals. Calculate concrete, bricks, steel, soil tests and more.
+                            {footerTagline}
                         </p>
 
                         {/* App Download Badge */}

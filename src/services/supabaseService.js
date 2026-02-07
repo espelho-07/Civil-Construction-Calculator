@@ -4,9 +4,24 @@
  */
 import { supabase } from '../lib/supabase';
 
+function ensureSupabase() {
+    if (!supabase) throw new Error('Database not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env');
+}
+
+// Sanitize object for JSONB (remove undefined, avoid circular)
+function sanitizeForJson(obj) {
+    if (obj == null || typeof obj !== 'object') return obj ?? {};
+    try {
+        return JSON.parse(JSON.stringify(obj));
+    } catch {
+        return {};
+    }
+}
+
 // ─── Calculations ─────────────────────────────────────────────────────────
 
 export async function getCalculations(userId, options = {}) {
+    ensureSupabase();
     const { page = 1, limit = 50, type, saved, search } = options;
 
     let query = supabase
@@ -46,6 +61,7 @@ export async function getCalculations(userId, options = {}) {
 }
 
 export async function saveCalculation(userId, payload) {
+    ensureSupabase();
     const {
         calculatorSlug,
         calculatorName,
@@ -61,12 +77,12 @@ export async function saveCalculation(userId, payload) {
         .from('calculations')
         .insert({
             user_id: userId,
-            calculator_slug: calculatorSlug,
-            calculator_name: calculatorName,
+            calculator_slug: calculatorSlug || 'unknown',
+            calculator_name: calculatorName || 'Calculation',
             calculator_icon: calculatorIcon || 'fa-calculator',
-            inputs: inputs || {},
-            outputs: outputs || {},
-            is_saved: isSaved || false,
+            inputs: sanitizeForJson(inputs),
+            outputs: sanitizeForJson(outputs),
+            is_saved: isSaved ?? true,
             project_name: projectName || null,
             notes: notes || null,
         })
@@ -152,6 +168,7 @@ export async function getCalculationStats(userId) {
 // ─── Favorites ───────────────────────────────────────────────────────────
 
 export async function getFavorites(userId) {
+    ensureSupabase();
     const { data, error } = await supabase
         .from('favorites')
         .select('*')
@@ -163,6 +180,7 @@ export async function getFavorites(userId) {
 }
 
 export async function checkFavorite(userId, calculatorSlug) {
+    ensureSupabase();
     const { data, error } = await supabase
         .from('favorites')
         .select('id')
@@ -185,21 +203,26 @@ export async function removeFavorite(userId, calculatorSlug) {
 }
 
 export async function toggleFavorite(userId, payload) {
+    ensureSupabase();
     const { calculatorSlug, calculatorName, calculatorIcon, category } = payload;
+    if (!calculatorSlug) throw new Error('Calculator slug is required');
 
-    const { data: existing } = await supabase
+    const { data: existing, error: fetchError } = await supabase
         .from('favorites')
         .select('id')
         .eq('user_id', userId)
         .eq('calculator_slug', calculatorSlug)
         .maybeSingle();
 
+    if (fetchError) throw fetchError;
+
     if (existing) {
-        await supabase
+        const { error: delError } = await supabase
             .from('favorites')
             .delete()
             .eq('user_id', userId)
             .eq('calculator_slug', calculatorSlug);
+        if (delError) throw delError;
         return { isFavorite: false };
     }
 
@@ -275,6 +298,7 @@ export async function getDashboardData(userId, user, profile) {
 // ─── Profile ─────────────────────────────────────────────────────────────
 
 export async function getProfile(userId) {
+    ensureSupabase();
     const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -286,6 +310,7 @@ export async function getProfile(userId) {
 }
 
 export async function updateProfile(userId, updates) {
+    ensureSupabase();
     const { data, error } = await supabase
         .from('profiles')
         .update({
@@ -370,6 +395,45 @@ export async function getAdminCalculations(page = 1, limit = 20) {
         pagination: { page, limit, total: count || 0, totalPages: Math.ceil((count || 0) / limit) },
     };
 }
+
+// ─── Site settings (admin-editable, public read) ───────────────────────────
+
+export async function getSiteSettings() {
+    ensureSupabase();
+    const { data, error } = await supabase
+        .from('site_settings')
+        .select('key, value');
+    if (error) throw error;
+    const map = {};
+    (data || []).forEach((row) => {
+        map[row.key] = row.value != null ? row.value : '';
+    });
+    return map;
+}
+
+export async function updateSiteSetting(key, value) {
+    ensureSupabase();
+    const payload = { key, value, updated_at: new Date().toISOString() };
+    const { data, error } = await supabase
+        .from('site_settings')
+        .upsert(payload, { onConflict: 'key' })
+        .select()
+        .single();
+    if (error) throw error;
+    return data;
+}
+
+export async function getAdminSiteSettings() {
+    ensureSupabase();
+    const { data, error } = await supabase
+        .from('site_settings')
+        .select('*')
+        .order('key');
+    if (error) throw error;
+    return data || [];
+}
+
+// ─── Admin (RLS allows admin to read all) ───────────────────────────────────
 
 export async function getAdminProfiles(page = 1, limit = 20) {
     const from = (page - 1) * limit;

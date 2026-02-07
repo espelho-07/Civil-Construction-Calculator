@@ -8,6 +8,7 @@ import MiniNavbar from '../components/MiniNavbar';
 import CategoryQuickNav from '../components/CategoryQuickNav';
 import { QUANTITY_ESTIMATOR_NAV } from '../constants/calculatorRoutes';
 import { getCalculatorFromPath, useCalculatorActivity } from '../hooks/useActivityMemory';
+import { useCalculatorKeyboard } from '../hooks/useCalculatorKeyboard';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
@@ -39,6 +40,17 @@ export default function CementConcreteCalculator() {
 
     const [results, setResults] = useState(null);
     const sidebarRef = useRef(null);
+
+    const {
+        getInputRef,
+        resultRef,
+        containerRef,
+        handleKeyDown,
+    } = useCalculatorKeyboard({
+        inputCount: 4,
+        onCalculate: calculate,
+        autoFocusFirst: true,
+    });
 
     const calculate = () => {
         const l = unit === 'Meter' ? length : length * 0.3048;
@@ -343,20 +355,28 @@ export default function CementConcreteCalculator() {
                             <h2 className="font-semibold text-white">Cement Concrete Calculator</h2>
                         </div>
 
-                        <div className="p-5">
+                        <div
+                            ref={containerRef}
+                            className="p-5"
+                            onKeyDown={handleKeyDown}
+                            role="form"
+                            aria-label="Cement concrete inputs"
+                        >
                             {/* Unit Toggle */}
                             <div className="mb-4">
-                                <label className="text-xs text-gray-500 mb-1 block">Unit</label>
-                                <div className={`flex ${theme.border} rounded-lg overflow-hidden`}>
-                                    <button onClick={() => setUnit('Meter')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Meter' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Meter</button>
-                                    <button onClick={() => setUnit('Feet')} className={`flex-1 py-2 text-sm font-medium transition-colors ${unit === 'Feet' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`}>Feet</button>
+                                <span className="text-xs text-gray-500 mb-1 block" id="cement-unit-label">Unit</span>
+                                <div className={`flex ${theme.border} rounded-lg overflow-hidden`} role="group" aria-labelledby="cement-unit-label">
+                                    <button type="button" onClick={() => setUnit('Meter')} className={`flex-1 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3B68FC] focus-visible:ring-offset-1 ${unit === 'Meter' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`} aria-pressed={unit === 'Meter'}>Meter</button>
+                                    <button type="button" onClick={() => setUnit('Feet')} className={`flex-1 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3B68FC] focus-visible:ring-offset-1 ${unit === 'Feet' ? theme.button : 'text-[#6b7280] hover:bg-[#f8f9fa]'}`} aria-pressed={unit === 'Feet'}>Feet</button>
                                 </div>
                             </div>
 
                             {/* Grade */}
                             <div className="mb-3">
-                                <label className="text-xs text-gray-500 mb-1 block">Grade of Concrete</label>
+                                <label htmlFor="cement-grade" className="text-xs text-gray-500 mb-1 block">Grade of Concrete</label>
                                 <CustomDropdown
+                                    id="cement-grade"
+                                    ref={getInputRef(0)}
                                     options={Object.entries(grades).map(([key, val]) => ({ value: key, label: val.label }))}
                                     value={grade}
                                     onChange={setGrade}
@@ -367,27 +387,38 @@ export default function CementConcreteCalculator() {
                             {/* Inputs */}
                             <div className="grid grid-cols-3 gap-2 mb-3">
                                 <div>
-                                    <label className="text-xs text-gray-500 mb-1 block">Length</label>
-                                    <input type="number" value={length} onChange={(e) => setLength(Number(e.target.value))} className={`w-full px-2 py-2 ${theme.border} rounded-lg text-sm text-center ${theme.focus} outline-none`} />
+                                    <label htmlFor="cement-length" className="text-xs text-gray-500 mb-1 block">Length</label>
+                                    <input id="cement-length" ref={getInputRef(1)} type="number" inputMode="decimal" min={0} step={0.01} value={length} onChange={(e) => setLength(Number(e.target.value) || 0)} className={`w-full px-2 py-2 ${theme.border} rounded-lg text-sm text-center ${theme.focus} outline-none focus-visible:ring-2 focus-visible:ring-[#3B68FC] focus-visible:ring-offset-1`} aria-label="Length" />
                                 </div>
                                 <div>
-                                    <label className="text-xs text-gray-500 mb-1 block">Width</label>
-                                    <input type="number" value={width} onChange={(e) => setWidth(Number(e.target.value))} className={`w-full px-2 py-2 ${theme.border} rounded-lg text-sm text-center ${theme.focus} outline-none`} />
+                                    <label htmlFor="cement-width" className="text-xs text-gray-500 mb-1 block">Width</label>
+                                    <input id="cement-width" ref={getInputRef(2)} type="number" inputMode="decimal" min={0} step={0.01} value={width} onChange={(e) => setWidth(Number(e.target.value) || 0)} className={`w-full px-2 py-2 ${theme.border} rounded-lg text-sm text-center ${theme.focus} outline-none focus-visible:ring-2 focus-visible:ring-[#3B68FC] focus-visible:ring-offset-1`} aria-label="Width" />
                                 </div>
                                 <div>
-                                    <label className="text-xs text-gray-500 mb-1 block">Depth</label>
-                                    <input type="number" value={depth} step="0.01" onChange={(e) => setDepth(Number(e.target.value))} className={`w-full px-2 py-2 ${theme.border} rounded-lg text-sm text-center ${theme.focus} outline-none`} />
+                                    <label htmlFor="cement-depth" className="text-xs text-gray-500 mb-1 block">Depth</label>
+                                    <input id="cement-depth" ref={getInputRef(3)} type="number" inputMode="decimal" min={0} step={0.01} value={depth} onChange={(e) => setDepth(Number(e.target.value) || 0)} className={`w-full px-2 py-2 ${theme.border} rounded-lg text-sm text-center ${theme.focus} outline-none focus-visible:ring-2 focus-visible:ring-[#3B68FC] focus-visible:ring-offset-1`} aria-label="Depth" />
                                 </div>
                             </div>
 
                             {/* Calculate Button */}
                             <div className="flex gap-2 mb-5">
-                                <button onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium transition-colors`}>Calculate</button>
-                                <button className="bg-red-500 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-red-600 transition-colors">Reset</button>
+                                <button type="button" onClick={calculate} className={`flex-1 ${theme.button} py-2.5 rounded-lg font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#3B68FC]`} aria-label="Calculate">Calculate</button>
+                                <button type="button" className="bg-red-500 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500">Reset</button>
                             </div>
 
-                            {/* Results */}
-                            <div className="bg-[#f8f9fa] rounded-xl p-4 mb-4">
+                            {/* Results - focusable; Ctrl+C copies summary */}
+                            <div
+                                ref={resultRef}
+                                tabIndex={0}
+                                role="region"
+                                aria-label="Calculation results"
+                                aria-live="polite"
+                                className="bg-[#f8f9fa] rounded-xl p-4 mb-4 outline-none focus-visible:ring-2 focus-visible:ring-[#3B68FC] focus-visible:ring-inset"
+                                onCopy={(e) => {
+                                    if (!results) return;
+                                    const text = `Cement Concrete: Volume ${results.wetVol} m³ (Dry ${results.dryVol} m³). Cement: ${results.cement} Bags (${results.cementKg} kg). Sand: ${results.sand} Ton. Aggregate: ${results.aggregate} Ton.`;
+                                    e.clipboardData?.setData('text/plain', text);
+                                }}
                                 <div className="grid grid-cols-2 gap-4 mb-4">
                                     <div className="text-center">
                                         <div className="text-xs text-gray-500">Total Volume of Cement Concrete</div>

@@ -48,7 +48,8 @@ export default function LoginPage() {
         setLoading(false);
 
         if (result.success) {
-            navigate(from, { replace: true });
+            const isAdmin = formData.email.toLowerCase() === 'darpantrader1727@gmail.com';
+            navigate(isAdmin ? '/admin' : from, { replace: true });
         }
     };
 

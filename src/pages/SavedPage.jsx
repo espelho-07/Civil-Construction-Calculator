@@ -22,7 +22,7 @@ export default function SavedPage() {
                         calculatorSlug: f.calculator_slug,
                         name: f.calculator_name,
                         icon: f.calculator_icon || 'fa-calculator',
-                        path: f.calculator_slug?.startsWith('/') ? f.calculator_slug : `/${f.calculator_slug || ''}`,
+                        path: (f.calculator_slug && !f.calculator_slug.startsWith('/')) ? `/${f.calculator_slug}` : (f.calculator_slug || '/'),
                         category: f.category || 'General',
                         savedAt: f.created_at,
                     })));

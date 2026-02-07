@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import { categories, getThemeClasses } from '../constants/categories';
 import { useActivityMemory } from '../hooks/useActivityMemory';
+import { useSiteSettings } from '../contexts/SiteSettingsContext';
 
 const mostSearched = [
     { name: 'Countertop Calculator', slug: '/countertop', icon: 'fa-ruler-combined', searches: '45.2K', category: 'Quantity Estimator', theme: 'green' },
@@ -109,6 +110,10 @@ export default function HomePage() {
     const searchRef = useRef(null);
     const navigate = useNavigate();
     const { lastVisited, recentCalculators, clearHistory, isAvailable } = useActivityMemory();
+    const { settings } = useSiteSettings();
+    const heroTitle = settings.hero_title || 'Civil Engineering Calculators';
+    const heroTagline = settings.hero_tagline || 'Estimate Cement, Concrete, Bricks, Steel, and more with accuracy.';
+    const announcement = (settings.announcement || '').trim();
 
     // Filter calculators based on search query
     const filteredCalculators = searchQuery.length > 0
@@ -149,6 +154,11 @@ export default function HomePage() {
 
     return (
         <main>
+            {announcement && (
+                <div className="bg-gradient-to-r from-[#3B68FC] to-indigo-600 text-white py-2.5 px-6 text-center text-sm font-medium">
+                    {announcement}
+                </div>
+            )}
             <section className="relative py-16 px-6 overflow-hidden min-h-[320px]">
                 <div className="absolute inset-0 -top-24 overflow-hidden pointer-events-none">
                     <div className="absolute w-[500px] h-[500px] bg-blue-200/70 rounded-full blur-[100px] -top-20 -left-32"></div>
@@ -159,10 +169,16 @@ export default function HomePage() {
                     <div className="flex items-center justify-between">
                         <div>
                             <h1 className="text-[48px] leading-[1.1] mb-8 text-[#0A0A0A]">
-                                <span className="font-bold">Civil Engineering</span><br />
-                                <span className="text-[#3B68FC]">Calculators</span>
+                                {heroTitle.includes(' ') ? (
+                                    <>
+                                        <span className="font-bold">{heroTitle.split(' ').slice(0, -1).join(' ')}</span><br />
+                                        <span className="text-[#3B68FC]">{heroTitle.split(' ').slice(-1)[0]}</span>
+                                    </>
+                                ) : (
+                                    <span className="font-bold text-[#0A0A0A]">{heroTitle}</span>
+                                )}
                             </h1>
-                            <p className="text-lg text-[#6b7280] mb-6 max-w-md">Free online tools for structural analysis, concrete design, geotechnical calculations and more.</p>
+                            <p className="text-lg text-[#6b7280] mb-6 max-w-md">{heroTagline}</p>
                             <div className="relative max-w-[500px]" ref={searchRef}>
                                 <input
                                     type="text"

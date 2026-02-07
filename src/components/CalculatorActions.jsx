@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from './auth/AuthContext';
 import { checkFavorite, toggleFavorite } from '../services/supabaseService';
 import { saveCalculation } from '../services/supabaseService';
@@ -41,19 +42,20 @@ export default function CalculatorActions({
 
         try {
             await saveCalculation(user.id, {
-                calculatorSlug,
-                calculatorName,
+                calculatorSlug: calculatorSlug || 'unknown',
+                calculatorName: calculatorName || 'Calculation',
                 calculatorIcon,
-                inputs,
-                outputs,
+                inputs: inputs || {},
+                outputs: outputs || {},
                 isSaved: true,
             });
             setSaveMessage('✓ Saved!');
             setTimeout(() => setSaveMessage(''), 3000);
         } catch (err) {
             console.error('Failed to save calculation:', err);
-            setSaveMessage('Failed to save');
-            setTimeout(() => setSaveMessage(''), 3000);
+            const msg = err?.message?.includes('not configured') ? 'Database not set up' : (err?.message || 'Failed to save');
+            setSaveMessage(msg);
+            setTimeout(() => setSaveMessage(''), 4000);
         } finally {
             setIsSaving(false);
         }
@@ -109,7 +111,7 @@ export default function CalculatorActions({
                 <div className="absolute top-full left-0 mt-2 p-3 bg-gray-900 text-white text-sm rounded-lg shadow-lg z-50 whitespace-nowrap">
                     <div className="flex items-center gap-2">
                         <i className="fas fa-lock"></i>
-                        <span>Please <a href="/login" className="text-blue-400 underline">login</a> to save</span>
+                        <span>Please <Link to="/login" className="text-blue-400 underline hover:text-blue-300">login</Link> to save</span>
                     </div>
                 </div>
             )}
