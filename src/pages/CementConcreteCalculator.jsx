@@ -419,6 +419,7 @@ export default function CementConcreteCalculator() {
                                     const text = `Cement Concrete: Volume ${results.wetVol} m³ (Dry ${results.dryVol} m³). Cement: ${results.cement} Bags (${results.cementKg} kg). Sand: ${results.sand} Ton. Aggregate: ${results.aggregate} Ton.`;
                                     e.clipboardData?.setData('text/plain', text);
                                 }}
+                            >
                                 <div className="grid grid-cols-2 gap-4 mb-4">
                                     <div className="text-center">
                                         <div className="text-xs text-gray-500">Total Volume of Cement Concrete</div>
