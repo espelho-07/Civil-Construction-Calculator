@@ -104,7 +104,7 @@ export default function Header() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const { user, isAuthenticated, logout, loading } = useAuth();
+    const { user, isAuthenticated, isAdmin, logout, loading } = useAuth();
     const { isDarkMode } = useSettings();
 
     // Dark mode classes
@@ -432,6 +432,21 @@ export default function Header() {
                                                     <p className={`text-xs ${subTextColor}`}>Preferences & notifications</p>
                                                 </div>
                                             </Link>
+                                            {isAdmin && (
+                                                <Link
+                                                    to="/admin"
+                                                    onClick={() => setShowUserMenu(false)}
+                                                    className={`flex items-center gap-3 px-4 py-2.5 transition-colors ${hoverBg}`}
+                                                >
+                                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isDarkMode ? 'bg-amber-500/30' : 'bg-amber-100'}`}>
+                                                        <i className="fas fa-shield-halved text-amber-500"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p className={`font-medium text-sm ${textColor}`}>Admin Dashboard</p>
+                                                        <p className={`text-xs ${subTextColor}`}>Manage site & calculators</p>
+                                                    </div>
+                                                </Link>
+                                            )}
                                         </div>
 
                                         {/* Logout */}

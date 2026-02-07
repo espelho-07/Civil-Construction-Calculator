@@ -304,3 +304,88 @@ export async function updateProfile(userId, updates) {
     if (error) throw error;
     return data;
 }
+
+// ─── Admin (RLS allows admin to read all) ───────────────────────────────────
+
+export async function getAdminStats() {
+    const { data: calcs } = await supabase
+        .from('calculations')
+        .select('id, user_id, calculator_slug, calculator_name, calculator_icon, is_saved, created_at')
+        .eq('is_deleted', false);
+
+    const { count: userCount } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true });
+
+    const totalCalcs = calcs?.length || 0;
+    const savedCalcs = calcs?.filter((c) => c.is_saved).length || 0;
+    const uniqueUsers = new Set(calcs?.map((c) => c.user_id) || []).size;
+
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+    const thisMonth = calcs?.filter((c) => new Date(c.created_at) >= startOfMonth).length || 0;
+
+    const bySlug = {};
+    calcs?.forEach((c) => {
+        bySlug[c.calculator_slug] = (bySlug[c.calculator_slug] || 0) + 1;
+    });
+    const topCalculators = Object.entries(bySlug)
+        .map(([slug, count]) => {
+            const first = calcs.find((c) => c.calculator_slug === slug);
+            return { slug, name: first?.calculator_name, icon: first?.calculator_icon, count };
+        })
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 15);
+
+    return {
+        totalCalculations: totalCalcs,
+        savedCalculations: savedCalcs,
+        totalUsers: userCount ?? uniqueUsers,
+        uniqueActiveUsers: uniqueUsers,
+        thisMonth,
+        topCalculators,
+    };
+}
+
+export async function getAdminCalculations(page = 1, limit = 20) {
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+    const { data, error } = await supabase
+        .from('calculations')
+        .select('*')
+        .eq('is_deleted', false)
+        .order('created_at', { ascending: false })
+        .range(from, to);
+
+    if (error) throw error;
+
+    const { count } = await supabase
+        .from('calculations')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_deleted', false);
+
+    return {
+        calculations: data || [],
+        pagination: { page, limit, total: count || 0, totalPages: Math.ceil((count || 0) / limit) },
+    };
+}
+
+export async function getAdminProfiles(page = 1, limit = 20) {
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .range(from, to);
+
+    if (error) throw error;
+
+    const { count } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+
+    return {
+        profiles: data || [],
+        pagination: { page, limit, total: count || 0, totalPages: Math.ceil((count || 0) / limit) },
+    };
+}

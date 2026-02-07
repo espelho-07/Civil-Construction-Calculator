@@ -4,16 +4,19 @@ import { getProfile } from '../../services/supabaseService';
 
 const AuthContext = createContext(null);
 
+const ADMIN_EMAIL = 'darpantrader1727@gmail.com';
+
 function mapSupabaseUser(supabaseUser, profile = null) {
     if (!supabaseUser) return null;
     const meta = supabaseUser.user_metadata || {};
+    const role = profile?.role === 'admin' || supabaseUser.email === ADMIN_EMAIL ? 'admin' : (profile?.role || 'user');
     return {
         id: supabaseUser.id,
         fullName: profile?.full_name || meta.full_name || meta.name || supabaseUser.email?.split('@')[0] || 'User',
         name: profile?.full_name || meta.full_name || meta.name || supabaseUser.email?.split('@')[0] || 'User',
         email: supabaseUser.email,
         phone: profile?.phone || null,
-        role: 'user',
+        role,
         isEmailVerified: !!supabaseUser.email_confirmed_at,
         createdAt: supabaseUser.created_at,
     };
@@ -41,6 +44,12 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         const init = async () => {
             try {
+                if (!supabase) {
+                    console.warn('Supabase not initialized. Auth features unavailable.');
+                    setUser(null);
+                    setLoading(false);
+                    return;
+                }
                 const { data: { session } } = await supabase.auth.getSession();
                 if (session?.user) {
                     const mapped = await fetchUserWithProfile(session.user);
@@ -58,6 +67,10 @@ export function AuthProvider({ children }) {
 
         init();
 
+        if (!supabase) {
+            return;
+        }
+
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             if (session?.user) {
                 const mapped = await fetchUserWithProfile(session.user);
@@ -73,6 +86,9 @@ export function AuthProvider({ children }) {
     const signup = async (userData) => {
         setError(null);
         try {
+            if (!supabase) {
+                throw new Error('Supabase not configured. Please add credentials to .env');
+            }
             const { fullName, email, password, phone } = userData;
             const { data, error: signUpError } = await supabase.auth.signUp({
                 email,
@@ -109,6 +125,9 @@ export function AuthProvider({ children }) {
     const login = async (email, password, rememberMe = false) => {
         setError(null);
         try {
+            if (!supabase) {
+                throw new Error('Supabase not configured. Please add credentials to .env');
+            }
             const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
 
             if (signInError) {
@@ -133,13 +152,18 @@ export function AuthProvider({ children }) {
     };
 
     const logout = async () => {
-        await supabase.auth.signOut();
+        if (supabase) {
+            await supabase.auth.signOut();
+        }
         setUser(null);
     };
 
     const forgotPassword = async (email) => {
         setError(null);
         try {
+            if (!supabase) {
+                throw new Error('Supabase not configured. Please add credentials to .env');
+            }
             const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
                 redirectTo: `${window.location.origin}/reset-password`,
             });
@@ -160,6 +184,9 @@ export function AuthProvider({ children }) {
             return { success: false, message: 'Passwords do not match' };
         }
         try {
+            if (!supabase) {
+                throw new Error('Supabase not configured. Please add credentials to .env');
+            }
             const { error: updateError } = await supabase.auth.updateUser({ password });
             if (updateError) {
                 return { success: false, message: updateError.message };
@@ -172,6 +199,9 @@ export function AuthProvider({ children }) {
 
     const verifyEmail = async (token) => {
         try {
+            if (!supabase) {
+                throw new Error('Supabase not configured. Please add credentials to .env');
+            }
             const { data: { user: u }, error: verifyError } = await supabase.auth.verifyOtp({
                 token_hash: token,
                 type: 'email',
@@ -188,6 +218,9 @@ export function AuthProvider({ children }) {
 
     const resendVerification = async () => {
         try {
+            if (!supabase) {
+                throw new Error('Supabase not configured. Please add credentials to .env');
+            }
             const { error: resendError } = await supabase.auth.resend({
                 type: 'signup',
             });
@@ -210,7 +243,7 @@ export function AuthProvider({ children }) {
         error,
         isAuthenticated: !!user,
         isEmailVerified: user?.isEmailVerified || false,
-        isAdmin: user?.role === 'admin',
+        isAdmin: user?.role === 'admin' || user?.email === ADMIN_EMAIL,
         signup,
         login,
         logout,

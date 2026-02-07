@@ -4,6 +4,11 @@ import { AuthProvider } from './components/auth/AuthContext';
 import { RecordCalculatorVisit } from './hooks/useActivityMemory';
 import { SettingsProvider, useSettings } from './contexts/SettingsContext';
 import { GuestRoute, ProtectedRoute } from './components/auth/ProtectedRoute';
+import AdminLayout from './components/admin/AdminLayout';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import AdminCalculationsPage from './pages/admin/AdminCalculationsPage';
+import AdminCalculatorsPage from './pages/admin/AdminCalculatorsPage';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
@@ -273,6 +278,13 @@ function AppContent() {
                         <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
                         <Route path="/dashboard/calculations" element={<ProtectedRoute><CalculationsPage /></ProtectedRoute>} />
                         <Route path="/dashboard/security" element={<ProtectedRoute><SecurityPage /></ProtectedRoute>} />
+                        {/* Admin Routes (admin only) */}
+                        <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminLayout /></ProtectedRoute>}>
+                            <Route index element={<AdminDashboardPage />} />
+                            <Route path="calculations" element={<AdminCalculationsPage />} />
+                            <Route path="calculators" element={<AdminCalculatorsPage />} />
+                            <Route path="users" element={<AdminUsersPage />} />
+                        </Route>
                         {/* 404 Route */}
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>
