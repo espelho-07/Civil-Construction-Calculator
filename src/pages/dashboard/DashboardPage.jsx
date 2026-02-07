@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../components/auth/AuthContext';
 import { useSettings } from '../../contexts/SettingsContext';
-import api from '../../services/api';
+import { getDashboardData, getProfile } from '../../services/supabaseService';
 
 export default function DashboardPage() {
     const { user, isAuthenticated, loading: authLoading } = useAuth();
@@ -28,9 +28,11 @@ export default function DashboardPage() {
 
     useEffect(() => {
         const fetchDashboard = async () => {
+            if (!user?.id) return;
             try {
-                const response = await api.get('/dashboard');
-                setDashboardData(response.data);
+                const profile = await getProfile(user.id).catch(() => null);
+                const data = await getDashboardData(user.id, user, profile);
+                setDashboardData(data);
             } catch (err) {
                 console.error('Failed to load dashboard:', err);
                 setError('Failed to load dashboard data');
@@ -39,10 +41,12 @@ export default function DashboardPage() {
             }
         };
 
-        if (isAuthenticated) {
+        if (isAuthenticated && user?.id) {
             fetchDashboard();
+        } else {
+            setLoading(false);
         }
-    }, [isAuthenticated]);
+    }, [isAuthenticated, user?.id]);
 
     const formatDate = (dateString) => {
         if (!dateString) return 'Never';
@@ -257,7 +261,7 @@ export default function DashboardPage() {
                                 {recentCalcs.map((calc) => (
                                     <Link
                                         key={calc.id}
-                                        to={calc.calculatorSlug}
+                                        to={calc.calculatorSlug?.startsWith('/') ? calc.calculatorSlug : `/${calc.calculatorSlug || ''}`}
                                         className={`flex items-center gap-4 p-3 rounded-lg border ${borderColor} hover:shadow transition-shadow`}
                                     >
                                         <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f0f4ff]'}`}>
@@ -300,7 +304,7 @@ export default function DashboardPage() {
                                 {favorites.slice(0, 8).map((fav) => (
                                     <Link
                                         key={fav.id}
-                                        to={fav.calculatorSlug}
+                                        to={fav.calculatorSlug?.startsWith('/') ? fav.calculatorSlug : `/${fav.calculatorSlug || ''}`}
                                         className={`flex flex-col items-center p-4 rounded-lg border ${borderColor} hover:shadow hover:border-[#3B68FC] transition-all text-center`}
                                     >
                                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-2 ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f0f4ff]'}`}>

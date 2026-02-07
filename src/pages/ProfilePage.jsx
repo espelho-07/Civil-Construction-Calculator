@@ -2,11 +2,10 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../components/auth/AuthContext';
 import { useSettings } from '../contexts/SettingsContext';
-
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api');
+import { updateProfile } from '../services/supabaseService';
 
 export default function ProfilePage() {
-    const { user, updateProfile } = useAuth();
+    const { user, updateProfile: updateAuthProfile } = useAuth();
     const { isDarkMode } = useSettings();
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
@@ -46,28 +45,17 @@ export default function ProfilePage() {
     };
 
     const handleSave = async () => {
+        if (!user?.id) return;
         setSaving(true);
         setMessage({ type: '', text: '' });
 
         try {
-            const response = await fetch(`${API_URL}/auth/profile`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({ name: formData.name, phone: formData.phone }),
-            });
-
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                setMessage({ type: 'success', text: 'Profile updated successfully!' });
-                setIsEditing(false);
-                if (data.user) updateProfile(data.user);
-            } else {
-                setMessage({ type: 'error', text: data.message || data.error || 'Failed to update profile' });
-            }
+            await updateProfile(user.id, { name: formData.name, phone: formData.phone });
+            setMessage({ type: 'success', text: 'Profile updated successfully!' });
+            setIsEditing(false);
+            updateAuthProfile({ fullName: formData.name, name: formData.name, phone: formData.phone });
         } catch (error) {
-            setMessage({ type: 'error', text: 'Network error. Please try again.' });
+            setMessage({ type: 'error', text: error.message || 'Failed to update profile' });
         }
 
         setSaving(false);

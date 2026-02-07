@@ -61,6 +61,33 @@ body {
   transition: all 0.15s ease;
 }
 
+/* Calculator inputs - opaque background + visible border (Quantity Estimator) */
+main input[type="number"],
+main input[type="text"] {
+  background-color: white !important;
+  border: 1px solid #e5e7eb !important;
+  color: #0A0A0A !important;
+}
+
+main input[type="number"]:focus,
+main input[type="text"]:focus {
+  border-color: #3B68FC !important;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 104, 252, 0.2);
+}
+
+.dark main input[type="number"],
+.dark main input[type="text"] {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+  color: white !important;
+}
+
+.dark main input[type="number"]:focus,
+.dark main input[type="text"]:focus {
+  border-color: #3B68FC !important;
+}
+
 .calc-input:focus {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(59, 104, 252, 0.15);

@@ -1,50 +1,85 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../components/auth/AuthContext';
 import { useSettings } from '../contexts/SettingsContext';
-
-// Sample calculator data for saved items
-const CALCULATORS = {
-    'concrete': { name: 'Cement Concrete Calculator', icon: 'fa-cube', path: '/concrete-calculator', category: 'Concrete' },
-    'brick-masonry': { name: 'Brick Masonry Calculator', icon: 'fa-th-large', path: '/brick-masonry-calculator', category: 'Masonry' },
-    'steel-weight': { name: 'Steel Weight Calculator', icon: 'fa-weight', path: '/steel-weight-calculator', category: 'Steel' },
-    'paint-work': { name: 'Paint Work Calculator', icon: 'fa-paint-roller', path: '/paint-work-calculator', category: 'Finishing' },
-    'flooring': { name: 'Flooring Calculator', icon: 'fa-border-all', path: '/flooring-calculator', category: 'Finishing' },
-    'excavation': { name: 'Excavation Calculator', icon: 'fa-mountain', path: '/excavation-calculator', category: 'Earthwork' },
-    'plaster': { name: 'Plaster Calculator', icon: 'fa-brush', path: '/plaster-calculator', category: 'Masonry' },
-    'construction-cost': { name: 'Construction Cost Estimator', icon: 'fa-rupee-sign', path: '/construction-cost-calculator', category: 'Estimation' },
-};
+import { getFavorites, removeFavorite } from '../services/supabaseService';
 
 export default function SavedPage() {
+    const { isAuthenticated, user } = useAuth();
     const { isDarkMode } = useSettings();
     const [savedItems, setSavedItems] = useState([]);
-    const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+    const [viewMode, setViewMode] = useState('grid');
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
 
-    // Load saved items from localStorage
     useEffect(() => {
-        const saved = localStorage.getItem('savedCalculators');
-        if (saved) {
-            const savedIds = JSON.parse(saved);
-            const items = savedIds.map(id => ({
-                id,
-                ...CALCULATORS[id],
-                savedAt: new Date().toISOString() // Mock date
-            })).filter(item => item.name);
-            setSavedItems(items);
-        }
-        setLoading(false);
-    }, []);
+        const load = async () => {
+            if (isAuthenticated && user?.id) {
+                try {
+                    const favs = await getFavorites(user.id);
+                    setSavedItems(favs.map((f) => ({
+                        id: f.id,
+                        calculatorSlug: f.calculator_slug,
+                        name: f.calculator_name,
+                        icon: f.calculator_icon || 'fa-calculator',
+                        path: f.calculator_slug?.startsWith('/') ? f.calculator_slug : `/${f.calculator_slug || ''}`,
+                        category: f.category || 'General',
+                        savedAt: f.created_at,
+                    })));
+                } catch (err) {
+                    console.error('Failed to load favorites:', err);
+                    setSavedItems([]);
+                }
+            } else {
+                const saved = localStorage.getItem('savedCalculators');
+                if (saved) {
+                    try {
+                        const savedIds = JSON.parse(saved);
+                        const CALCULATORS = {
+                            concrete: { name: 'Cement Concrete Calculator', icon: 'fa-cube', path: '/cement-concrete', category: 'Concrete' },
+                            'brick-masonry': { name: 'Brick Masonry Calculator', icon: 'fa-th-large', path: '/brick-masonry', category: 'Masonry' },
+                            'steel-weight': { name: 'Steel Weight Calculator', icon: 'fa-weight', path: '/steel-weight', category: 'Steel' },
+                            'paint-work': { name: 'Paint Work Calculator', icon: 'fa-paint-roller', path: '/paint-work', category: 'Finishing' },
+                            flooring: { name: 'Flooring Calculator', icon: 'fa-border-all', path: '/flooring', category: 'Finishing' },
+                            excavation: { name: 'Excavation Calculator', icon: 'fa-mountain', path: '/excavation', category: 'Earthwork' },
+                            plastering: { name: 'Plaster Calculator', icon: 'fa-brush', path: '/plastering', category: 'Masonry' },
+                            'construction-cost': { name: 'Construction Cost Estimator', icon: 'fa-rupee-sign', path: '/construction-cost', category: 'Estimation' },
+                        };
+                        const items = savedIds.map((id) => ({
+                            id,
+                            ...CALCULATORS[id],
+                            savedAt: new Date().toISOString(),
+                        })).filter((item) => item.name);
+                        setSavedItems(items);
+                    } catch {
+                        setSavedItems([]);
+                    }
+                }
+            }
+            setLoading(false);
+        };
+        load();
+    }, [isAuthenticated, user?.id]);
 
-    const removeItem = (id) => {
-        const updated = savedItems.filter(item => item.id !== id);
-        setSavedItems(updated);
-        localStorage.setItem('savedCalculators', JSON.stringify(updated.map(i => i.id)));
+    const removeItem = async (item) => {
+        if (isAuthenticated && user?.id && item.calculatorSlug) {
+            try {
+                await removeFavorite(user.id, item.calculatorSlug);
+                setSavedItems((prev) => prev.filter((i) => i.calculatorSlug !== item.calculatorSlug));
+            } catch (err) {
+                console.error('Failed to remove:', err);
+            }
+        } else {
+            const updated = savedItems.filter((i) => i.id !== item.id);
+            setSavedItems(updated);
+            localStorage.setItem('savedCalculators', JSON.stringify(updated.map((i) => i.id)));
+        }
     };
 
-    const filteredItems = savedItems.filter(item =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.category?.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredItems = savedItems.filter(
+        (item) =>
+            item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.category?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const bgClass = isDarkMode ? 'bg-[#0f172a]' : 'bg-[#F7F9FF]';
@@ -55,10 +90,16 @@ export default function SavedPage() {
         ? 'bg-[#0f172a] border-[#334155] text-white placeholder:text-[#64748b]'
         : 'bg-white border-[#e5e7eb] text-[#0A0A0A] placeholder:text-[#9ca3af]';
 
+    const popularCalcs = [
+        { id: 'cement-concrete', name: 'Cement Concrete Calculator', icon: 'fa-cubes', path: '/cement-concrete' },
+        { id: 'brick-masonry', name: 'Brick Masonry Calculator', icon: 'fa-th-large', path: '/brick-masonry' },
+        { id: 'steel-weight', name: 'Steel Weight Calculator', icon: 'fa-weight-hanging', path: '/steel-weight' },
+        { id: 'construction-cost', name: 'Construction Cost', icon: 'fa-rupee-sign', path: '/construction-cost' },
+    ];
+
     return (
         <div className={`min-h-screen ${bgClass} py-8`}>
             <div className="max-w-5xl mx-auto px-6">
-                {/* Header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                     <div>
                         <h1 className={`text-3xl font-bold ${textClass} mb-2`}>Saved Calculators</h1>
@@ -82,7 +123,6 @@ export default function SavedPage() {
                     </div>
                 </div>
 
-                {/* Search Bar */}
                 <div className="mb-6">
                     <div className={`relative ${cardClass} rounded-xl border`}>
                         <i className={`fas fa-search absolute left-4 top-1/2 -translate-y-1/2 ${subTextClass}`}></i>
@@ -96,7 +136,6 @@ export default function SavedPage() {
                     </div>
                 </div>
 
-                {/* Empty State */}
                 {loading ? (
                     <div className={`${cardClass} rounded-2xl p-12 text-center border`}>
                         <div className="w-12 h-12 border-4 border-[#3B68FC] border-t-transparent rounded-full animate-spin mx-auto"></div>
@@ -111,85 +150,76 @@ export default function SavedPage() {
                             {searchTerm ? 'No results found' : 'No saved calculators'}
                         </h3>
                         <p className={`${subTextClass} mb-6`}>
-                            {searchTerm
-                                ? 'Try a different search term'
-                                : 'Bookmark your favorite calculators for quick access'
-                            }
+                            {searchTerm ? 'Try a different search term' : 'Bookmark your favorite calculators for quick access'}
                         </p>
                         <Link to="/" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#F59E0B] to-[#EF4444] text-white rounded-xl font-medium hover:opacity-90 transition-all shadow-lg shadow-[#F59E0B]/20">
                             <i className="fas fa-search"></i>
                             Browse Calculators
                         </Link>
                     </div>
+                ) : viewMode === 'grid' ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {filteredItems.map((item) => (
+                            <div key={item.id || item.calculatorSlug} className={`${cardClass} rounded-xl p-5 border hover:shadow-md transition-all group`}>
+                                <div className="flex items-start justify-between mb-4">
+                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-[#0f172a]' : 'bg-gradient-to-br from-[#3B68FC]/10 to-[#8B5CF6]/10'}`}>
+                                        <i className={`fas ${item.icon} text-lg text-[#3B68FC]`}></i>
+                                    </div>
+                                    <button
+                                        onClick={() => removeItem(item)}
+                                        className="p-2 text-[#F59E0B] hover:bg-[#F59E0B]/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                                        title="Remove from saved"
+                                    >
+                                        <i className="fas fa-bookmark"></i>
+                                    </button>
+                                </div>
+                                <h3 className={`font-semibold ${textClass} mb-1`}>{item.name}</h3>
+                                <p className={`text-sm ${subTextClass} mb-4`}>{item.category}</p>
+                                <Link
+                                    to={item.path}
+                                    className="block w-full text-center py-2.5 bg-[#3B68FC]/10 text-[#3B68FC] rounded-lg text-sm font-medium hover:bg-[#3B68FC]/20 transition-colors"
+                                >
+                                    <i className="fas fa-calculator mr-2"></i>
+                                    Open Calculator
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
                 ) : (
-                    /* Saved Items Grid/List */
-                    viewMode === 'grid' ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {filteredItems.map((item) => (
-                                <div key={item.id} className={`${cardClass} rounded-xl p-5 border hover:shadow-md transition-all group`}>
-                                    <div className="flex items-start justify-between mb-4">
-                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-[#0f172a]' : 'bg-gradient-to-br from-[#3B68FC]/10 to-[#8B5CF6]/10'
-                                            }`}>
+                    <div className="space-y-3">
+                        {filteredItems.map((item) => (
+                            <div key={item.id || item.calculatorSlug} className={`${cardClass} rounded-xl p-4 border hover:shadow-md transition-all`}>
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-4">
+                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f0f5ff]'}`}>
                                             <i className={`fas ${item.icon} text-lg text-[#3B68FC]`}></i>
                                         </div>
-                                        <button
-                                            onClick={() => removeItem(item.id)}
-                                            className="p-2 text-[#F59E0B] hover:bg-[#F59E0B]/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
-                                            title="Remove from saved"
+                                        <div>
+                                            <h3 className={`font-semibold ${textClass}`}>{item.name}</h3>
+                                            <p className={`text-sm ${subTextClass}`}>{item.category}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Link
+                                            to={item.path}
+                                            className="px-4 py-2 bg-gradient-to-r from-[#3B68FC] to-[#6366F1] text-white rounded-lg text-sm font-medium hover:opacity-90 transition-all shadow-sm"
                                         >
-                                            <i className="fas fa-bookmark"></i>
+                                            <i className="fas fa-external-link-alt mr-2"></i>
+                                            Open
+                                        </Link>
+                                        <button
+                                            onClick={() => removeItem(item)}
+                                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                        >
+                                            <i className="fas fa-trash-alt"></i>
                                         </button>
                                     </div>
-                                    <h3 className={`font-semibold ${textClass} mb-1`}>{item.name}</h3>
-                                    <p className={`text-sm ${subTextClass} mb-4`}>{item.category}</p>
-                                    <Link
-                                        to={item.path}
-                                        className="block w-full text-center py-2.5 bg-[#3B68FC]/10 text-[#3B68FC] rounded-lg text-sm font-medium hover:bg-[#3B68FC]/20 transition-colors"
-                                    >
-                                        <i className="fas fa-calculator mr-2"></i>
-                                        Open Calculator
-                                    </Link>
                                 </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="space-y-3">
-                            {filteredItems.map((item) => (
-                                <div key={item.id} className={`${cardClass} rounded-xl p-4 border hover:shadow-md transition-all`}>
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-4">
-                                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f0f5ff]'
-                                                }`}>
-                                                <i className={`fas ${item.icon} text-lg text-[#3B68FC]`}></i>
-                                            </div>
-                                            <div>
-                                                <h3 className={`font-semibold ${textClass}`}>{item.name}</h3>
-                                                <p className={`text-sm ${subTextClass}`}>{item.category}</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Link
-                                                to={item.path}
-                                                className="px-4 py-2 bg-gradient-to-r from-[#3B68FC] to-[#6366F1] text-white rounded-lg text-sm font-medium hover:opacity-90 transition-all shadow-sm"
-                                            >
-                                                <i className="fas fa-external-link-alt mr-2"></i>
-                                                Open
-                                            </Link>
-                                            <button
-                                                onClick={() => removeItem(item.id)}
-                                                className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                                            >
-                                                <i className="fas fa-trash-alt"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )
+                            </div>
+                        ))}
+                    </div>
                 )}
 
-                {/* Quick Add Section */}
                 {savedItems.length < 3 && (
                     <div className={`mt-8 ${cardClass} rounded-xl p-6 border`}>
                         <h3 className={`font-semibold ${textClass} mb-4`}>
@@ -197,12 +227,11 @@ export default function SavedPage() {
                             Popular Calculators
                         </h3>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                            {Object.entries(CALCULATORS).slice(0, 4).map(([id, calc]) => (
+                            {popularCalcs.map((calc) => (
                                 <Link
-                                    key={id}
+                                    key={calc.id}
                                     to={calc.path}
-                                    className={`p-4 rounded-xl text-center hover:shadow-md transition-all ${isDarkMode ? 'bg-[#0f172a] hover:bg-[#1e293b]' : 'bg-[#f8f9fa] hover:bg-white'
-                                        }`}
+                                    className={`p-4 rounded-xl text-center hover:shadow-md transition-all ${isDarkMode ? 'bg-[#0f172a] hover:bg-[#1e293b]' : 'bg-[#f8f9fa] hover:bg-white'}`}
                                 >
                                     <i className={`fas ${calc.icon} text-2xl text-[#3B68FC] mb-2`}></i>
                                     <p className={`text-sm font-medium ${textClass} line-clamp-2`}>{calc.name.replace(' Calculator', '')}</p>

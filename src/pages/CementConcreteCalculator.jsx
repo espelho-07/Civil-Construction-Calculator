@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
@@ -7,18 +7,26 @@ import { getThemeClasses } from '../constants/categories';
 import MiniNavbar from '../components/MiniNavbar';
 import CategoryQuickNav from '../components/CategoryQuickNav';
 import { QUANTITY_ESTIMATOR_NAV } from '../constants/calculatorRoutes';
+import { getCalculatorFromPath, useCalculatorActivity } from '../hooks/useActivityMemory';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+const CALCULATOR_ID = 'cement-concrete';
+const CALCULATOR_NAME = 'Cement Concrete Calculator';
+
 export default function CementConcreteCalculator() {
     const theme = getThemeClasses('green');
+    const { pathname } = useLocation();
+    const calcInfo = getCalculatorFromPath(pathname) || { id: CALCULATOR_ID, name: CALCULATOR_NAME };
+    const { restoredState, saveState, persistNow } = useCalculatorActivity(calcInfo.id, calcInfo.name);
+
     const [unit, setUnit] = useState('Meter');
     const [grade, setGrade] = useState('M20');
-    const [length, setLength] = useState(10);
-    const [width, setWidth] = useState(10);
-    const [depth, setDepth] = useState(0.15);
+    const [length, setLength] = useState(() => restoredState?.length ?? 10);
+    const [width, setWidth] = useState(() => restoredState?.width ?? 10);
+    const [depth, setDepth] = useState(() => restoredState?.depth ?? 0.15);
 
     const grades = {
         'M5': { ratio: '1:5:10', label: 'M5 (1:5:10)' },
@@ -53,8 +61,9 @@ export default function CementConcreteCalculator() {
 
         // As per original calculator:
         // No. of cement bags = Cement Volume / 0.035 (m³ per bag)
-        const cementBags = (cementVol / 0.035).toFixed(2);
-        const cementKg = (cementBags * 50).toFixed(2);
+        const cementBagsNum = cementVol / 0.035;
+        const cementBags = cementBagsNum.toFixed(2);
+        const cementKg = (cementBagsNum * 50).toFixed(2);
         const sandCft = (sandVol * 35.315).toFixed(2);
         const sandTon = (sandVol * 1.55).toFixed(2); // 1550 kg/m³ → 1.55 ton/m³
         const aggCft = (aggVol * 35.315).toFixed(2);
@@ -81,6 +90,10 @@ export default function CementConcreteCalculator() {
     useEffect(() => {
         calculate();
     }, [length, width, depth, grade, unit]);
+
+    useEffect(() => {
+        saveState({ length, width, depth });
+    }, [length, width, depth, saveState]);
 
     useEffect(() => {
         const update = () => {

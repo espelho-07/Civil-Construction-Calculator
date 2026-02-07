@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import CategoryNav from '../components/CategoryNav';
 import CalculatorActions from '../components/CalculatorActions';
 import CustomDropdown from '../components/CustomDropdown';
@@ -113,9 +112,6 @@ export default function BrickMasonryCalculator() {
         update(); window.addEventListener('resize', update); return () => window.removeEventListener('resize', update);
     }, []);
 
-
-    const navigate = useNavigate();
-
     return (
         <main className="min-h-screen bg-[#F7F9FF]">
             <CategoryNav activeCategory="quantity-estimator" />
@@ -123,17 +119,9 @@ export default function BrickMasonryCalculator() {
             <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
                 <div>
                     <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-4">
-                            <button
-                                onClick={() => navigate('/category/quantity-estimator')}
-                                className="w-10 h-10 flex items-center justify-center bg-white border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 hover:border-blue-300 transition-all shadow-sm"
-                            >
-                                <i className="fas fa-arrow-left"></i>
-                            </button>
-                            <div>
-                                <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Brick Masonry Calculator</h1>
-                                <p className="text-[#6b7280]">Calculate bricks, cement and sand required for masonry</p>
-                            </div>
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#0A0A0A] mb-2">Brick Masonry Calculator</h1>
+                            <p className="text-[#6b7280]">Calculate bricks, cement and sand required for masonry</p>
                         </div>
                         <CalculatorActions
                             calculatorSlug="brick-masonry"

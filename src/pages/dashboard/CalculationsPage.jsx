@@ -2,10 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../components/auth/AuthContext';
 import { useSettings } from '../../contexts/SettingsContext';
-import api from '../../services/api';
+import {
+    getCalculations,
+    getCalculationStats,
+    deleteCalculation,
+    updateCalculation,
+} from '../../services/supabaseService';
 
 export default function CalculationsPage() {
-    const { isAuthenticated, loading: authLoading } = useAuth();
+    const { user, isAuthenticated, loading: authLoading } = useAuth();
     const { isDarkMode } = useSettings();
     const navigate = useNavigate();
 
@@ -13,16 +18,14 @@ export default function CalculationsPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
-    const [filters, setFilters] = useState({ saved: '', search: '', project: '' });
+    const [filters, setFilters] = useState({ saved: '', search: '' });
     const [stats, setStats] = useState(null);
 
-    // Theme classes
     const bgColor = isDarkMode ? 'bg-[#0f172a]' : 'bg-gradient-to-br from-blue-50 via-white to-pink-50';
     const cardBg = isDarkMode ? 'bg-[#1e293b]' : 'bg-white';
     const textColor = isDarkMode ? 'text-white' : 'text-gray-900';
     const subTextColor = isDarkMode ? 'text-gray-400' : 'text-gray-600';
     const borderColor = isDarkMode ? 'border-[#334155]' : 'border-gray-200';
-    const inputBg = isDarkMode ? 'bg-[#0f172a]' : 'bg-white';
 
     useEffect(() => {
         if (!authLoading && !isAuthenticated) {
@@ -31,27 +34,36 @@ export default function CalculationsPage() {
     }, [authLoading, isAuthenticated, navigate]);
 
     useEffect(() => {
-        fetchCalculations();
-        fetchStats();
-    }, [isAuthenticated, pagination.page, filters]);
+        if (isAuthenticated && user?.id) {
+            fetchCalculations();
+            fetchStats();
+        }
+    }, [isAuthenticated, user?.id, pagination.page, filters]);
 
     const fetchCalculations = async () => {
-        if (!isAuthenticated) return;
+        if (!user?.id) return;
         try {
-            const params = new URLSearchParams({
+            const res = await getCalculations(user.id, {
                 page: pagination.page,
                 limit: 10,
-                ...(filters.saved && { saved: filters.saved }),
-                ...(filters.search && { search: filters.search }),
-                ...(filters.project && { project: filters.project })
+                saved: filters.saved === 'true' ? true : undefined,
+                search: filters.search || undefined,
             });
-
-            const response = await api.get(`/calculations?${params}`);
-            setCalculations(response.data.calculations || []);
-            setPagination(prev => ({
+            const mapped = (res.calculations || []).map((c) => ({
+                id: c.id,
+                calculatorSlug: c.calculator_slug,
+                calculatorName: c.calculator_name,
+                calculatorIcon: c.calculator_icon,
+                inputs: c.inputs || {},
+                outputs: c.outputs || {},
+                isSaved: c.is_saved,
+                createdAt: c.created_at,
+            }));
+            setCalculations(mapped);
+            setPagination((prev) => ({
                 ...prev,
-                totalPages: response.data.pagination.totalPages,
-                total: response.data.pagination.total
+                totalPages: res.pagination?.totalPages || 1,
+                total: res.pagination?.total || 0,
             }));
         } catch (err) {
             console.error('Failed to load calculations:', err);
@@ -62,9 +74,10 @@ export default function CalculationsPage() {
     };
 
     const fetchStats = async () => {
+        if (!user?.id) return;
         try {
-            const response = await api.get('/calculations/stats');
-            setStats(response.data);
+            const data = await getCalculationStats(user.id);
+            setStats(data);
         } catch (err) {
             console.error('Failed to load stats:', err);
         }
@@ -73,8 +86,8 @@ export default function CalculationsPage() {
     const handleDelete = async (id) => {
         if (!window.confirm('Are you sure you want to delete this calculation?')) return;
         try {
-            await api.delete(`/calculations/${id}`);
-            setCalculations(prev => prev.filter(c => c.id !== id));
+            await deleteCalculation(user.id, id);
+            setCalculations((prev) => prev.filter((c) => c.id !== id));
         } catch (err) {
             console.error('Failed to delete:', err);
             alert('Failed to delete calculation');
@@ -83,10 +96,10 @@ export default function CalculationsPage() {
 
     const toggleSaved = async (id, currentSaved) => {
         try {
-            await api.put(`/calculations/${id}`, { isSaved: !currentSaved });
-            setCalculations(prev => prev.map(c =>
-                c.id === id ? { ...c, isSaved: !currentSaved } : c
-            ));
+            await updateCalculation(user.id, id, { isSaved: !currentSaved });
+            setCalculations((prev) =>
+                prev.map((c) => (c.id === id ? { ...c, isSaved: !currentSaved } : c))
+            );
         } catch (err) {
             console.error('Failed to update:', err);
         }
@@ -98,9 +111,11 @@ export default function CalculationsPage() {
             month: 'short',
             year: 'numeric',
             hour: '2-digit',
-            minute: '2-digit'
+            minute: '2-digit',
         });
     };
+
+    const slugToPath = (slug) => (slug?.startsWith('/') ? slug : `/${slug || ''}`);
 
     if (authLoading || loading) {
         return (
@@ -116,176 +131,112 @@ export default function CalculationsPage() {
     return (
         <div className={`min-h-screen ${bgColor} py-8 px-4`}>
             <div className="max-w-6xl mx-auto">
-
-                {/* Header */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                     <div>
-                        <div className="flex items-center gap-2 mb-2">
-                            <Link to="/dashboard" className={`${subTextColor} hover:text-[#3B68FC]`}>
-                                <i className="fas fa-arrow-left"></i> Dashboard
-                            </Link>
-                        </div>
                         <h1 className={`text-2xl font-bold ${textColor}`}>Calculation History</h1>
-                        <p className={subTextColor}>
-                            {pagination.total} calculations found
-                        </p>
+                        <p className={subTextColor}>View and manage your saved calculations</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            value={filters.search}
+                            onChange={(e) => setFilters((p) => ({ ...p, search: e.target.value }))}
+                            className={`px-4 py-2 border rounded-lg outline-none focus:border-[#3B68FC] ${cardBg} ${textColor} border ${borderColor}`}
+                        />
+                        <select
+                            value={filters.saved}
+                            onChange={(e) => setFilters((p) => ({ ...p, saved: e.target.value }))}
+                            className={`px-4 py-2 border rounded-lg outline-none focus:border-[#3B68FC] ${cardBg} ${textColor} border ${borderColor}`}
+                        >
+                            <option value="">All</option>
+                            <option value="true">Saved Only</option>
+                        </select>
+                        <Link to="/history" className="px-4 py-2 bg-[#3B68FC] text-white rounded-lg hover:bg-[#2a4add]">
+                            View All
+                        </Link>
                     </div>
                 </div>
 
-                {/* Stats Row */}
-                {stats && (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                        <div className={`${cardBg} p-4 rounded-xl border ${borderColor}`}>
-                            <p className={`text-2xl font-bold ${textColor}`}>{stats.total}</p>
-                            <p className={`text-sm ${subTextColor}`}>Total</p>
-                        </div>
-                        <div className={`${cardBg} p-4 rounded-xl border ${borderColor}`}>
-                            <p className={`text-2xl font-bold ${textColor}`}>{stats.saved}</p>
-                            <p className={`text-sm ${subTextColor}`}>Saved</p>
-                        </div>
-                        <div className={`${cardBg} p-4 rounded-xl border ${borderColor}`}>
-                            <p className={`text-2xl font-bold ${textColor}`}>{stats.thisMonth}</p>
-                            <p className={`text-sm ${subTextColor}`}>This Month</p>
-                        </div>
-                        <div className={`${cardBg} p-4 rounded-xl border ${borderColor}`}>
-                            <p className={`text-2xl font-bold ${textColor}`}>{stats.byType?.length || 0}</p>
-                            <p className={`text-sm ${subTextColor}`}>Calculator Types</p>
-                        </div>
+                {error && (
+                    <div className={`${cardBg} p-4 rounded-xl border ${borderColor} text-red-500 mb-4`}>
+                        {error}
                     </div>
                 )}
 
-                {/* Filters */}
-                <div className={`${cardBg} p-4 rounded-xl border ${borderColor} mb-6`}>
-                    <div className="flex flex-col md:flex-row gap-4">
-                        <div className="flex-1">
-                            <input
-                                type="text"
-                                placeholder="Search calculations..."
-                                value={filters.search}
-                                onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-                                className={`w-full px-4 py-2 rounded-lg border ${borderColor} ${inputBg} ${textColor}`}
-                            />
-                        </div>
-                        <select
-                            value={filters.saved}
-                            onChange={(e) => setFilters(prev => ({ ...prev, saved: e.target.value }))}
-                            className={`px-4 py-2 rounded-lg border ${borderColor} ${inputBg} ${textColor}`}
-                        >
-                            <option value="">All Calculations</option>
-                            <option value="true">Saved Only</option>
-                        </select>
-                        <button
-                            onClick={() => setFilters({ saved: '', search: '', project: '' })}
-                            className={`px-4 py-2 rounded-lg border ${borderColor} ${textColor} hover:bg-gray-100 dark:hover:bg-[#0f172a]`}
-                        >
-                            Clear Filters
-                        </button>
+                {calculations.length === 0 ? (
+                    <div className={`${cardBg} p-12 rounded-xl border ${borderColor} text-center`}>
+                        <i className="fas fa-calculator text-4xl text-gray-400 mb-4"></i>
+                        <p className={subTextColor}>No calculations yet</p>
+                        <Link to="/" className="text-[#3B68FC] hover:underline mt-2 inline-block">
+                            Start calculating →
+                        </Link>
                     </div>
-                </div>
-
-                {/* Calculations List */}
-                <div className={`${cardBg} rounded-xl border ${borderColor} overflow-hidden`}>
-                    {calculations.length === 0 ? (
-                        <div className={`text-center py-12 ${subTextColor}`}>
-                            <i className="fas fa-calculator text-4xl mb-3 opacity-50"></i>
-                            <p>No calculations found</p>
-                            <Link to="/" className="text-[#3B68FC] text-sm hover:underline mt-2 inline-block">
-                                Start calculating →
-                            </Link>
-                        </div>
-                    ) : (
-                        <>
-                            <div className="overflow-x-auto">
-                                <table className="w-full">
-                                    <thead className={`${isDarkMode ? 'bg-[#0f172a]' : 'bg-gray-50'} border-b ${borderColor}`}>
-                                        <tr>
-                                            <th className={`px-6 py-3 text-left text-xs font-semibold ${subTextColor} uppercase`}>Calculator</th>
-                                            <th className={`px-6 py-3 text-left text-xs font-semibold ${subTextColor} uppercase hidden md:table-cell`}>Project</th>
-                                            <th className={`px-6 py-3 text-left text-xs font-semibold ${subTextColor} uppercase hidden lg:table-cell`}>Date</th>
-                                            <th className={`px-6 py-3 text-center text-xs font-semibold ${subTextColor} uppercase`}>Status</th>
-                                            <th className={`px-6 py-3 text-right text-xs font-semibold ${subTextColor} uppercase`}>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-200">
-                                        {calculations.map((calc) => (
-                                            <tr key={calc.id} className={`${isDarkMode ? 'hover:bg-[#0f172a]' : 'hover:bg-gray-50'}`}>
-                                                <td className="px-6 py-4">
-                                                    <Link to={calc.calculatorSlug} className="flex items-center gap-3">
-                                                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f0f4ff]'}`}>
-                                                            <i className={`fas ${calc.calculatorIcon || 'fa-calculator'} text-[#3B68FC]`}></i>
-                                                        </div>
-                                                        <div>
-                                                            <p className={`font-medium ${textColor}`}>{calc.calculatorName}</p>
-                                                            <p className={`text-xs ${subTextColor} md:hidden`}>{formatDate(calc.createdAt)}</p>
-                                                        </div>
-                                                    </Link>
-                                                </td>
-                                                <td className={`px-6 py-4 ${subTextColor} hidden md:table-cell`}>
-                                                    {calc.projectName || '-'}
-                                                </td>
-                                                <td className={`px-6 py-4 ${subTextColor} hidden lg:table-cell`}>
-                                                    {formatDate(calc.createdAt)}
-                                                </td>
-                                                <td className="px-6 py-4 text-center">
-                                                    <button
-                                                        onClick={() => toggleSaved(calc.id, calc.isSaved)}
-                                                        className={calc.isSaved ? 'text-green-500' : subTextColor}
-                                                    >
-                                                        <i className={`fas fa-bookmark ${calc.isSaved ? '' : 'opacity-50'}`}></i>
-                                                    </button>
-                                                </td>
-                                                <td className="px-6 py-4 text-right">
-                                                    <div className="flex items-center justify-end gap-2">
-                                                        <Link
-                                                            to={calc.calculatorSlug}
-                                                            className="p-2 text-[#3B68FC] hover:bg-blue-50 rounded-lg"
-                                                            title="Re-open"
-                                                        >
-                                                            <i className="fas fa-external-link-alt"></i>
-                                                        </Link>
-                                                        <button
-                                                            onClick={() => handleDelete(calc.id)}
-                                                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
-                                                            title="Delete"
-                                                        >
-                                                            <i className="fas fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            {/* Pagination */}
-                            {pagination.totalPages > 1 && (
-                                <div className={`flex items-center justify-between px-6 py-4 border-t ${borderColor}`}>
-                                    <p className={subTextColor}>
-                                        Page {pagination.page} of {pagination.totalPages}
-                                    </p>
-                                    <div className="flex gap-2">
-                                        <button
-                                            onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
-                                            disabled={pagination.page === 1}
-                                            className={`px-3 py-1 rounded border ${borderColor} ${textColor} disabled:opacity-50`}
-                                        >
-                                            Previous
-                                        </button>
-                                        <button
-                                            onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
-                                            disabled={pagination.page === pagination.totalPages}
-                                            className={`px-3 py-1 rounded border ${borderColor} ${textColor} disabled:opacity-50`}
-                                        >
-                                            Next
-                                        </button>
+                ) : (
+                    <div className="space-y-4">
+                        {calculations.map((calc) => (
+                            <div
+                                key={calc.id}
+                                className={`${cardBg} p-4 rounded-xl border ${borderColor} flex items-center justify-between`}
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f0f4ff]'}`}>
+                                        <i className={`fas ${calc.calculatorIcon || 'fa-calculator'} text-[#3B68FC]`}></i>
+                                    </div>
+                                    <div>
+                                        <p className={`font-medium ${textColor}`}>{calc.calculatorName}</p>
+                                        <p className={`text-sm ${subTextColor}`}>{formatDate(calc.createdAt)}</p>
                                     </div>
                                 </div>
-                            )}
-                        </>
-                    )}
-                </div>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => toggleSaved(calc.id, calc.isSaved)}
+                                        className={`p-2 rounded-lg ${calc.isSaved ? 'text-yellow-500' : 'text-gray-400'}`}
+                                        title={calc.isSaved ? 'Unsave' : 'Save'}
+                                    >
+                                        <i className="fas fa-bookmark"></i>
+                                    </button>
+                                    <Link
+                                        to={slugToPath(calc.calculatorSlug)}
+                                        className="px-4 py-2 bg-[#3B68FC]/10 text-[#3B68FC] rounded-lg text-sm font-medium hover:bg-[#3B68FC]/20"
+                                    >
+                                        Open
+                                    </Link>
+                                    <button
+                                        onClick={() => handleDelete(calc.id)}
+                                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
+                                    >
+                                        <i className="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
 
+                {stats && (
+                    <div className={`mt-8 ${cardBg} p-6 rounded-xl border ${borderColor}`}>
+                        <h3 className={`font-semibold ${textColor} mb-4`}>Statistics</h3>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div>
+                                <p className={`text-2xl font-bold ${textColor}`}>{stats.total}</p>
+                                <p className={`text-sm ${subTextColor}`}>Total</p>
+                            </div>
+                            <div>
+                                <p className={`text-2xl font-bold ${textColor}`}>{stats.saved}</p>
+                                <p className={`text-sm ${subTextColor}`}>Saved</p>
+                            </div>
+                            <div>
+                                <p className={`text-2xl font-bold ${textColor}`}>{stats.thisMonth}</p>
+                                <p className={`text-sm ${subTextColor}`}>This Month</p>
+                            </div>
+                            <div>
+                                <p className={`text-2xl font-bold ${textColor}`}>{stats.mostUsed?.calculatorName?.split(' ')[0] || '-'}</p>
+                                <p className={`text-sm ${subTextColor}`}>Most Used</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

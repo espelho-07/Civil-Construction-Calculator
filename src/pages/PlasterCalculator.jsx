@@ -43,7 +43,8 @@ export default function PlasterCalculator() {
         const sandVol = (dryVolume * s) / totalParts;
 
         // No. of cement bags = Cement Volume / 0.035
-        const cementBags = (cementVol / 0.035).toFixed(2);
+        const cementBagsNum = cementVol / 0.035;
+        const cementBags = cementBagsNum.toFixed(2);
         const sandTon = (sandVol * 1.55).toFixed(2); // density approx 1550 kg/m3 = 1.55 ton/m3
 
         setResults({
@@ -52,7 +53,7 @@ export default function PlasterCalculator() {
             wetVol: volWithJoints.toFixed(4),
             dryVol: dryVolume.toFixed(4),
             cementBags,
-            cementKg: (cementBags * 50).toFixed(0),
+            cementKg: (cementBagsNum * 50).toFixed(0),
             sandTon,
             sandVolM3: sandVol.toFixed(4),
             sandVolCft: (sandVol * 35.3147).toFixed(2)

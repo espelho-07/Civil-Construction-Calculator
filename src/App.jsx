@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { AuthProvider } from './components/auth/AuthContext';
+import { RecordCalculatorVisit } from './hooks/useActivityMemory';
 import { SettingsProvider, useSettings } from './contexts/SettingsContext';
 import { GuestRoute, ProtectedRoute } from './components/auth/ProtectedRoute';
 import Header from './components/Header';
@@ -114,6 +115,7 @@ function AppContent() {
     return (
         <Router>
             <ScrollToTop />
+            <RecordCalculatorVisit />
             <div className={`min-h-screen flex flex-col ${bgColor} transition-colors duration-300`}>
                 <Header />
                 <ScrollToTopButton />

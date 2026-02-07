@@ -161,6 +161,9 @@ export default function Header() {
             if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
                 setShowUserMenu(false);
             }
+            if (historyRef.current && !historyRef.current.contains(e.target)) {
+                setShowHistoryDropdown(false);
+            }
         };
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -264,81 +267,81 @@ export default function Header() {
                     )}
                 </div>
 
-                {/* User Navigation */}
+                {/* History chip - between Search and Login/Avatar (same for guest and logged-in, uses localStorage) */}
+                {lastUsedCalc && (
+                    <div
+                        className="hidden md:block relative shrink-0"
+                        ref={historyRef}
+                        onMouseEnter={() => {
+                            if (historyRef.current?.hideTimeout) {
+                                clearTimeout(historyRef.current.hideTimeout);
+                            }
+                            setShowHistoryDropdown(true);
+                        }}
+                        onMouseLeave={() => {
+                            historyRef.current.hideTimeout = setTimeout(() => {
+                                setShowHistoryDropdown(false);
+                            }, 200);
+                        }}
+                    >
+                        <Link
+                            to={lastUsedCalc.slug}
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm transition-all ${chipBg} ${textColor}`}
+                            title={`Last used: ${lastUsedCalc.name}`}
+                        >
+                            <i className={`fas ${lastUsedCalc.icon} text-[#3B68FC] text-xs`}></i>
+                            <span className="max-w-[120px] truncate font-medium">
+                                {lastUsedCalc.name.replace(' Calculator', '').replace(' Determination', '')}
+                            </span>
+                            <i className={`fas fa-chevron-down text-[10px] ${subTextColor} transition-transform ${showHistoryDropdown ? 'rotate-180' : ''}`}></i>
+                        </Link>
+
+                        {/* History Dropdown */}
+                        {showHistoryDropdown && recentCalcs.length > 0 && (
+                            <div className={`absolute right-0 top-full mt-2 w-72 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.15)] border overflow-hidden z-[300] ${dropdownBg}`}>
+                                <div className={`px-4 py-2 border-b ${isDarkMode ? 'border-[#334155]' : 'border-[#e5e7eb]'}`}>
+                                    <p className={`text-xs font-semibold ${subTextColor} uppercase tracking-wide`}>Recent Calculators</p>
+                                </div>
+                                <div className="py-1 max-h-64 overflow-y-auto">
+                                    {recentCalcs.map((calc, index) => (
+                                        <Link
+                                            key={calc.slug + index}
+                                            to={calc.slug}
+                                            onClick={() => setShowHistoryDropdown(false)}
+                                            className={`flex items-center gap-3 px-4 py-2.5 transition-colors ${hoverBg}`}
+                                        >
+                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f0f4ff]'}`}>
+                                                <i className={`fas ${calc.icon} text-[#3B68FC] text-sm`}></i>
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className={`font-medium text-sm truncate ${textColor}`}>{calc.name}</p>
+                                                <p className={`text-xs ${subTextColor}`}>{calc.category}</p>
+                                            </div>
+                                            {index === 0 && (
+                                                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#3B68FC]/10 text-[#3B68FC] font-medium">Latest</span>
+                                            )}
+                                        </Link>
+                                    ))}
+                                </div>
+                                <Link
+                                    to="/history"
+                                    onClick={() => setShowHistoryDropdown(false)}
+                                    className={`flex items-center justify-center gap-2 px-4 py-2.5 border-t transition-colors ${isDarkMode ? 'border-[#334155]' : 'border-[#e5e7eb]'} ${hoverBg}`}
+                                >
+                                    <i className={`fas fa-history text-xs ${subTextColor}`}></i>
+                                    <span className={`text-sm font-medium ${subTextColor}`}>View All History</span>
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* User Navigation (right side) */}
                 <nav className="flex items-center gap-2 shrink-0">
                     {loading ? (
                         <div className={`w-10 h-10 rounded-full animate-pulse ${isDarkMode ? 'bg-[#334155]' : 'bg-[#f8f9fa]'}`}></div>
                     ) : isAuthenticated ? (
                         <>
-                            {/* Last Used Calculator Chip with History Dropdown */}
-                            {lastUsedCalc && (
-                                <div
-                                    className="hidden md:block relative"
-                                    ref={historyRef}
-                                    onMouseEnter={() => {
-                                        if (historyRef.current?.hideTimeout) {
-                                            clearTimeout(historyRef.current.hideTimeout);
-                                        }
-                                        setShowHistoryDropdown(true);
-                                    }}
-                                    onMouseLeave={() => {
-                                        historyRef.current.hideTimeout = setTimeout(() => {
-                                            setShowHistoryDropdown(false);
-                                        }, 200);
-                                    }}
-                                >
-                                    <Link
-                                        to={lastUsedCalc.slug}
-                                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm transition-all ${chipBg} ${textColor}`}
-                                        title={`Last used: ${lastUsedCalc.name}`}
-                                    >
-                                        <i className={`fas ${lastUsedCalc.icon} text-[#3B68FC] text-xs`}></i>
-                                        <span className="max-w-[120px] truncate font-medium">
-                                            {lastUsedCalc.name.replace(' Calculator', '').replace(' Determination', '')}
-                                        </span>
-                                        <i className={`fas fa-chevron-down text-[10px] ${subTextColor} transition-transform ${showHistoryDropdown ? 'rotate-180' : ''}`}></i>
-                                    </Link>
-
-                                    {/* History Dropdown */}
-                                    {showHistoryDropdown && recentCalcs.length > 0 && (
-                                        <div className={`absolute right-0 top-full mt-2 w-72 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.15)] border overflow-hidden z-[300] ${dropdownBg}`}>
-                                            <div className={`px-4 py-2 border-b ${isDarkMode ? 'border-[#334155]' : 'border-[#e5e7eb]'}`}>
-                                                <p className={`text-xs font-semibold ${subTextColor} uppercase tracking-wide`}>Recent Calculators</p>
-                                            </div>
-                                            <div className="py-1 max-h-64 overflow-y-auto">
-                                                {recentCalcs.map((calc, index) => (
-                                                    <Link
-                                                        key={calc.slug + index}
-                                                        to={calc.slug}
-                                                        onClick={() => setShowHistoryDropdown(false)}
-                                                        className={`flex items-center gap-3 px-4 py-2.5 transition-colors ${hoverBg}`}
-                                                    >
-                                                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f0f4ff]'}`}>
-                                                            <i className={`fas ${calc.icon} text-[#3B68FC] text-sm`}></i>
-                                                        </div>
-                                                        <div className="flex-1 min-w-0">
-                                                            <p className={`font-medium text-sm truncate ${textColor}`}>{calc.name}</p>
-                                                            <p className={`text-xs ${subTextColor}`}>{calc.category}</p>
-                                                        </div>
-                                                        {index === 0 && (
-                                                            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#3B68FC]/10 text-[#3B68FC] font-medium">Latest</span>
-                                                        )}
-                                                    </Link>
-                                                ))}
-                                            </div>
-                                            <Link
-                                                to="/history"
-                                                onClick={() => setShowHistoryDropdown(false)}
-                                                className={`flex items-center justify-center gap-2 px-4 py-2.5 border-t transition-colors ${isDarkMode ? 'border-[#334155]' : 'border-[#e5e7eb]'} ${hoverBg}`}
-                                            >
-                                                <i className={`fas fa-history text-xs ${subTextColor}`}></i>
-                                                <span className={`text-sm font-medium ${subTextColor}`}>View All History</span>
-                                            </Link>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
                             {/* User Avatar with Dropdown */}
                             <div className="relative" ref={userMenuRef}>
                                 <button
@@ -451,7 +454,6 @@ export default function Header() {
                             </div>
                         </>
                     ) : (
-                        /* Login/Signup Buttons (When not authenticated) */
                         <>
                             <Link to="/login" className={`text-sm font-medium px-3 py-2 rounded-lg ${textColor} ${hoverBg}`}>Log in</Link>
                             <Link to="/signup" className="text-sm px-4 py-2 bg-[#3B68FC] text-white rounded-lg hover:bg-[#2a4add]">Sign up</Link>

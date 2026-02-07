@@ -6,7 +6,7 @@ export default function VerifyEmailPage() {
     const [searchParams] = useSearchParams();
     const { verifyEmail } = useAuth();
 
-    const token = searchParams.get('token');
+    const token = searchParams.get('token') || searchParams.get('token_hash');
 
     const [status, setStatus] = useState('loading'); // loading, success, error
     const [message, setMessage] = useState('');

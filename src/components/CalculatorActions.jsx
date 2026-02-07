@@ -1,19 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from './auth/AuthContext';
-import api from '../services/api';
+import { checkFavorite, toggleFavorite } from '../services/supabaseService';
+import { saveCalculation } from '../services/supabaseService';
 
 /**
  * CalculatorActions Component
- * 
- * Provides Save and Favorite buttons for calculator pages.
- * 
- * @param {Object} props
- * @param {string} props.calculatorSlug - URL slug of the calculator (e.g., "plaster-calculator")
- * @param {string} props.calculatorName - Display name (e.g., "Plaster Calculator")
- * @param {string} props.calculatorIcon - FontAwesome icon class (e.g., "fa-paint-roller")
- * @param {string} props.category - Category name (e.g., "Quantity Estimator")
- * @param {Object} props.inputs - Current calculator inputs (to be saved)
- * @param {Object} props.outputs - Current calculator results (to be saved)
+ * Uses Supabase for save/favorite - works with Vercel
  */
 export default function CalculatorActions({
     calculatorSlug,
@@ -23,30 +15,22 @@ export default function CalculatorActions({
     inputs = {},
     outputs = {}
 }) {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, user } = useAuth();
     const [isFavorite, setIsFavorite] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [saveMessage, setSaveMessage] = useState('');
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
-    // Check if calculator is favorited on mount
     useEffect(() => {
-        if (isAuthenticated && calculatorSlug) {
-            checkFavoriteStatus();
+        if (isAuthenticated && user?.id && calculatorSlug) {
+            checkFavorite(user.id, calculatorSlug)
+                .then((res) => setIsFavorite(res.isFavorite))
+                .catch(() => {});
         }
-    }, [isAuthenticated, calculatorSlug]);
-
-    const checkFavoriteStatus = async () => {
-        try {
-            const response = await api.get(`/favorites/check/${calculatorSlug}`);
-            setIsFavorite(response.data.isFavorite);
-        } catch (err) {
-            console.error('Failed to check favorite status:', err);
-        }
-    };
+    }, [isAuthenticated, user?.id, calculatorSlug]);
 
     const handleSave = async () => {
-        if (!isAuthenticated) {
+        if (!isAuthenticated || !user?.id) {
             setShowLoginPrompt(true);
             setTimeout(() => setShowLoginPrompt(false), 3000);
             return;
@@ -56,13 +40,13 @@ export default function CalculatorActions({
         setSaveMessage('');
 
         try {
-            await api.post('/calculations', {
+            await saveCalculation(user.id, {
                 calculatorSlug,
                 calculatorName,
                 calculatorIcon,
                 inputs,
                 outputs,
-                isSaved: true
+                isSaved: true,
             });
             setSaveMessage('✓ Saved!');
             setTimeout(() => setSaveMessage(''), 3000);
@@ -76,20 +60,20 @@ export default function CalculatorActions({
     };
 
     const handleToggleFavorite = async () => {
-        if (!isAuthenticated) {
+        if (!isAuthenticated || !user?.id) {
             setShowLoginPrompt(true);
             setTimeout(() => setShowLoginPrompt(false), 3000);
             return;
         }
 
         try {
-            const response = await api.post('/favorites/toggle', {
+            const res = await toggleFavorite(user.id, {
                 calculatorSlug,
                 calculatorName,
                 calculatorIcon,
-                category
+                category,
             });
-            setIsFavorite(response.data.isFavorite);
+            setIsFavorite(res.isFavorite);
         } catch (err) {
             console.error('Failed to toggle favorite:', err);
         }
@@ -97,33 +81,30 @@ export default function CalculatorActions({
 
     return (
         <div className="flex items-center gap-2 relative">
-            {/* Save Button */}
             <button
                 onClick={handleSave}
                 disabled={isSaving}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all ${saveMessage
-                        ? 'bg-green-50 border-green-300 text-green-700'
-                        : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300'
-                    } disabled:opacity-50`}
+                    ? 'bg-green-50 border-green-300 text-green-700'
+                    : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300'
+                } disabled:opacity-50`}
                 title="Save calculation"
             >
                 <i className={`fas ${isSaving ? 'fa-spinner fa-spin' : 'fa-save'}`}></i>
                 <span className="text-sm font-medium">{saveMessage || 'Save'}</span>
             </button>
 
-            {/* Favorite Button */}
             <button
                 onClick={handleToggleFavorite}
                 className={`flex items-center justify-center w-10 h-10 rounded-lg border transition-all ${isFavorite
-                        ? 'bg-yellow-50 border-yellow-300 text-yellow-500'
-                        : 'bg-white border-gray-200 text-gray-400 hover:bg-gray-50 hover:text-yellow-500'
-                    }`}
+                    ? 'bg-yellow-50 border-yellow-300 text-yellow-500'
+                    : 'bg-white border-gray-200 text-gray-400 hover:bg-gray-50 hover:text-yellow-500'
+                }`}
                 title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
             >
                 <i className={`fas fa-star ${isFavorite ? '' : 'opacity-60'}`}></i>
             </button>
 
-            {/* Login Prompt */}
             {showLoginPrompt && (
                 <div className="absolute top-full left-0 mt-2 p-3 bg-gray-900 text-white text-sm rounded-lg shadow-lg z-50 whitespace-nowrap">
                     <div className="flex items-center gap-2">

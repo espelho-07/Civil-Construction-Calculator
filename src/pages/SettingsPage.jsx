@@ -18,17 +18,7 @@ export default function SettingsPage() {
 
     const handleSaveToServer = async () => {
         setSaving(true);
-        // Save settings to server (optional - currently using localStorage)
-        try {
-            await fetch('http://localhost:5000/api/auth/settings', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify(settings),
-            });
-        } catch (error) {
-            // Silently fail - settings are saved locally anyway
-        }
+        // Settings are stored in localStorage via SettingsContext - no backend needed
         setSaving(false);
         setSaved(true);
         setTimeout(() => setSaved(false), 3000);

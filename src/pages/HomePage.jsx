@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import { categories, getThemeClasses } from '../constants/categories';
+import { useActivityMemory } from '../hooks/useActivityMemory';
 
 const mostSearched = [
     { name: 'Countertop Calculator', slug: '/countertop', icon: 'fa-ruler-combined', searches: '45.2K', category: 'Quantity Estimator', theme: 'green' },
@@ -107,6 +108,7 @@ export default function HomePage() {
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const searchRef = useRef(null);
     const navigate = useNavigate();
+    const { lastVisited, recentCalculators, clearHistory, isAvailable } = useActivityMemory();
 
     // Filter calculators based on search query
     const filteredCalculators = searchQuery.length > 0
@@ -191,6 +193,54 @@ export default function HomePage() {
 
             <section className="bg-white px-6 py-10 rounded-t-[40px] -mt-5 relative z-10 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
                 <div className="max-w-6xl mx-auto">
+
+                    {/* Continue where you left off + Recently used (activity memory) */}
+                    {isAvailable && (lastVisited || recentCalculators.length > 0) && (
+                        <div className="mb-10 p-4 bg-[#f8fafc] border border-[#e2e8f0] rounded-2xl">
+                            <div className="flex items-center justify-between mb-3">
+                                <h2 className="text-lg font-semibold text-[#0A0A0A]">Continue where you left off</h2>
+                                <button
+                                    type="button"
+                                    onClick={clearHistory}
+                                    className="text-sm text-[#6b7280] hover:text-[#3B68FC] hover:underline"
+                                >
+                                    Clear history
+                                </button>
+                            </div>
+                            {lastVisited && (
+                                <Link
+                                    to={lastVisited.path || `/${lastVisited.id}`}
+                                    className="flex items-center gap-3 p-3 mb-3 bg-white border border-[#e5e7eb] rounded-xl hover:shadow-md hover:border-[#3B68FC] transition-all"
+                                >
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#EEF2FF] text-[#3B68FC]">
+                                        <i className="fas fa-calculator"></i>
+                                    </span>
+                                    <div className="flex-1 min-w-0">
+                                        <span className="font-medium text-[#0A0A0A]">{lastVisited.name}</span>
+                                        <span className="block text-xs text-[#6b7280]">Last visited</span>
+                                    </div>
+                                    <i className="fas fa-chevron-right text-[#9ca3af]"></i>
+                                </Link>
+                            )}
+                            {recentCalculators.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                    {recentCalculators.map((calc) => (
+                                        <Link
+                                            key={calc.id}
+                                            to={calc.path || `/${calc.id}`}
+                                            className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-[#e5e7eb] rounded-lg text-sm text-[#0A0A0A] hover:border-[#3B68FC] hover:shadow-sm transition-all"
+                                        >
+                                            <i className="fas fa-calculator text-[#3B68FC] text-xs"></i>
+                                            {calc.name}
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                            <p className="mt-3 text-xs text-[#6b7280]">
+                                This site stores calculator usage locally on your device. No data is sent to any server.
+                            </p>
+                        </div>
+                    )}
 
                     {/* SEARCH RESULTS - Show when searching */}
                     {searchQuery.length > 0 && (

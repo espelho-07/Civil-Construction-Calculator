@@ -2,41 +2,61 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../components/auth/AuthContext';
 import { useSettings } from '../contexts/SettingsContext';
-import api from '../services/api';
+import {
+    getCalculations,
+    getCalculationStats,
+    deleteCalculation,
+} from '../services/supabaseService';
 
 export default function HistoryPage() {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, user } = useAuth();
     const { isDarkMode } = useSettings();
     const [calculations, setCalculations] = useState([]);
     const [filter, setFilter] = useState('all');
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState(null);
 
-    // Load calculations from backend API
     useEffect(() => {
-        if (isAuthenticated) {
+        if (isAuthenticated && user?.id) {
             loadCalculations();
             loadStats();
         } else {
-            // Fall back to localStorage if not logged in
             const savedHistory = localStorage.getItem('calculationHistory');
             if (savedHistory) {
-                setCalculations(JSON.parse(savedHistory));
+                try {
+                    setCalculations(JSON.parse(savedHistory));
+                } catch {
+                    setCalculations([]);
+                }
             }
             setLoading(false);
         }
-    }, [isAuthenticated]);
+    }, [isAuthenticated, user?.id]);
 
     const loadCalculations = async () => {
         try {
-            const response = await api.get('/calculations');
-            setCalculations(response.data.calculations || []);
+            const res = await getCalculations(user.id);
+            const mapped = (res.calculations || []).map((c) => ({
+                id: c.id,
+                calculatorSlug: c.calculator_slug,
+                calculatorName: c.calculator_name,
+                calculatorIcon: c.calculator_icon,
+                inputs: c.inputs || {},
+                outputs: c.outputs || {},
+                isSaved: c.is_saved,
+                createdAt: c.created_at,
+                date: c.created_at,
+            }));
+            setCalculations(mapped);
         } catch (err) {
             console.error('Failed to load calculations:', err);
-            // Fall back to localStorage
             const savedHistory = localStorage.getItem('calculationHistory');
             if (savedHistory) {
-                setCalculations(JSON.parse(savedHistory));
+                try {
+                    setCalculations(JSON.parse(savedHistory));
+                } catch {
+                    setCalculations([]);
+                }
             }
         } finally {
             setLoading(false);
@@ -45,17 +65,16 @@ export default function HistoryPage() {
 
     const loadStats = async () => {
         try {
-            const response = await api.get('/calculations/stats');
-            setStats(response.data);
+            const data = await getCalculationStats(user.id);
+            setStats(data);
         } catch (err) {
             console.error('Failed to load stats:', err);
         }
     };
 
-    // Filter calculations based on date
     const getFilteredCalculations = () => {
         const now = new Date();
-        return calculations.filter(item => {
+        return calculations.filter((item) => {
             const itemDate = new Date(item.createdAt || item.date);
             switch (filter) {
                 case 'today':
@@ -75,16 +94,15 @@ export default function HistoryPage() {
     };
 
     const deleteItem = async (id) => {
-        if (isAuthenticated) {
+        if (isAuthenticated && user?.id) {
             try {
-                await api.delete(`/calculations/${id}`);
-                setCalculations(prev => prev.filter(item => item.id !== id));
+                await deleteCalculation(user.id, id);
+                setCalculations((prev) => prev.filter((item) => item.id !== id));
             } catch (err) {
                 console.error('Failed to delete calculation:', err);
             }
         } else {
-            // localStorage fallback
-            const updated = calculations.filter(item => item.id !== id);
+            const updated = calculations.filter((item) => item.id !== id);
             setCalculations(updated);
             localStorage.setItem('calculationHistory', JSON.stringify(updated));
         }
@@ -92,11 +110,10 @@ export default function HistoryPage() {
 
     const clearAll = async () => {
         if (window.confirm('Are you sure you want to delete all history?')) {
-            if (isAuthenticated) {
+            if (isAuthenticated && user?.id) {
                 try {
-                    // Delete all calculations
                     for (const calc of calculations) {
-                        await api.delete(`/calculations/${calc.id}`);
+                        await deleteCalculation(user.id, calc.id);
                     }
                     setCalculations([]);
                 } catch (err) {
@@ -117,10 +134,11 @@ export default function HistoryPage() {
 
     const filteredCalculations = getFilteredCalculations();
 
+    const slugToPath = (slug) => (slug?.startsWith('/') ? slug : `/${slug || ''}`);
+
     return (
         <div className={`min-h-screen ${bgClass} py-8`}>
             <div className="max-w-4xl mx-auto px-6">
-                {/* Header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                     <div className="flex items-center gap-4">
                         <Link
@@ -158,7 +176,6 @@ export default function HistoryPage() {
                     </div>
                 </div>
 
-                {/* Login Prompt for Guests */}
                 {!isAuthenticated && (
                     <div className={`${cardClass} rounded-2xl p-6 mb-6 border border-yellow-300 bg-yellow-50`}>
                         <div className="flex items-center gap-3">
@@ -171,7 +188,6 @@ export default function HistoryPage() {
                     </div>
                 )}
 
-                {/* Empty State */}
                 {loading ? (
                     <div className={`${cardClass} rounded-2xl p-12 text-center border`}>
                         <div className="w-12 h-12 border-4 border-[#3B68FC] border-t-transparent rounded-full animate-spin mx-auto"></div>
@@ -186,8 +202,7 @@ export default function HistoryPage() {
                         <p className={`${subTextClass} mb-6`}>
                             {filter === 'all'
                                 ? 'Use the Save button on any calculator to save your work here'
-                                : 'No calculations found for the selected period'
-                            }
+                                : 'No calculations found for the selected period'}
                         </p>
                         <Link to="/" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#3B68FC] to-[#6366F1] text-white rounded-xl font-medium hover:opacity-90 transition-all shadow-lg shadow-[#3B68FC]/20">
                             <i className="fas fa-calculator"></i>
@@ -195,14 +210,12 @@ export default function HistoryPage() {
                         </Link>
                     </div>
                 ) : (
-                    /* Calculations List */
                     <div className="space-y-4">
                         {filteredCalculations.map((item) => (
                             <div key={item.id} className={`${cardClass} rounded-xl p-5 border hover:shadow-md transition-all`}>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-4">
-                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f0f5ff]'
-                                            }`}>
+                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f0f5ff]'}`}>
                                             <i className={`fas ${item.calculatorIcon || 'fa-calculator'} text-lg text-[#3B68FC]`}></i>
                                         </div>
                                         <div>
@@ -220,14 +233,14 @@ export default function HistoryPage() {
                                                     month: 'short',
                                                     day: 'numeric',
                                                     hour: '2-digit',
-                                                    minute: '2-digit'
+                                                    minute: '2-digit',
                                                 })}
                                             </p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Link
-                                            to={`${item.calculatorSlug?.startsWith('/') ? '' : '/'}${item.calculatorSlug || item.path || ''}`}
+                                            to={slugToPath(item.calculatorSlug)}
                                             className="px-4 py-2 bg-[#3B68FC]/10 text-[#3B68FC] rounded-lg text-sm font-medium hover:bg-[#3B68FC]/20 transition-colors"
                                         >
                                             <i className="fas fa-redo mr-2"></i>
@@ -241,9 +254,7 @@ export default function HistoryPage() {
                                         </button>
                                     </div>
                                 </div>
-
-                                {/* Show inputs/outputs if available */}
-                                {(item.inputs || item.outputs) && (
+                                {(item.inputs || item.outputs) && Object.keys(item.inputs || {}).length + Object.keys(item.outputs || {}).length > 0 && (
                                     <div className={`mt-4 pt-4 border-t ${isDarkMode ? 'border-[#334155]' : 'border-[#f3f4f6]'}`}>
                                         <div className="grid grid-cols-2 gap-4">
                                             {item.inputs && Object.keys(item.inputs).length > 0 && (
@@ -281,24 +292,21 @@ export default function HistoryPage() {
                     </div>
                 )}
 
-                {/* Stats */}
                 {(stats || calculations.length > 0) && (
                     <div className={`mt-8 ${cardClass} rounded-xl p-6 border`}>
                         <h3 className={`font-semibold ${textClass} mb-4`}>Statistics</h3>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div className={`p-4 rounded-xl ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f8f9fa]'}`}>
-                                <p className={`text-2xl font-bold ${textClass}`}>{stats?.total || calculations.length}</p>
+                                <p className={`text-2xl font-bold ${textClass}`}>{stats?.total ?? calculations.length}</p>
                                 <p className={`text-sm ${subTextClass}`}>Total Calculations</p>
                             </div>
                             <div className={`p-4 rounded-xl ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f8f9fa]'}`}>
-                                <p className={`text-2xl font-bold ${textClass}`}>
-                                    {stats?.savedCount || calculations.filter(c => c.isSaved).length}
-                                </p>
+                                <p className={`text-2xl font-bold ${textClass}`}>{stats?.savedCount ?? calculations.filter((c) => c.isSaved).length}</p>
                                 <p className={`text-sm ${subTextClass}`}>Saved</p>
                             </div>
                             <div className={`p-4 rounded-xl ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f8f9fa]'}`}>
                                 <p className={`text-2xl font-bold ${textClass}`}>
-                                    {stats?.thisWeek || calculations.filter(c => {
+                                    {stats?.thisWeek ?? calculations.filter((c) => {
                                         const d = new Date(c.createdAt || c.date);
                                         const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
                                         return d >= weekAgo;
@@ -307,9 +315,7 @@ export default function HistoryPage() {
                                 <p className={`text-sm ${subTextClass}`}>This Week</p>
                             </div>
                             <div className={`p-4 rounded-xl ${isDarkMode ? 'bg-[#0f172a]' : 'bg-[#f8f9fa]'}`}>
-                                <p className={`text-2xl font-bold ${textClass}`}>
-                                    {stats?.mostUsed?.calculatorName?.split(' ')[0] || '-'}
-                                </p>
+                                <p className={`text-2xl font-bold ${textClass}`}>{stats?.mostUsed?.calculatorName?.split(' ')[0] || '-'}</p>
                                 <p className={`text-sm ${subTextClass}`}>Most Used</p>
                             </div>
                         </div>

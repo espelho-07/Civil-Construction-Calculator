@@ -10,6 +10,8 @@ export default function ResetPasswordPage() {
     const { resetPassword } = useAuth();
 
     const token = searchParams.get('token');
+    const { user } = useAuth();
+    const hasSession = !!user;
 
     const [formData, setFormData] = useState({
         password: '',
@@ -21,10 +23,10 @@ export default function ResetPasswordPage() {
     const [formErrors, setFormErrors] = useState({});
 
     useEffect(() => {
-        if (!token) {
+        if (!token && !hasSession) {
             setError('Invalid or missing reset token. Please request a new password reset.');
         }
-    }, [token]);
+    }, [token, hasSession]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -60,7 +62,7 @@ export default function ResetPasswordPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!validate() || !token) return;
+        if (!validate() || (!token && !hasSession)) return;
 
         setLoading(true);
         setError(null);
@@ -123,7 +125,7 @@ export default function ResetPasswordPage() {
                                 </div>
                             )}
 
-                            {token ? (
+                            {(token || hasSession) ? (
                                 <form onSubmit={handleSubmit} className="space-y-5">
                                     <div>
                                         <label className="block text-sm font-medium text-[#374151] mb-2">

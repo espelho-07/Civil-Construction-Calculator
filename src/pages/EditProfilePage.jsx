@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../components/auth/AuthContext';
 import { useSettings } from '../contexts/SettingsContext';
-import api from '../services/api';
+import { getProfile, updateProfile } from '../services/supabaseService';
 
 export default function EditProfilePage() {
-    const { user, updateProfile } = useAuth();
+    const { user, updateProfile: updateAuthProfile } = useAuth();
     const { isDarkMode } = useSettings();
     const navigate = useNavigate();
 
@@ -21,22 +21,23 @@ export default function EditProfilePage() {
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
 
-    // Load profile data
     useEffect(() => {
         const loadProfile = async () => {
+            if (!user?.id) {
+                setLoading(false);
+                return;
+            }
             try {
-                const response = await api.get('/dashboard/profile');
-                const profile = response.data.profile || {};
+                const profile = await getProfile(user.id);
                 setFormData({
-                    fullName: user?.fullName || user?.name || '',
-                    phone: user?.phone || '',
-                    profession: profile.profession || '',
-                    company: profile.company || '',
-                    location: profile.location || '',
-                    bio: profile.bio || ''
+                    fullName: profile?.full_name || user?.fullName || user?.name || '',
+                    phone: profile?.phone || user?.phone || '',
+                    profession: profile?.profession || '',
+                    company: profile?.company || '',
+                    location: profile?.location || '',
+                    bio: profile?.bio || ''
                 });
-            } catch (err) {
-                // If no profile exists, just use user data
+            } catch {
                 setFormData({
                     fullName: user?.fullName || user?.name || '',
                     phone: user?.phone || '',
@@ -58,31 +59,33 @@ export default function EditProfilePage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!user?.id) return;
         setSaving(true);
         setMessage({ type: '', text: '' });
 
         try {
-            const response = await api.put('/dashboard/profile', formData);
-            setMessage({ type: 'success', text: 'Profile updated successfully!' });
-
-            // Update local auth state so header/profile show new name/phone
-            const updatedUser = response.data?.user || {};
-            updateProfile({
-                fullName: formData.fullName ?? updatedUser.fullName ?? user?.fullName,
-                phone: formData.phone ?? updatedUser.phone ?? user?.phone,
+            await updateProfile(user.id, {
+                name: formData.fullName,
+                phone: formData.phone,
+                profession: formData.profession,
+                company: formData.company,
+                location: formData.location,
+                bio: formData.bio,
             });
-
-            // Redirect after 2 seconds
+            setMessage({ type: 'success', text: 'Profile updated successfully!' });
+            updateAuthProfile({
+                fullName: formData.fullName,
+                name: formData.fullName,
+                phone: formData.phone,
+            });
             setTimeout(() => navigate('/dashboard'), 2000);
         } catch (err) {
-            const msg = err.response?.data?.message || err.response?.data?.error || 'Failed to update profile';
-            setMessage({ type: 'error', text: msg });
+            setMessage({ type: 'error', text: err.message || 'Failed to update profile' });
         } finally {
             setSaving(false);
         }
     };
 
-    // Get user initials for avatar
     const getUserInitials = () => {
         const name = formData.fullName || 'U';
         const names = name.split(' ');
@@ -92,7 +95,6 @@ export default function EditProfilePage() {
         return names[0][0].toUpperCase();
     };
 
-    // Get avatar color based on name
     const getAvatarColor = () => {
         if (!formData.fullName) return '#3B68FC';
         const colors = ['#3B68FC', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4'];
@@ -122,7 +124,6 @@ export default function EditProfilePage() {
     return (
         <div className={`min-h-screen ${bgClass} py-8`}>
             <div className="max-w-2xl mx-auto px-6">
-                {/* Header */}
                 <div className="flex items-center gap-4 mb-8">
                     <Link
                         to="/dashboard"
@@ -136,20 +137,17 @@ export default function EditProfilePage() {
                     </div>
                 </div>
 
-                {/* Success/Error Message */}
                 {message.text && (
                     <div className={`mb-6 px-4 py-3 rounded-xl flex items-center gap-2 ${message.type === 'success'
-                            ? 'bg-green-50 border border-green-200 text-green-600'
-                            : 'bg-red-50 border border-red-200 text-red-600'
-                        }`}>
+                        ? 'bg-green-50 border border-green-200 text-green-600'
+                        : 'bg-red-50 border border-red-200 text-red-600'
+                    }`}>
                         <i className={`fas ${message.type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}`}></i>
                         <span>{message.text}</span>
                     </div>
                 )}
 
-                {/* Profile Form */}
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Avatar Section */}
                     <div className={`${cardClass} rounded-2xl p-6 border text-center`}>
                         <div
                             className="w-24 h-24 rounded-2xl flex items-center justify-center text-white font-bold text-3xl mx-auto mb-4"
@@ -160,13 +158,11 @@ export default function EditProfilePage() {
                         <p className={`text-sm ${subTextClass}`}>Profile avatar is generated from your name</p>
                     </div>
 
-                    {/* Personal Info */}
                     <div className={`${cardClass} rounded-2xl p-6 border`}>
                         <h3 className={`text-lg font-semibold ${textClass} mb-4 flex items-center gap-2`}>
                             <i className="fas fa-user text-[#3B68FC]"></i>
                             Personal Information
                         </h3>
-
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className={`block text-sm font-medium ${textClass} mb-2`}>Full Name *</label>
@@ -180,7 +176,6 @@ export default function EditProfilePage() {
                                     placeholder="Enter your full name"
                                 />
                             </div>
-
                             <div>
                                 <label className={`block text-sm font-medium ${textClass} mb-2`}>Phone Number</label>
                                 <input
@@ -195,13 +190,11 @@ export default function EditProfilePage() {
                         </div>
                     </div>
 
-                    {/* Professional Info */}
                     <div className={`${cardClass} rounded-2xl p-6 border`}>
                         <h3 className={`text-lg font-semibold ${textClass} mb-4 flex items-center gap-2`}>
                             <i className="fas fa-briefcase text-[#10B981]"></i>
                             Professional Information
                         </h3>
-
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label className={`block text-sm font-medium ${textClass} mb-2`}>Profession</label>
@@ -214,7 +207,6 @@ export default function EditProfilePage() {
                                     placeholder="Civil Engineer, Architect, etc."
                                 />
                             </div>
-
                             <div>
                                 <label className={`block text-sm font-medium ${textClass} mb-2`}>Company/Organization</label>
                                 <input
@@ -227,7 +219,6 @@ export default function EditProfilePage() {
                                 />
                             </div>
                         </div>
-
                         <div>
                             <label className={`block text-sm font-medium ${textClass} mb-2`}>Location</label>
                             <input
@@ -241,13 +232,11 @@ export default function EditProfilePage() {
                         </div>
                     </div>
 
-                    {/* Bio */}
                     <div className={`${cardClass} rounded-2xl p-6 border`}>
                         <h3 className={`text-lg font-semibold ${textClass} mb-4 flex items-center gap-2`}>
                             <i className="fas fa-info-circle text-[#F59E0B]"></i>
                             About You
                         </h3>
-
                         <div>
                             <label className={`block text-sm font-medium ${textClass} mb-2`}>Bio</label>
                             <textarea
@@ -261,7 +250,6 @@ export default function EditProfilePage() {
                         </div>
                     </div>
 
-                    {/* Action Buttons */}
                     <div className="flex justify-end gap-4">
                         <Link
                             to="/dashboard"
