@@ -5,6 +5,17 @@ import { getProfile } from '../../services/supabaseService';
 const AuthContext = createContext(null);
 
 const ADMIN_EMAIL = 'darpantrader1727@gmail.com';
+const AUTH_TIMEOUT = 15000; // 15 second timeout for auth operations
+
+// Utility function to add timeout to promises
+const withTimeout = (promise, timeoutMs = AUTH_TIMEOUT) => {
+    return Promise.race([
+        promise,
+        new Promise((_, reject) =>
+            setTimeout(() => reject(new Error(`Operation timed out after ${timeoutMs}ms`)), timeoutMs)
+        )
+    ]);
+};
 
 function mapSupabaseUser(supabaseUser, profile = null) {
     if (!supabaseUser) return null;
@@ -30,13 +41,16 @@ export function AuthProvider({ children }) {
     const fetchUserWithProfile = useCallback(async (supabaseUser) => {
         if (!supabaseUser) return null;
         try {
-            const { data: profile } = await supabase
+            const profilePromise = supabase
                 .from('profiles')
                 .select('*')
                 .eq('id', supabaseUser.id)
                 .single();
+            
+            const { data: profile } = await withTimeout(profilePromise, 10000);
             return mapSupabaseUser(supabaseUser, profile);
-        } catch {
+        } catch (err) {
+            console.warn('Could not fetch profile, using basic user data:', err);
             return mapSupabaseUser(supabaseUser);
         }
     }, []);
@@ -50,7 +64,9 @@ export function AuthProvider({ children }) {
                     setLoading(false);
                     return;
                 }
-                const { data: { session } } = await supabase.auth.getSession();
+                const sessionPromise = supabase.auth.getSession();
+                const { data: { session } } = await withTimeout(sessionPromise);
+                
                 if (session?.user) {
                     const mapped = await fetchUserWithProfile(session.user);
                     setUser(mapped);
@@ -59,6 +75,7 @@ export function AuthProvider({ children }) {
                 }
             } catch (err) {
                 console.error('Auth init error:', err);
+                setError(err.message);
                 setUser(null);
             } finally {
                 setLoading(false);
@@ -90,7 +107,7 @@ export function AuthProvider({ children }) {
                 throw new Error('Supabase not configured. Please add credentials to .env');
             }
             const { fullName, email, password, phone } = userData;
-            const { data, error: signUpError } = await supabase.auth.signUp({
+            const signUpPromise = supabase.auth.signUp({
                 email,
                 password,
                 options: {
@@ -100,6 +117,7 @@ export function AuthProvider({ children }) {
                     },
                 },
             });
+            const { data, error: signUpError } = await withTimeout(signUpPromise);
 
             if (signUpError) {
                 setError(signUpError.message);
@@ -117,8 +135,9 @@ export function AuthProvider({ children }) {
             }
             return { success: false, message: 'Signup failed' };
         } catch (err) {
-            setError(err.message);
-            return { success: false, message: err.message };
+            const message = err.message || 'Signup failed';
+            setError(message);
+            return { success: false, message };
         }
     };
 
@@ -128,15 +147,17 @@ export function AuthProvider({ children }) {
             if (!supabase) {
                 throw new Error('Supabase not configured. Please add credentials to .env');
             }
-            const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+            const signInPromise = supabase.auth.signInWithPassword({ email, password });
+            const { data, error: signInError } = await withTimeout(signInPromise);
 
             if (signInError) {
-                setError(signInError.message);
+                const message = signInError.message === 'Invalid login credentials'
+                    ? 'Invalid email or password'
+                    : signInError.message;
+                setError(message);
                 return {
                     success: false,
-                    message: signInError.message === 'Invalid login credentials'
-                        ? 'Invalid email or password'
-                        : signInError.message,
+                    message,
                 };
             }
 
@@ -146,8 +167,9 @@ export function AuthProvider({ children }) {
             }
             return { success: false, message: 'Login failed' };
         } catch (err) {
-            setError(err.message);
-            return { success: false, message: err.message };
+            const message = err.message || 'Login failed';
+            setError(message);
+            return { success: false, message };
         }
     };
 
@@ -164,9 +186,11 @@ export function AuthProvider({ children }) {
             if (!supabase) {
                 throw new Error('Supabase not configured. Please add credentials to .env');
             }
-            const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+            const resetPromise = supabase.auth.resetPasswordForEmail(email, {
                 redirectTo: `${window.location.origin}/reset-password`,
             });
+            const { error: resetError } = await withTimeout(resetPromise);
+            
             if (resetError) {
                 return { success: false, message: resetError.message };
             }
@@ -175,7 +199,8 @@ export function AuthProvider({ children }) {
                 message: 'If an account exists with this email, you will receive a password reset link.',
             };
         } catch (err) {
-            return { success: false, message: err.message };
+            const message = err.message || 'Password reset request failed';
+            return { success: false, message };
         }
     };
 
@@ -187,7 +212,9 @@ export function AuthProvider({ children }) {
             if (!supabase) {
                 throw new Error('Supabase not configured. Please add credentials to .env');
             }
-            const { error: updateError } = await supabase.auth.updateUser({ password });
+            const updatePromise = supabase.auth.updateUser({ password });
+            const { error: updateError } = await withTimeout(updatePromise);
+            
             if (updateError) {
                 return { success: false, message: updateError.message };
             }
@@ -202,10 +229,12 @@ export function AuthProvider({ children }) {
             if (!supabase) {
                 throw new Error('Supabase not configured. Please add credentials to .env');
             }
-            const { data: { user: u }, error: verifyError } = await supabase.auth.verifyOtp({
+            const verifyPromise = supabase.auth.verifyOtp({
                 token_hash: token,
                 type: 'email',
             });
+            const { data: { user: u }, error: verifyError } = await withTimeout(verifyPromise);
+            
             if (verifyError) {
                 return { success: false, message: verifyError.message };
             }
@@ -221,9 +250,11 @@ export function AuthProvider({ children }) {
             if (!supabase) {
                 throw new Error('Supabase not configured. Please add credentials to .env');
             }
-            const { error: resendError } = await supabase.auth.resend({
+            const resendPromise = supabase.auth.resend({
                 type: 'signup',
             });
+            const { error: resendError } = await withTimeout(resendPromise);
+            
             if (resendError) {
                 return { success: false, message: resendError.message };
             }

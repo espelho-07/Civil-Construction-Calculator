@@ -64,44 +64,49 @@ export default function AdminSiteSettingsPage() {
 
     if (loading) {
         return (
-            <div className="p-8">
-                <div className="flex items-center gap-3 text-slate-400">
-                    <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
-                    Loading site settings...
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                    <div className="w-12 h-12 border-4 border-[#3B68FC] border-t-transparent rounded-full animate-spin mx-auto"></div>
+                    <p className="mt-4 text-[#6b7280]">Loading settings...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="p-8 max-w-3xl">
-            <h1 className="text-2xl font-bold text-white mb-2">Site Settings</h1>
-            <p className="text-slate-400 mb-6">
-                Edit content that all users see on the main site. Changes apply immediately.
-            </p>
+        <div>
+            <div className="mb-8">
+                <h1 className="text-4xl font-bold text-[#0A0A0A]">Site Settings</h1>
+                <p className="text-[#6b7280] mt-2 flex items-center gap-2">
+                    <i className="fas fa-sliders-h"></i>
+                    Edit content visible to all users on the main site
+                </p>
+            </div>
 
             {message.text && (
                 <div
-                    className={`mb-6 px-4 py-3 rounded-xl flex items-center gap-2 ${
-                        message.type === 'success' ? 'bg-green-500/10 text-green-400 border border-green-500/30' : 'bg-red-500/10 text-red-400 border border-red-500/30'
+                    className={`mb-6 px-6 py-4 rounded-2xl flex items-center gap-3 ${
+                        message.type === 'success' 
+                            ? 'bg-green-50 text-green-700 border border-green-200' 
+                            : 'bg-red-50 text-red-700 border border-red-200'
                     }`}
                 >
-                    <i className={`fas ${message.type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}`} />
-                    <span>{message.text}</span>
+                    <i className={`fas fas-lg ${message.type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}`} />
+                    <span className="font-medium">{message.text}</span>
                 </div>
             )}
 
-            <div className="space-y-6">
+            <div className="grid grid-cols-1 gap-6 max-w-2xl">
                 {EDITABLE_KEYS.map(({ key, label, type, placeholder }) => (
-                    <div key={key} className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
-                        <label className="block text-sm font-medium text-slate-300 mb-2">{label}</label>
+                    <div key={key} className="bg-white border border-[#e5e7eb] rounded-2xl p-6 shadow-sm">
+                        <label className="block text-sm font-semibold text-[#0A0A0A] mb-3">{label}</label>
                         {type === 'textarea' ? (
                             <textarea
                                 value={typeof getValue(key) === 'string' ? getValue(key) : ''}
                                 onChange={(e) => setValue(key, e.target.value)}
                                 placeholder={placeholder}
-                                rows={3}
-                                className="w-full px-4 py-3 bg-slate-900 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none"
+                                rows={4}
+                                className="w-full px-4 py-3 bg-white border border-[#e5e7eb] rounded-xl text-[#0A0A0A] placeholder-[#9ca3af] focus:border-[#3B68FC] focus:ring-2 focus:ring-[#3B68FC]/20 outline-none resize-none transition-colors"
                             />
                         ) : (
                             <input
@@ -109,26 +114,41 @@ export default function AdminSiteSettingsPage() {
                                 value={typeof getValue(key) === 'string' ? getValue(key) : ''}
                                 onChange={(e) => setValue(key, e.target.value)}
                                 placeholder={placeholder}
-                                className="w-full px-4 py-3 bg-slate-900 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none"
+                                className="w-full px-4 py-3 bg-white border border-[#e5e7eb] rounded-xl text-[#0A0A0A] placeholder-[#9ca3af] focus:border-[#3B68FC] focus:ring-2 focus:ring-[#3B68FC]/20 outline-none transition-colors"
                             />
                         )}
-                        <div className="mt-3 flex justify-end">
+                        <div className="mt-4 flex justify-end">
                             <button
                                 onClick={() => handleSave(key)}
                                 disabled={saving === key}
-                                className="px-4 py-2 bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-white rounded-lg font-medium transition-colors"
+                                className="px-6 py-2.5 bg-gradient-to-r from-[#3B68FC] to-[#2a4add] hover:from-[#2a4add] hover:to-[#1f36b5] disabled:opacity-50 text-white rounded-xl font-semibold transition-all shadow-sm hover:shadow-md"
                             >
                                 {saving === key ? (
                                     <span className="flex items-center gap-2">
                                         <i className="fas fa-spinner fa-spin" /> Saving...
                                     </span>
                                 ) : (
-                                    'Save'
+                                    <>
+                                        <i className="fas fa-save mr-2"></i>
+                                        Save
+                                    </>
                                 )}
                             </button>
                         </div>
                     </div>
                 ))}
+            </div>
+
+            {/* Security Notice */}
+            <div className="mt-8 rounded-2xl bg-blue-50 border border-blue-200 p-6">
+                <h3 className="text-lg font-bold text-[#0A0A0A] mb-2 flex items-center gap-2">
+                    <i className="fas fa-info-circle text-blue-600"></i>
+                    Information
+                </h3>
+                <p className="text-[#6b7280] text-justify">
+                    Changes made to site settings will be immediately visible to all users. The announcement banner is displayed prominently on the homepage 
+                    and can be dismissed by users. Hero title and tagline appear in the main search section. All changes are logged for audit purposes.
+                </p>
             </div>
         </div>
     );

@@ -24,7 +24,7 @@ export default function AdminCalculatorsPage() {
     if (loading) {
         return (
             <div className="flex justify-center py-12">
-                <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-12 h-12 border-4 border-[#3B68FC] border-t-transparent rounded-full animate-spin"></div>
             </div>
         );
     }
@@ -34,37 +34,42 @@ export default function AdminCalculatorsPage() {
     return (
         <div>
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-white">Calculator Usage</h1>
-                <p className="text-slate-400 mt-1">Most used calculators across the platform</p>
+                <h1 className="text-4xl font-bold text-[#0A0A0A]">Calculator Usage</h1>
+                <p className="text-[#6b7280] mt-2 flex items-center gap-2">
+                    <i className="fas fa-chart-bar"></i>
+                    Most used calculators across the platform
+                </p>
             </div>
 
-            <div className="rounded-2xl bg-slate-800/50 border border-slate-700 p-6">
-                <div className="space-y-4">
+            <div className="rounded-2xl bg-white border border-[#e5e7eb] p-8 shadow-sm">
+                <div className="space-y-6">
                     {topCalculators.map((calc, i) => (
                         <div key={calc.slug} className="flex items-center gap-4">
-                            <span className="w-8 h-8 rounded-lg bg-slate-700 text-slate-400 flex items-center justify-center text-sm font-bold shrink-0">
+                            <span className="w-10 h-10 rounded-full bg-gradient-to-br from-[#3B68FC] to-[#2a4add] text-white flex items-center justify-center text-sm font-bold shrink-0 shadow-md">
                                 {i + 1}
                             </span>
                             <div className="flex-1 min-w-0">
-                                <div className="flex items-center justify-between mb-1">
-                                    <span className="text-white font-medium truncate">{calc.name}</span>
-                                    <span className="text-amber-400 font-semibold shrink-0 ml-2">{calc.count}</span>
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-[#0A0A0A] font-semibold truncate">{calc.name}</span>
+                                    <span className="text-[#3B68FC] font-bold shrink-0 ml-2 text-lg">{calc.count}</span>
                                 </div>
-                                <div className="h-2 rounded-full bg-slate-700 overflow-hidden">
+                                <div className="h-2.5 rounded-full bg-[#e5e7eb] overflow-hidden">
                                     <div
-                                        className="h-full rounded-full bg-gradient-to-r from-amber-500 to-orange-600 transition-all duration-500"
+                                        className="h-full rounded-full bg-gradient-to-r from-[#3B68FC] to-indigo-600 transition-all duration-700 shadow-sm"
                                         style={{ width: `${(calc.count / maxCount) * 100}%` }}
                                     />
                                 </div>
                             </div>
-                            <div className="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0">
-                                <i className={`fas ${calc.icon || 'fa-calculator'} text-amber-400`}></i>
+                            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-indigo-500/20 flex items-center justify-center shrink-0">
+                                <i className={`fas ${calc.icon || 'fa-calculator'} text-[#3B68FC] text-lg`}></i>
                             </div>
                         </div>
                     ))}
                 </div>
                 {topCalculators.length === 0 && (
-                    <p className="text-slate-500 text-center py-8">No calculation data yet.</p>
+                    <div className="text-center py-12">
+                        <p className="text-[#6b7280] font-medium">No calculation data yet.</p>
+                    </div>
                 )}
             </div>
         </div>

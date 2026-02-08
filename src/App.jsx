@@ -5,6 +5,7 @@ import { RecordCalculatorVisit } from './hooks/useActivityMemory';
 import { SettingsProvider, useSettings } from './contexts/SettingsContext';
 import { useAuth } from './components/auth/AuthContext';
 import { GuestRoute, ProtectedRoute } from './components/auth/ProtectedRoute';
+import ErrorBoundary from './components/ErrorBoundary';
 import AdminLayout from './components/admin/AdminLayout';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminCalculationsPage from './pages/admin/AdminCalculationsPage';
@@ -310,15 +311,17 @@ function AppContent() {
 
 function App() {
     return (
-        <SettingsProvider>
-            <AuthProvider>
-                <SiteSettingsProvider>
-                    <Router>
-                        <AppContent />
-                    </Router>
-                </SiteSettingsProvider>
-            </AuthProvider>
-        </SettingsProvider>
+        <ErrorBoundary>
+            <SettingsProvider>
+                <AuthProvider>
+                    <SiteSettingsProvider>
+                        <Router>
+                            <AppContent />
+                        </Router>
+                    </SiteSettingsProvider>
+                </AuthProvider>
+            </SettingsProvider>
+        </ErrorBoundary>
     );
 }
 

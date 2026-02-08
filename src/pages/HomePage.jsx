@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { categories, getThemeClasses } from '../constants/categories';
 import { useActivityMemory } from '../hooks/useActivityMemory';
 import { useSiteSettings } from '../contexts/SiteSettingsContext';
+import AnnouncementBanner from '../components/AnnouncementBanner';
 
 const mostSearched = [
     { name: 'Countertop Calculator', slug: '/countertop', icon: 'fa-ruler-combined', searches: '45.2K', category: 'Quantity Estimator', theme: 'green' },
@@ -154,11 +155,7 @@ export default function HomePage() {
 
     return (
         <main>
-            {announcement && (
-                <div className="bg-gradient-to-r from-[#3B68FC] to-indigo-600 text-white py-2.5 px-6 text-center text-sm font-medium">
-                    {announcement}
-                </div>
-            )}
+            <AnnouncementBanner announcement={announcement} dismissible={true} />
             <section className="relative py-16 px-6 overflow-hidden min-h-[320px]">
                 <div className="absolute inset-0 -top-24 overflow-hidden pointer-events-none">
                     <div className="absolute w-[500px] h-[500px] bg-blue-200/70 rounded-full blur-[100px] -top-20 -left-32"></div>
