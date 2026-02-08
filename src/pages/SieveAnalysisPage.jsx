@@ -90,12 +90,12 @@ export default function SieveAnalysisPage() {
                                 <i className={`fas fa-info-circle ${theme.text}`}></i>
                                 What is Sieve Analysis of Aggregates?
                             </h2>
-                            <p className="text-sm text-[#0A0A0A] leading-relaxed mb-4">
+                            <p className="text-sm text-[#0A0A0A] leading-relaxed mb-4 text-justify">
                                 A sieve analysis (or gradation test) is a practice or procedure used to assess the particle size distribution (also called gradation) of a granular material by allowing the material to pass through a series of sieves of progressively smaller mesh size and weighing the amount of material that is stopped by each sieve as a fraction of the whole mass. Sieve analysis helps to determine the particle size distribution of the coarse and fine aggregates. This is done by sieving the aggregates as per IS: 2386 (Part I) – 1963.
                             </p>
 
                             <h3 className="font-semibold text-[#0A0A0A] mb-2">Why to perform Sieve analysis of Aggregates?</h3>
-                            <p className="text-sm text-[#0A0A0A] leading-relaxed">
+                            <p className="text-sm text-[#0A0A0A] leading-relaxed text-justify">
                                 Particle size determinations on large samples of aggregate are necessary to ensure that aggregates perform as intended for their specified use. A sieve analysis, or gradation test determines the distribution of aggregate particles by size within a given sample. This information can then be used to determine compliance with design and production requirements. Data can also be used to better understand the relationship between aggregates or blends and to predict trends during production.
                             </p>
                         </div>
